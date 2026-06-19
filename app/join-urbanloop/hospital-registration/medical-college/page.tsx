@@ -1,0 +1,675 @@
+"use client";
+
+import Link from "next/link";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import { ArrowUpRight } from "lucide-react";
+
+export default function MedicalcollegeRegistrationPage() {
+  return (
+    <>
+      <Header />
+
+      <main className="bg-white min-h-screen">
+
+        <section className="bg-gradient-to-b from-[#EAF7D7] via-white to-white py-20">
+
+          <div className="mx-auto max-w-5xl px-6">
+
+            {/* Hero Section */}
+
+            <div className="mb-12 text-center">
+
+              <h1 className="mt-4 text-3xl font-bold text-slate-900 md:text-4xl">
+                Medical College Registration
+              </h1>
+
+              <p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed text-slate-600">
+                Register your medical college with UrbanLoop and implement responsible
+                recycling, asset recovery and sustainability initiatives while
+                supporting circular economy goals.
+              </p>
+
+              <div className="mt-8 flex justify-center">
+
+                <Link
+                  href="/join-urbanloop/hospital-registration"
+                  className="inline-flex items-center gap-2 rounded-xl border border-[#72B543] px-5 py-3 text-sm font-medium text-[#72B543] transition-all duration-300 hover:bg-[#72B543] hover:text-white"
+                >
+                  ← Back
+                </Link>
+
+              </div>
+
+            </div>
+
+            <div className="rounded-[32px] border-2 border-[#DDE8D0] bg-white p-8 md:p-10 shadow-[0_20px_60px_rgba(15,76,129,0.08)]">
+
+             <h2 className="mb-8 text-2xl font-bold text-slate-900">
+                Medical College Information
+              </h2>
+
+              <div className="grid gap-6 md:grid-cols-2">
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Medical College Name *
+                  </label>
+
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Website
+                  </label>
+
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Registration Number
+                  </label>
+
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    GST Number
+                  </label>
+
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Year Established
+                  </label>
+
+                  <input
+                    type="number"
+                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                  />
+
+              </div>
+
+              </div>
+
+<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
+              <h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
+                Primary Contact Information
+              </h2>
+
+              <div className="grid gap-6 md:grid-cols-2">
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Contact Person Name *
+                  </label>
+
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Designation *
+                  </label>
+
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Mobile Number *
+                  </label>
+
+                  <input
+                    type="tel"
+                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Alternate Mobile Number
+                  </label>
+
+                  <input
+                    type="tel"
+                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Email Address *
+                  </label>
+
+                  <input
+                    type="email"
+                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                  />
+                </div>
+
+              </div>
+
+<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
+              <h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
+                Medical College Address
+              </h2>
+
+              <div className="grid gap-6 md:grid-cols-2">
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Building / Medical College Name *
+                  </label>
+
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Street Address *
+                  </label>
+
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Landmark
+                  </label>
+
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    PIN Code *
+                  </label>
+
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    City *
+                  </label>
+
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    State *
+                  </label>
+
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                  />
+                </div>
+
+              </div>
+
+<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
+              <h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
+  Medical College Profile
+</h2>
+
+<div className="grid gap-6 md:grid-cols-2">
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      Institution Type *
+    </label>
+
+    <select className="w-full rounded-xl border-2 border-slate-300 px-4 py-3">
+      <option>Select Type</option>
+      <option>Medical College</option>
+      <option>Dental College</option>
+      <option>Nursing College</option>
+      <option>Pharmacy College</option>
+      <option>Allied Health Sciences Institute</option>
+      <option>Teaching Hospital</option>
+    </select>
+  </div>
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      Student Strength *
+    </label>
+
+    <input
+      type="number"
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    />
+  </div>
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      Faculty & Staff Count
+    </label>
+
+    <input
+      type="number"
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    />
+  </div>
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      Campus Area (Sq. Ft.)
+    </label>
+
+    <input
+      type="number"
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    />
+  </div>
+
+</div>
+
+<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
+              <h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
+                Material Categories
+              </h2>
+
+              <p className="mb-6 text-slate-600">
+                Select recyclable and recoverable materials generated by your medical college.
+              </p>
+
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+
+                {[
+                  "Paper & Cardboard",
+  "Plastic",
+  "Metal",
+  "Glass",
+  "Furniture",
+  "Classroom Furniture",
+  "Laboratory Furniture",
+  "Office Furniture",
+  "IT Assets",
+  "Computers & Laptops",
+  "Servers & Networking Equipment",
+  "Printers & Peripherals",
+  "E-Waste",
+  "Electrical Equipment",
+  "Batteries",
+  "Packaging Materials",
+  "Laboratory Equipment",
+  "Library Assets",
+  "Air Conditioners & Appliances",
+                ].map((item) => (
+                  <label
+                    key={item}
+                    className="flex cursor-pointer items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4 transition-all duration-300 hover:border-[#72B543] hover:bg-[#F8FBF4]"
+                  >
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 accent-[#72B543]"
+                    />
+
+                    <span className="font-medium text-slate-700">
+                      {item}
+                    </span>
+
+                  </label>
+                ))}
+
+              </div>
+
+<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
+              <h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
+                Collection & Service Requirements
+              </h2>
+
+              <div className="space-y-8">
+
+                <div>
+
+                  <label className="mb-4 block text-sm font-medium text-slate-700">
+                    Required Services *
+                  </label>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+
+                    {[
+                      "Recurring Collection",
+  "One-Time Clearance",
+  "Furniture Recovery",
+  "Laboratory Equipment Recovery",
+  "IT Asset Recovery",
+  "Library Asset Recovery",
+  "E-Waste Collection",
+  "Asset Buyback Program",
+  "Campus Sustainability Reporting",
+  "CSR & ESG Reporting Support",
+                    ].map((option) => (
+                      <label
+                        key={option}
+                        className="flex cursor-pointer items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4 transition-all duration-300 hover:border-[#72B543] hover:bg-[#F8FBF4]"
+                      >
+                        <input
+                          type="checkbox"
+                          className="h-4 w-4 accent-[#72B543]"
+                        />
+
+                        <span className="font-medium text-slate-700">
+                          {option}
+                        </span>
+
+                      </label>
+                    ))}
+
+                  </div>
+
+                </div>
+
+                <div className="grid gap-6 md:grid-cols-2">
+
+<div>
+                    <label className="mb-2 block text-sm font-medium text-slate-700">
+                      Collection Frequency *
+                    </label>
+
+                    <select className="w-full rounded-xl border-2 border-slate-300 px-4 py-3">
+                      <option>Select Frequency</option>
+                      <option>Daily</option>
+                      <option>Weekly</option>
+                      <option>Bi-Weekly</option>
+                      <option>Monthly</option>
+                      <option>Quarterly</option>
+                      <option>On-Demand</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-slate-700">
+                      Existing Waste Management Vendor
+                    </label>
+
+                    <input
+                      type="text"
+                      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-slate-700">
+                      Biomedical Waste Management Partner
+                    </label>
+
+                    <input
+                      type="text"
+                      placeholder="Authorized Biomedical Waste Management Partner"
+                      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-slate-700">
+                      Dedicated Storage Area Available?
+                    </label>
+
+                    <select className="w-full rounded-xl border-2 border-slate-300 px-4 py-3">
+                      <option>Select Option</option>
+                      <option>Yes</option>
+                      <option>No</option>
+                      <option>Planning To Create</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-slate-700">
+                      Estimated Monthly Recyclables Generated
+                    </label>
+
+                    <select className="w-full rounded-xl border-2 border-slate-300 px-4 py-3">
+                      <option>Select Quantity</option>
+                      <option>Less than 100 kg</option>
+                      <option>100 - 500 kg</option>
+                      <option>500 - 1000 kg</option>
+                      <option>1 - 5 Tons</option>
+                      <option>5+ Tons</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-slate-700">
+                      Preferred Collection Day
+                    </label>
+
+                    <select className="w-full rounded-xl border-2 border-slate-300 px-4 py-3">
+                      <option>Select Day</option>
+                      <option>Monday</option>
+                      <option>Tuesday</option>
+                      <option>Wednesday</option>
+                      <option>Thursday</option>
+                      <option>Friday</option>
+                      <option>Saturday</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-slate-700">
+                      Preferred Collection Time
+                    </label>
+
+                    <select className="w-full rounded-xl border-2 border-slate-300 px-4 py-3">
+                      <option>Select Time Slot</option>
+                      <option>08:00 AM - 10:00 AM</option>
+                      <option>10:00 AM - 12:00 PM</option>
+                      <option>12:00 PM - 03:00 PM</option>
+                      <option>03:00 PM - 06:00 PM</option>
+                      <option>06:00 PM - 08:00 PM</option>
+                    </select>
+                  </div>
+
+                </div>
+
+              </div>
+
+<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
+              <h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
+                Communication Preferences
+              </h2>
+
+              <p className="mb-6 text-slate-600">
+                Choose how you would like UrbanLoop to communicate with you.
+              </p>
+
+              <div className="grid gap-4 md:grid-cols-2">
+
+                {[
+                  "Email Notifications",
+                  "SMS Notifications",
+                  "WhatsApp Notifications",
+                  "Sustainability Reports",
+                  "Recovery Reports",
+                ].map((item) => (
+                  <label
+                    key={item}
+                    className="flex cursor-pointer items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4 transition-all duration-300 hover:border-[#72B543] hover:bg-[#F8FBF4]"
+                  >
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 accent-[#72B543]"
+                    />
+
+                    <span className="font-medium text-slate-700">
+                      {item}
+                    </span>
+
+                  </label>
+                ))}
+
+              </div>
+
+<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
+<h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
+                Referral Information
+              </h2>
+
+              <div className="grid gap-6 md:grid-cols-2">
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    How Did You Hear About UrbanLoop?
+                  </label>
+
+                  <select className="w-full rounded-xl border-2 border-slate-300 px-4 py-3">
+                    <option>Select Source</option>
+                    <option>Google Search</option>
+                    <option>Medical Education Association</option>
+                    <option>Academic Conference</option>
+                    <option>University Network</option>
+                    <option>Existing Customer</option>
+                    <option>LinkedIn</option>
+                    <option>Social Media</option>
+                    <option>Referral</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">
+                    Referral Code (Optional)
+                  </label>
+
+                  <input
+                    type="text"
+                    placeholder="Enter Referral Code"
+                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                  />
+                </div>
+
+              </div>
+
+              <div className="mt-6">
+
+                <label className="mb-2 block text-sm font-medium text-slate-700">
+                  Additional Comments
+                </label>
+
+                <textarea
+                  rows={4}
+                  placeholder="Additional requirements, collection notes or comments..."
+                  className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                />
+
+              </div>
+
+<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
+
+              <h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
+                Declaration & Consent
+              </h2>
+
+              <div className="space-y-5">
+
+                <label className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    className="mt-1 h-4 w-4 accent-[#72B543]"
+                  />
+
+                  <span className="text-slate-700">
+                    I confirm that all information provided in this registration form is accurate and complete to the best of my knowledge.
+                  </span>
+                </label>
+
+                <label className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    className="mt-1 h-4 w-4 accent-[#72B543]"
+                  />
+
+                  <span className="text-slate-700">
+                    I agree to UrbanLoop's Terms & Conditions and Privacy Policy.
+                  </span>
+                </label>
+
+                <label className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    className="mt-1 h-4 w-4 accent-[#72B543]"
+                  />
+
+                  <span className="text-slate-700">
+                    I consent to receiving service updates, pickup reminders, notifications and sustainability reports.
+                  </span>
+                </label>
+
+              </div>
+
+
+              <div className="mt-12 border-t border-[#E6EFE0] pt-10">
+
+                <div className="text-center">
+
+                  <button
+                    type="submit"
+                    className="rounded-xl bg-[#72B543] px-8 py-4 text-lg font-semibold text-white shadow-[0_10px_25px_rgba(114,181,67,0.30)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#5FA032]"
+                  >
+                    Register Medical College With UrbanLoop
+                  </button>
+
+                  <p className="mt-4 text-sm text-slate-500">
+                    Our team will review your registration and contact you shortly.
+                  </p>
+
+                </div>
+
+              </div>
+
+              </div>
+
+          </div>
+
+        </section>
+
+      </main>
+
+      <Footer />
+
+    </>
+  );
+}

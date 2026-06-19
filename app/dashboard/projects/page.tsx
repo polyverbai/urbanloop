@@ -1,9 +1,27 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
+import AddProjectForm from "@/components/projects/AddProjectForm";
+
+const router = useRouter();
+
+useEffect(() => {
+  async function checkAuth() {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      router.push("/login");
+    }
+  }
+
+  checkAuth();
+}, [router]);
 
 interface Project {
   id: string;
@@ -21,6 +39,8 @@ interface Stakeholder {
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [showProjectForm, setShowProjectForm] =
+  useState(false);
 
   useEffect(() => {
     async function loadProjects() {
@@ -47,12 +67,30 @@ export default function ProjectsPage() {
           Projects
         </h1>
 
-        <button className="px-4 py-2 bg-green-600 text-white rounded-lg">
-          + New Project
-        </button>
+        <button
+  onClick={() =>
+    setShowProjectForm(
+      !showProjectForm
+    )
+  }
+  className="px-4 py-2 bg-green-600 text-white rounded-lg"
+>
+  {showProjectForm
+    ? "Cancel"
+    : "+ New Project"}
+</button>
       </div>
 
       <div className="bg-white rounded-lg border overflow-hidden">
+        {showProjectForm && (
+  <div className="mb-6">
+    <AddProjectForm
+      onSuccess={() =>
+        window.location.reload()
+      }
+    />
+  </div>
+)}
         <table className="w-full">
           <thead className="bg-gray-50">
             <tr>

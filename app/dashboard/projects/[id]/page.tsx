@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import AddStakeholderForm from "@/components/dashboard/AddStakeholderForm";
 import AddOpportunityForm from "@/components/dashboard/AddOpportunityForm";
 import AddAssessmentForm from "../../../../components/assessments/AddAssessmentForm";
+import AddDocumentForm from "../../../../components/documents/AddDocumentForm";
+import EditProjectForm from "@/components/projects/EditProjectForm";
 
 interface Project {
   id: string;
@@ -36,6 +39,13 @@ interface Assessment {
   notes: string | null;
 }
 
+interface Document {
+  id: string;
+  file_name: string;
+  file_path: string;
+  file_size: number | null;
+}
+
 type TabType =
   | "overview"
   | "stakeholders"
@@ -46,15 +56,22 @@ type TabType =
 export default function ProjectDetailsPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+
+    const router = useRouter();
+    
   const [project, setProject] = useState<Project | null>(null);
   const [stakeholders, setStakeholders] = useState<Stakeholder[]>([]);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
-  const [assessments, setAssessments] =
-  useState<Assessment[]>([]);
+  const [assessments, setAssessments] = useState<Assessment[]>([]);
 
-const [showAssessmentForm, setShowAssessmentForm] =
+const [showAssessmentForm, setShowAssessmentForm] = useState(false);
+
+const [documents, setDocuments] =
+  useState<Document[]>([]);
+
+const [showDocumentForm, setShowDocumentForm] =
   useState(false);
 
   const [showForm, setShowForm] = useState(false);
@@ -64,29 +81,110 @@ const [showAssessmentForm, setShowAssessmentForm] =
   const [activeTab, setActiveTab] =
     useState<TabType>("overview");
 
-  async function deleteStakeholder(
-    stakeholderId: string
-  ) {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this stakeholder?"
-    );
+    const [showEditProject, setShowEditProject] =
+  useState(false);
 
-    if (!confirmed) return;
+useEffect(() => {
+  async function checkAuth() {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
 
-    const { error } = await supabase
+    if (!session) {
+      router.push("/login");
+    }
+  }
+
+  checkAuth();
+}, [router]);
+
+async function deleteProject() {
+  const confirmed = window.confirm(
+    "Are you sure you want to delete this project and all related data?"
+  );
+
+
+  if (!confirmed || !project) return;
+
+  try {
+    await supabase
       .from("stakeholders")
       .delete()
-      .eq("id", stakeholderId);
+      .eq("project_id", project.id);
+
+    await supabase
+      .from("opportunities")
+      .delete()
+      .eq("project_id", project.id);
+
+    await supabase
+      .from("assessments")
+      .delete()
+      .eq("project_id", project.id);
+
+    const { data: docs } = await supabase
+      .from("documents")
+      .select("*")
+      .eq("project_id", project.id);
+
+    if (docs?.length) {
+      const paths = docs
+  .map((d) => d.file_path)
+  .filter(Boolean);
+
+      if (paths.length) {
+        await supabase.storage
+          .from("project-documents")
+          .remove(paths);
+      }
+
+      await supabase
+        .from("documents")
+        .delete()
+        .eq("project_id", project.id);
+    }
+
+    const { error } = await supabase
+      .from("projects")
+      .delete()
+      .eq("id", project.id);
 
     if (error) {
-      alert(`Delete failed: ${error.message}`);
+      alert(error.message);
       return;
     }
 
-    window.location.reload();
+    alert("Project deleted successfully");
+
+    router.push("/dashboard/projects");
+  } catch (error) {
+    console.error(error);
+    alert("Delete failed");
+  }
+}
+
+  async function deleteStakeholder(
+  stakeholderId: string
+) {
+  const confirmed = window.confirm(
+    "Are you sure you want to delete this stakeholder?"
+  );
+
+  if (!confirmed) return;
+
+  const { error } = await supabase
+    .from("stakeholders")
+    .delete()
+    .eq("id", stakeholderId);
+
+  if (error) {
+    alert(`Delete failed: ${error.message}`);
+    return;
   }
 
-async function deleteOpportunity(
+  window.location.reload();
+}
+  async function deleteOpportunity(
   opportunityId: string
 ) {
   const confirmed = window.confirm(
@@ -111,7 +209,7 @@ async function deleteOpportunity(
 async function deleteAssessment(
   assessmentId: string
 ) {
-  const confirmed = window.confirm(
+      const confirmed = window.confirm(
     "Are you sure you want to delete this assessment?"
   );
 
@@ -130,12 +228,42 @@ async function deleteAssessment(
   window.location.reload();
 }
 
+async function deleteDocument(
+  documentId: string,
+  filePath: string
+) {
+  const confirmed = window.confirm(
+    "Delete this document?"
+  );
+
+  if (!confirmed) return;
+
+  await supabase.storage
+    .from("project-documents")
+    .remove([filePath]);
+
+  const { error } = await supabase
+    .from("documents")
+    .delete()
+    .eq("id", documentId);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  window.location.reload();
+}
+
   useEffect(() => {
-    async function loadProject() {
-      const { data, error } = await supabase
+  async function loadProject() {
+    const resolvedParams = await params;
+    const id = resolvedParams.id;
+
+        const { data, error } = await supabase
         .from("projects")
         .select("*")
-        .eq("id", params.id)
+        .eq("project_id", id)
         .single();
 
       if (error) {
@@ -151,7 +279,7 @@ async function deleteAssessment(
       } = await supabase
         .from("stakeholders")
         .select("*")
-        .eq("project_id", params.id);
+        .eq("project_id", id);
 
       if (stakeholderError) {
         console.error(stakeholderError);
@@ -165,7 +293,7 @@ async function deleteAssessment(
       } = await supabase
         .from("opportunities")
         .select("*")
-        .eq("project_id", params.id);
+        .eq("project_id", id);
 
       if (opportunityError) {
         console.error(opportunityError);
@@ -179,7 +307,7 @@ async function deleteAssessment(
 } = await supabase
   .from("assessments")
   .select("*")
-  .eq("project_id", params.id);
+  .eq("project_id", id);
 
 if (assessmentError) {
   console.error(assessmentError);
@@ -187,11 +315,25 @@ if (assessmentError) {
   setAssessments(assessmentData || []);
 }
 
+const {
+  data: documentData,
+  error: documentError,
+} = await supabase
+  .from("documents")
+  .select("*")
+  .eq("project_id", id);
+
+if (documentError) {
+  console.error(documentError);
+} else {
+  setDocuments(documentData || []);
+}
+
     }
     
 
     loadProject();
-  }, [params.id]);
+  }, [params]);
 
   
   if (!project) {
@@ -213,24 +355,44 @@ if (assessmentError) {
           {project.description}
         </p>
 
-        <div className="mt-4">
-          <span className="px-3 py-1 rounded-full bg-green-100 text-green-700">
-            {project.status}
-          </span>
-        </div>
-      </div>
+        <div className="mt-4 flex items-center gap-4">
+  <span className="px-3 py-1 rounded-full bg-green-100 text-green-700">
+    {project.status}
+  </span>
 
-      <div className="flex gap-2 mb-8 border-b pb-4">
-        <button
-          onClick={() => setActiveTab("overview")}
-          className={`px-4 py-2 rounded ${
-            activeTab === "overview"
-              ? "bg-green-600 text-white"
-              : "bg-gray-100"
-          }`}
-        >
-          Overview
-        </button>
+  <button
+  onClick={deleteProject}
+  className="px-4 py-2 bg-red-600 text-white rounded"
+>
+  Delete Project
+</button>
+
+  <button
+    onClick={() =>
+      setShowEditProject(
+        !showEditProject
+      )
+    }
+    className="px-4 py-2 bg-blue-600 text-white rounded"
+  >
+    {showEditProject
+      ? "Cancel"
+      : "Edit Project"}
+  </button>
+</div>
+
+{showEditProject && (
+  <div className="mt-6">
+    <EditProjectForm
+      project={project}
+      onSuccess={() =>
+        window.location.reload()
+      }
+    />
+  </div>
+)}
+
+
 
         <button
           onClick={() =>
@@ -318,7 +480,9 @@ if (assessmentError) {
             <h3 className="font-semibold">
               Documents
             </h3>
-            <p className="text-3xl mt-2">0</p>
+            <p className="text-3xl mt-2">
+  {documents.length}
+</p>
           </div>
         </div>
       )}
@@ -612,10 +776,115 @@ if (assessmentError) {
 )}
 
       {activeTab === "documents" && (
-        <div className="bg-white border rounded-lg p-6">
-          Documents module coming next
-        </div>
-      )}
+  <div>
+    <div className="flex items-center justify-between mb-4">
+      <h2 className="text-2xl font-semibold">
+        Project Documents
+      </h2>
+
+      <button
+        onClick={() =>
+          setShowDocumentForm(
+            !showDocumentForm
+          )
+        }
+        className="bg-green-600 text-white px-4 py-2 rounded-lg"
+      >
+        {showDocumentForm
+          ? "Cancel"
+          : "+ Upload Document"}
+      </button>
+    </div>
+
+    {showDocumentForm && (
+      <div className="mb-6">
+        <AddDocumentForm
+          projectId={project.id}
+          onSuccess={() =>
+            window.location.reload()
+          }
+        />
+      </div>
+    )}
+
+    <div className="bg-white rounded-lg border overflow-hidden">
+      <table className="w-full">
+        <thead className="bg-gray-50">
+          <tr>
+            <th className="text-left p-4">
+              File Name
+            </th>
+
+            <th className="text-left p-4">
+              Size
+            </th>
+
+            <th className="text-left p-4">
+              Actions
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {documents.map((document) => (
+            <tr
+              key={document.id}
+              className="border-t"
+            >
+              <td className="p-4">
+                {document.file_name}
+              </td>
+
+              <td className="p-4">
+                {document.file_size
+                  ? `${(
+                      document.file_size /
+                      1024
+                    ).toFixed(1)} KB`
+                  : "-"}
+              </td>
+
+              <td className="p-4 flex gap-2">
+                <button
+                  onClick={async () => {
+                    const { data } =
+                      supabase.storage
+                        .from(
+                          "project-documents"
+                        )
+                        .getPublicUrl(
+                          document.file_path
+                        );
+
+                    window.open(
+                      data.publicUrl,
+                      "_blank"
+                    );
+                  }}
+                  className="px-3 py-1 bg-blue-600 text-white rounded"
+                >
+                  Download
+                </button>
+
+                <button
+                  onClick={() =>
+                    deleteDocument(
+                      document.id,
+                      document.file_path
+                    )
+                  }
+                  className="px-3 py-1 bg-red-600 text-white rounded"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+)}
     </DashboardLayout>
   );
 }
