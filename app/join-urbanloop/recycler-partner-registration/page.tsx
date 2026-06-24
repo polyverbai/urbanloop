@@ -1,13 +1,77 @@
 "use client";
 
 import { useState } from "react";
-
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import Link from "next/link";
 
 export default function RecyclerPartnerRegistrationPage() {
+  const [loading, setLoading] = useState(false);
+  const [fullName, setFullName] = useState("");
+const [mobileNumber, setMobileNumber] = useState("");
+const [email, setEmail] = useState("");
+const [alternateMobile, setAlternateMobile] = useState("");
 
-  const [partnerType, setPartnerType] = useState("scrapDealer");
+const [shopNumber, setShopNumber] = useState("");
+const [buildingName, setBuildingName] = useState("");
+const [streetArea, setStreetArea] = useState("");
+const [landmark, setLandmark] = useState("");
+const [city, setCity] = useState("");
+const [stateName, setStateName] = useState("");
+const [pinCode, setPinCode] = useState("");
+
+const [partnerType, setPartnerType] = useState("");
+const [yearsInOperation, setYearsInOperation] = useState("");
+const [coverageArea, setCoverageArea] = useState("");
+const [monthlyCapacity, setMonthlyCapacity] = useState("");
+const [storageAvailable, setStorageAvailable] = useState("");
+
+const [collectionVehicle, setCollectionVehicle] = useState("");
+const [weighingScale, setWeighingScale] = useState("");
+const [sortingFacility, setSortingFacility] = useState("");
+const [staffCount, setStaffCount] = useState("");
+
+const [materialCategories, setMaterialCategories] = useState<string[]>([]);
+const [partnershipInterests, setPartnershipInterests] = useState<string[]>([]);
+
+const [additionalComments, setAdditionalComments] = useState("");
+
+const [declarationConfirmed, setDeclarationConfirmed] = useState(false);
+const [termsAccepted, setTermsAccepted] = useState(false);
+const [communicationConsent, setCommunicationConsent] = useState(false);
+
+const [vehicleType, setVehicleType] = useState("");
+const [vehicleNumber, setVehicleNumber] = useState("");
+const [vehicleOwnership, setVehicleOwnership] = useState("");
+const [vehicleMake, setVehicleMake] = useState("");
+const [driverName, setDriverName] = useState("");
+const [driverLicenseNumber, setDriverLicenseNumber] = useState("");
+
+const [vehicleCapacity, setVehicleCapacity] = useState("");
+const [serviceRadius, setServiceRadius] = useState("");
+const [operatingHours, setOperatingHours] = useState("");
+
+const [vehicleCount, setVehicleCount] = useState("");
+
+const [gstNumber, setGstNumber] = useState("");
+const [panNumber, setPanNumber] = useState("");
+const [tradeLicenseNumber, setTradeLicenseNumber] = useState("");
+const [udyamNumber, setUdyamNumber] = useState("");
+
+const [accountHolderName, setAccountHolderName] = useState("");
+const [bankName, setBankName] = useState("");
+const [accountNumber, setAccountNumber] = useState("");
+const [ifscCode, setIfscCode] = useState("");
+const [upiId, setUpiId] = useState("");
+
+const [vehicleRcFile, setVehicleRcFile] = useState<File | null>(null);
+const [vehicleInsuranceFile, setVehicleInsuranceFile] = useState<File | null>(null);
+const [pollutionCertificateFile, setPollutionCertificateFile] = useState<File | null>(null);
+
+const [driverLicenseFile, setDriverLicenseFile] = useState<File | null>(null);
+
+const [cancelledChequeFile, setCancelledChequeFile] =
+  useState<File | null>(null);
 
   return (
     <>
@@ -17,168 +81,60 @@ export default function RecyclerPartnerRegistrationPage() {
 
         <section className="bg-gradient-to-b from-[#EAF7D7] via-white to-white py-20">
 
-          <div className="mx-auto max-w-7xl px-6">
+          <div className="mx-auto max-w-5xl px-6">
 
-            <div className="mb-16 text-center">
+            {/* Heading */}
 
-              <h1 className="mt-6 text-5xl font-bold text-slate-900 md:text-4xl">
-                Recycler & Recovery Partner Registration
+            <div className="mb-12 text-center">
+
+              <h1 className="mt-4 text-3xl font-bold text-slate-900 md:text-4xl">
+                Recovery Partner Registration
               </h1>
 
-              <p className="mx-auto mt-6 max-w-3xl text-xl leading-relaxed text-slate-600">
-                Join UrbanLoop's circular economy network as a recycler,
-                refurbisher, aggregator, scrap dealer or recovery partner.
-                Access quality material streams and grow your recovery business.
+              <p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed text-slate-600">
+                Join UrbanLoop as a Recovery Partner and become part of
+                India's growing circular economy ecosystem.
               </p>
 
             </div>
 
-            <div className="mx-auto max-w-5xl">
+            {/* Back Button */}
 
-              <div className="rounded-[32px] border-2 border-[#DDE8D0] bg-white p-8 md:p-10 shadow-[0_20px_60px_rgba(15,76,129,0.08)]">
+            <div className="mb-10 flex justify-center">
 
-                {/* Partner Type Section Goes Here */}
+              <Link
+                href="/partner-program"
+                className="inline-flex items-center gap-2 rounded-xl border border-[#72B543] px-5 py-3 text-sm font-medium text-[#72B543] transition-all duration-300 hover:bg-[#72B543] hover:text-white"
+              >
+                ← Back
+              </Link>
+
+            </div>
+
+            {/* Form */}
+
+            <form
+              className="rounded-[32px] border-2 border-[#DDE8D0] bg-white p-8 md:p-10 shadow-[0_20px_60px_rgba(15,76,129,0.08)]"
+            >
+
+              {/* Sections will come here */}
+
 <h2 className="mb-8 text-2xl font-bold text-slate-900">
-  Select Partner Type
-</h2>
-
-<div className="mb-16 grid gap-4 md:grid-cols-3">
-
-  <button
-    type="button"
-    onClick={() => setPartnerType("scrapDealer")}
-    className={`rounded-2xl border p-5 text-left transition-all duration-300 ${
-      partnerType === "scrapDealer"
-        ? "border-[#72B543] bg-[#F8FBF4]"
-        : "border-[#DDE8D0]"
-    }`}
-  >
-    <h3 className="font-semibold text-slate-900">
-      Scrap Dealer
-    </h3>
-
-    <p className="mt-2 text-sm text-slate-600">
-      Purchase, aggregate and trade recyclable materials.
-    </p>
-  </button>
-
-  <button
-    type="button"
-    onClick={() => setPartnerType("recycler")}
-    className={`rounded-2xl border p-5 text-left transition-all duration-300 ${
-      partnerType === "recycler"
-        ? "border-[#72B543] bg-[#F8FBF4]"
-        : "border-[#DDE8D0]"
-    }`}
-  >
-    <h3 className="font-semibold text-slate-900">
-      Recycler
-    </h3>
-
-    <p className="mt-2 text-sm text-slate-600">
-      Process recyclable materials into reusable resources.
-    </p>
-  </button>
-
-  <button
-    type="button"
-    onClick={() => setPartnerType("refurbisher")}
-    className={`rounded-2xl border p-5 text-left transition-all duration-300 ${
-      partnerType === "refurbisher"
-        ? "border-[#72B543] bg-[#F8FBF4]"
-        : "border-[#DDE8D0]"
-    }`}
-  >
-    <h3 className="font-semibold text-slate-900">
-      Refurbisher
-    </h3>
-
-    <p className="mt-2 text-sm text-slate-600">
-      Restore furniture, IT assets and equipment for reuse.
-    </p>
-  </button>
-
-  <button
-    type="button"
-    onClick={() => setPartnerType("ewaste")}
-    className={`rounded-2xl border p-5 text-left transition-all duration-300 ${
-      partnerType === "ewaste"
-        ? "border-[#72B543] bg-[#F8FBF4]"
-        : "border-[#DDE8D0]"
-    }`}
-  >
-    <h3 className="font-semibold text-slate-900">
-      E-Waste Processor
-    </h3>
-
-    <p className="mt-2 text-sm text-slate-600">
-      Authorized e-waste dismantling and recycling facilities.
-    </p>
-  </button>
-
-  <button
-    type="button"
-    onClick={() => setPartnerType("aggregator")}
-    className={`rounded-2xl border p-5 text-left transition-all duration-300 ${
-      partnerType === "aggregator"
-        ? "border-[#72B543] bg-[#F8FBF4]"
-        : "border-[#DDE8D0]"
-    }`}
-  >
-    <h3 className="font-semibold text-slate-900">
-      Aggregator
-    </h3>
-
-    <p className="mt-2 text-sm text-slate-600">
-      Collect and consolidate materials from multiple sources.
-    </p>
-  </button>
-
-  <button
-    type="button"
-    onClick={() => setPartnerType("logistics")}
-    className={`rounded-2xl border p-5 text-left transition-all duration-300 ${
-      partnerType === "logistics"
-        ? "border-[#72B543] bg-[#F8FBF4]"
-        : "border-[#DDE8D0]"
-    }`}
-  >
-    <h3 className="font-semibold text-slate-900">
-      Logistics Partner
-    </h3>
-
-    <p className="mt-2 text-sm text-slate-600">
-      Transportation and material movement services.
-    </p>
-  </button>
-
-</div>
-
-<h2 className="mb-24 text-2xl font-bold text-slate-900">
-  Partner Contact Information
+  Contact Information
 </h2>
 
 <div className="grid gap-6 md:grid-cols-2">
 
   <div>
     <label className="mb-2 block text-sm font-medium text-slate-700">
-      Contact Person Name *
+      Full Name *
     </label>
 
     <input
       type="text"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
-    />
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Company / Business Name *
-    </label>
-
-    <input
-      type="text"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
+      value={fullName}
+      onChange={(e) => setFullName(e.target.value)}
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
     />
   </div>
 
@@ -189,98 +145,81 @@ export default function RecyclerPartnerRegistrationPage() {
 
     <input
       type="tel"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
+      value={mobileNumber}
+      onChange={(e) =>
+        setMobileNumber(
+          e.target.value.replace(/\D/g, "").slice(0, 10)
+        )
+      }
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
     />
   </div>
 
   <div>
     <label className="mb-2 block text-sm font-medium text-slate-700">
-      Alternate Mobile Number
-    </label>
-
-    <input
-      type="tel"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
-    />
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Email Address *
+      Email Address
     </label>
 
     <input
       type="email"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
     />
   </div>
 
   <div>
     <label className="mb-2 block text-sm font-medium text-slate-700">
-      Website
+      Alternate Mobile
     </label>
 
     <input
-      type="url"
-      placeholder="https://"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
-    />
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      GST Number
-    </label>
-
-    <input
-      type="text"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
-    />
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Years in Business *
-    </label>
-
-    <input
-      type="number"
-      min="0"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
+      type="tel"
+      value={alternateMobile}
+      onChange={(e) =>
+        setAlternateMobile(
+          e.target.value.replace(/\D/g, "").slice(0, 10)
+        )
+      }
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
     />
   </div>
 
 </div>
 
-<div className="pt-10">
+{/* ADDRESS SECTION */}
 
-</div>
+<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
 
 <h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
-  Business Address & Operational Coverage
+  Recovery Partner Address
 </h2>
 
 <div className="grid gap-6 md:grid-cols-2">
 
   <div>
     <label className="mb-2 block text-sm font-medium text-slate-700">
-      Office / Facility Address *
+      Shop / Unit Number *
     </label>
 
     <input
       type="text"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
+      value={shopNumber}
+      onChange={(e) => setShopNumber(e.target.value)}
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
     />
   </div>
 
   <div>
     <label className="mb-2 block text-sm font-medium text-slate-700">
-      Facility / Yard Name
+      Shop / Business Name *
     </label>
 
     <input
       type="text"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
+      value={buildingName}
+      onChange={(e) => setBuildingName(e.target.value)}
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
     />
   </div>
 
@@ -291,29 +230,22 @@ export default function RecyclerPartnerRegistrationPage() {
 
     <input
       type="text"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
+      value={streetArea}
+      onChange={(e) => setStreetArea(e.target.value)}
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
     />
   </div>
 
   <div>
     <label className="mb-2 block text-sm font-medium text-slate-700">
-      City *
+      Landmark
     </label>
 
     <input
       type="text"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
-    />
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      State *
-    </label>
-
-    <input
-      type="text"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
+      value={landmark}
+      onChange={(e) => setLandmark(e.target.value)}
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
     />
   </div>
 
@@ -324,254 +256,538 @@ export default function RecyclerPartnerRegistrationPage() {
 
     <input
       type="text"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
+      value={pinCode}
+      onChange={(e) =>
+        setPinCode(
+          e.target.value.replace(/\D/g, "").slice(0, 6)
+        )
+      }
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
     />
   </div>
 
   <div>
     <label className="mb-2 block text-sm font-medium text-slate-700">
-      Service Radius (KM)
+      City *
     </label>
 
     <input
-      type="number"
-      placeholder="e.g. 50"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
+      type="text"
+      value={city}
+      onChange={(e) => setCity(e.target.value)}
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
     />
   </div>
 
   <div>
     <label className="mb-2 block text-sm font-medium text-slate-700">
-      Number of Collection Vehicles
+      State *
     </label>
 
     <input
-      type="number"
-      placeholder="e.g. 5"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
-    />
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Number of Employees
-    </label>
-
-    <input
-      type="number"
-      placeholder="e.g. 25"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
+      type="text"
+      value={stateName}
+      onChange={(e) => setStateName(e.target.value)}
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
     />
   </div>
 
 </div>
 
-<div className="mt-6">
+{/* RECOVERY PARTNER PROFILE */}
 
-  <label className="mb-2 block text-sm font-medium text-slate-700">
-    Cities / Regions Served *
-  </label>
-
-  <textarea
-    rows={3}
-    placeholder="Example: Bengaluru, Mysuru, Tumakuru, Hosur, Chennai"
-    className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
-  />
-
-</div>
-
-<div className="pt-10">
-
-</div>
-
-{/* Recovery & Processing Capabilities */}
+<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
 
 <h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
-  Recovery & Processing Capabilities
-</h2>
-
-<p className="mb-6 text-slate-600">
-  Select the material categories your organization can collect,
-  process, refurbish, recycle or recover.
-</p>
-
-<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-
-  {(
-    partnerType === "scrapDealer"
-      ? [
-          "Paper & Cardboard",
-          "Plastic",
-          "Metal",
-          "Glass",
-          "Furniture",
-          "Office Assets",
-          "Packaging Materials",
-          "Wood",
-        ]
-      : partnerType === "recycler"
-      ? [
-          "Paper Recycling",
-          "Plastic Recycling",
-          "Metal Recycling",
-          "Glass Recycling",
-          "Textile Recycling",
-          "Wood Recycling",
-          "Packaging Recovery",
-          "Industrial Scrap",
-        ]
-      : partnerType === "refurbisher"
-      ? [
-          "Office Furniture",
-          "Hospital Furniture",
-          "School Furniture",
-          "Computers",
-          "Laptops",
-          "Printers",
-          "Electrical Equipment",
-          "Office Assets",
-        ]
-      : partnerType === "ewaste"
-      ? [
-          "Computers",
-          "Laptops",
-          "Servers",
-          "Networking Equipment",
-          "Printers",
-          "Monitors",
-          "Batteries",
-          "Consumer Electronics",
-          "Industrial Electronics",
-        ]
-      : partnerType === "aggregator"
-      ? [
-          "Paper",
-          "Plastic",
-          "Metal",
-          "Glass",
-          "Furniture",
-          "E-Waste",
-          "Packaging Waste",
-          "Industrial Scrap",
-        ]
-      : [
-          "Paper",
-          "Plastic",
-          "Metal",
-          "Furniture",
-          "E-Waste",
-          "Bulk Assets",
-          "Industrial Equipment",
-          "Special Project Logistics",
-        ]
-  ).map((item) => (
-    <label
-      key={item}
-      className="flex cursor-pointer items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4 transition-all duration-300 hover:border-[#72B543] hover:bg-[#F8FBF4]"
-    >
-      <input
-        type="checkbox"
-        className="h-4 w-4 accent-[#72B543]"
-      />
-
-      <span className="font-medium text-slate-700">
-        {item}
-      </span>
-    </label>
-  ))}
-
-</div>
-
-<div className="pt-10">
-
-</div>
-
-<h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
-  Processing Capacity
+  Recovery Partner Profile
 </h2>
 
 <div className="grid gap-6 md:grid-cols-2">
 
   <div>
     <label className="mb-2 block text-sm font-medium text-slate-700">
-      Monthly Processing Capacity *
+      Partner Type *
     </label>
 
-    <select className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3">
-      <option>Select Capacity</option>
+    <select
+      value={partnerType}
+      onChange={(e) => setPartnerType(e.target.value)}
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    >
+      <option value="">Select Partner Type</option>
+      <option>Kabadi Shop</option>
+      <option>Scrap Dealer</option>
+      <option>Collection Center</option>
+      <option>Aggregator</option>
+      <option>Recycler</option>
+    </select>
+  </div>
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      Years In Operation *
+    </label>
+
+    <input
+      type="number"
+      value={yearsInOperation}
+      onChange={(e) => setYearsInOperation(e.target.value)}
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    />
+  </div>
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      Service Coverage Area *
+    </label>
+
+    <input
+      type="text"
+      value={coverageArea}
+      onChange={(e) => setCoverageArea(e.target.value)}
+      placeholder="Example: RT Nagar, Hebbal, Yelahanka"
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    />
+  </div>
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      Monthly Material Handling Capacity *
+    </label>
+
+    <select
+      value={monthlyCapacity}
+      onChange={(e) => setMonthlyCapacity(e.target.value)}
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    >
+      <option value="">Select Capacity</option>
       <option>Less than 1 Ton</option>
       <option>1 - 5 Tons</option>
-      <option>5 - 25 Tons</option>
-      <option>25 - 100 Tons</option>
-      <option>100 - 500 Tons</option>
-      <option>500+ Tons</option>
-    </select>
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Storage Capacity
-    </label>
-
-    <input
-      type="text"
-      placeholder="e.g. 5000 sq.ft."
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3"
-    />
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Pickup Service Available?
-    </label>
-
-    <select className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3">
-      <option>Select Option</option>
-      <option>Yes</option>
-      <option>No</option>
-    </select>
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Weighing Facility Available?
-    </label>
-
-    <select className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3">
-      <option>Select Option</option>
-      <option>Yes</option>
-      <option>No</option>
+      <option>5 - 10 Tons</option>
+      <option>10 - 25 Tons</option>
+      <option>25+ Tons</option>
     </select>
   </div>
 
 </div>
 
-<div className="pt-10">
+{/* OPERATIONAL INFRASTRUCTURE */}
 
-</div>
-
-{/* Compliance & Certifications */}
+<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
 
 <h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
-  Compliance & Certifications
+  Operational Infrastructure
 </h2>
-
-<p className="mb-6 text-slate-600">
-  Provide information about licenses, certifications and regulatory
-  approvals applicable to your operations.
-</p>
 
 <div className="grid gap-6 md:grid-cols-2">
 
   <div>
     <label className="mb-2 block text-sm font-medium text-slate-700">
-      GST Registration Number
+      Collection Vehicle Available *
+    </label>
+
+    <select
+      value={collectionVehicle}
+      onChange={(e) => setCollectionVehicle(e.target.value)}
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    >
+      <option value="">Select</option>
+      <option>Yes</option>
+      <option>No</option>
+    </select>
+  </div>
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      Weighing Scale Available *
+    </label>
+
+    <select
+      value={weighingScale}
+      onChange={(e) => setWeighingScale(e.target.value)}
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    >
+      <option value="">Select</option>
+      <option>Yes</option>
+      <option>No</option>
+    </select>
+  </div>
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      Sorting Facility Available *
+    </label>
+
+    <select
+      value={sortingFacility}
+      onChange={(e) => setSortingFacility(e.target.value)}
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    >
+      <option value="">Select</option>
+      <option>Yes</option>
+      <option>No</option>
+    </select>
+  </div>
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      Storage Space Available *
+    </label>
+
+    <select
+      value={storageAvailable}
+      onChange={(e) => setStorageAvailable(e.target.value)}
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    >
+      <option value="">Select</option>
+      <option>Yes</option>
+      <option>No</option>
+      <option>Limited</option>
+    </select>
+  </div>
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      Collection Staff Count *
+    </label>
+
+    <input
+      type="number"
+      value={staffCount}
+      onChange={(e) => setStaffCount(e.target.value)}
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    />
+  </div>
+
+</div>
+
+{collectionVehicle === "Yes" && (
+
+  <>
+  <div className="grid gap-6 md:grid-cols-2 mb-5"></div>
+    <h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
+      Vehicle Information
+    </h2>
+
+    <div className="grid gap-6 md:grid-cols-2">
+
+      <div>
+        <label className="mb-2 block text-sm font-medium text-slate-700">
+          Vehicle Type *
+        </label>
+
+        <select
+          value={vehicleType}
+          onChange={(e) =>
+            setVehicleType(e.target.value)
+          }
+          className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+        >
+          <option value="">
+            Select Vehicle Type
+          </option>
+
+          <option>Two Wheeler</option>
+          <option>Three Wheeler</option>
+          <option>Mini Goods Vehicle</option>
+          <option>Pickup Truck</option>
+          <option>Tempo</option>
+          <option>Mini Truck</option>
+          <option>Container Vehicle</option>
+        </select>
+      </div>
+
+      <div>
+        <label className="mb-2 block text-sm font-medium text-slate-700">
+          Vehicle Number *
+        </label>
+
+        <input
+          type="text"
+          value={vehicleNumber}
+          onChange={(e) =>
+            setVehicleNumber(e.target.value.toUpperCase())
+          }
+          className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+        />
+      </div>
+
+      <div>
+        <label className="mb-2 block text-sm font-medium text-slate-700">
+          Vehicle Ownership *
+        </label>
+
+        <select
+          value={vehicleOwnership}
+          onChange={(e) =>
+            setVehicleOwnership(e.target.value)
+          }
+          className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+        >
+          <option value="">
+            Select Ownership
+          </option>
+
+          <option>Owned</option>
+          <option>Rented</option>
+          <option>Leased</option>
+        </select>
+      </div>
+
+      <div>
+        <label className="mb-2 block text-sm font-medium text-slate-700">
+          Vehicle Make / Model
+        </label>
+
+        <input
+          type="text"
+          value={vehicleMake}
+          onChange={(e) =>
+            setVehicleMake(e.target.value)
+          }
+          className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+        />
+      </div>
+
+      <div>
+        <label className="mb-2 block text-sm font-medium text-slate-700">
+          Driver Name
+        </label>
+
+        <input
+          type="text"
+          value={driverName}
+          onChange={(e) =>
+            setDriverName(e.target.value)
+          }
+          className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+        />
+      </div>
+
+      <div>
+        <label className="mb-2 block text-sm font-medium text-slate-700">
+          Driver License Number
+        </label>
+
+        <input
+          type="text"
+          value={driverLicenseNumber}
+          onChange={(e) =>
+            setDriverLicenseNumber(e.target.value)
+          }
+          className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+        />
+
+      </div>
+
+<div>
+  <label className="mb-2 block text-sm font-medium text-slate-700">
+    Number Of Collection Vehicles *
+  </label>
+
+  <input
+    type="number"
+    min="1"
+    value={vehicleCount}
+    onChange={(e) =>
+      setVehicleCount(e.target.value)
+    }
+    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+  />
+</div>
+
+<div>
+  <label className="mb-2 block text-sm font-medium text-slate-700">
+    Vehicle Load Capacity *
+  </label>
+
+  <select
+    value={vehicleCapacity}
+    onChange={(e) =>
+      setVehicleCapacity(e.target.value)
+    }
+    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+  >
+    <option value="">
+      Select Capacity
+    </option>
+
+    <option>Up to 100 Kg</option>
+    <option>100 - 500 Kg</option>
+    <option>500 Kg - 1 Ton</option>
+    <option>1 - 3 Tons</option>
+    <option>3 - 5 Tons</option>
+    <option>5+ Tons</option>
+  </select>
+</div>
+
+<div>
+  <label className="mb-2 block text-sm font-medium text-slate-700">
+    Maximum Service Radius *
+  </label>
+
+  <select
+    value={serviceRadius}
+    onChange={(e) =>
+      setServiceRadius(e.target.value)
+    }
+    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+  >
+    <option value="">
+      Select Radius
+    </option>
+
+    <option>5 KM</option>
+    <option>10 KM</option>
+    <option>20 KM</option>
+    <option>30 KM</option>
+    <option>50 KM+</option>
+  </select>
+</div>
+
+<div>
+  <label className="mb-2 block text-sm font-medium text-slate-700">
+    Collection Availability *
+  </label>
+
+  <select
+    value={operatingHours}
+    onChange={(e) =>
+      setOperatingHours(e.target.value)
+    }
+    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+  >
+    <option value="">
+      Select Availability
+    </option>
+
+    <option>06:00 AM - 12:00 PM</option>
+    <option>12:00 PM - 06:00 PM</option>
+    <option>06:00 PM - 10:00 PM</option>
+    <option>24 Hours</option>
+  </select>
+</div>
+
+    </div>
+  </>
+
+)}
+
+<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
+<h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
+  Documents & Compliance
+</h2>
+
+<div>
+  <label className="mb-2 block text-sm font-medium text-slate-700">
+    Upload Vehicle RC Book *
+  </label>
+
+  <input
+    type="file"
+    accept=".pdf,.jpg,.jpeg,.png"
+    onChange={(e) =>
+      setVehicleRcFile(
+        e.target.files?.[0] || null
+      )
+    }
+    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+  />
+</div>
+
+<div className="mt-6 grid gap-6 md:grid-cols-2">
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      Upload Driver License
+    </label>
+
+    <input
+      type="file"
+      accept=".pdf,.jpg,.jpeg,.png"
+      onChange={(e) =>
+        setDriverLicenseFile(
+          e.target.files?.[0] || null
+        )
+      }
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    />
+  </div>
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      Upload Vehicle Insurance
+    </label>
+
+    <input
+      type="file"
+      accept=".pdf,.jpg,.jpeg,.png"
+      onChange={(e) =>
+        setVehicleInsuranceFile(
+          e.target.files?.[0] || null
+        )
+      }
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    />
+  </div>
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      Upload Pollution Certificate (PUC)
+    </label>
+
+    <input
+      type="file"
+      accept=".pdf,.jpg,.jpeg,.png"
+      onChange={(e) =>
+        setPollutionCertificateFile(
+          e.target.files?.[0] || null
+        )
+      }
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    />
+  </div>
+
+</div>
+
+
+
+{/* BUSINESS & COMPLIANCE */}
+
+<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
+<h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
+  Business & Compliance Information
+</h2>
+
+<div className="grid gap-6 md:grid-cols-2">
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      GST Number
     </label>
 
     <input
       type="text"
-      placeholder="GST Number"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
+      value={gstNumber}
+      onChange={(e) =>
+        setGstNumber(e.target.value.toUpperCase())
+      }
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    />
+  </div>
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      PAN Number
+    </label>
+
+    <input
+      type="text"
+      value={panNumber}
+      onChange={(e) =>
+        setPanNumber(e.target.value.toUpperCase())
+      }
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
     />
   </div>
 
@@ -582,352 +798,265 @@ export default function RecyclerPartnerRegistrationPage() {
 
     <input
       type="text"
-      placeholder="Trade License Number"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
+      value={tradeLicenseNumber}
+      onChange={(e) =>
+        setTradeLicenseNumber(e.target.value)
+      }
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
     />
   </div>
 
   <div>
     <label className="mb-2 block text-sm font-medium text-slate-700">
-      Pollution Control Board Authorization
+      Udyam Registration Number
     </label>
 
-    <select className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3">
-      <option>Select Option</option>
-      <option>Yes</option>
-      <option>No</option>
-      <option>Applied</option>
-      <option>Not Applicable</option>
-    </select>
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      E-Waste Authorization
-    </label>
-
-    <select className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3">
-      <option>Select Option</option>
-      <option>Yes</option>
-      <option>No</option>
-      <option>Applied</option>
-      <option>Not Applicable</option>
-    </select>
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      ISO Certification
-    </label>
-
-    <select className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3">
-      <option>Select Option</option>
-      <option>ISO 9001</option>
-      <option>ISO 14001</option>
-      <option>ISO 45001</option>
-      <option>Multiple Certifications</option>
-      <option>None</option>
-    </select>
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Public Liability Insurance
-    </label>
-
-    <select className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3">
-      <option>Select Option</option>
-      <option>Yes</option>
-      <option>No</option>
-    </select>
+    <input
+      type="text"
+      value={udyamNumber}
+      onChange={(e) =>
+        setUdyamNumber(e.target.value)
+      }
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    />
   </div>
 
 </div>
 
-<div className="mt-6">
+{/* BANKING INFORMATION */}
 
-  <label className="mb-2 block text-sm font-medium text-slate-700">
-    Additional Certifications & Approvals
-  </label>
-
-  <textarea
-    rows={4}
-    placeholder="Mention any certifications, environmental approvals, industry memberships or special authorizations..."
-    className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none focus:border-[#72B543]"
-  />
-
-</div>
-
-<div className="pt-10">
-
-</div>
-
-{/* Commercial & Partnership Preferences */}
+<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
 
 <h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
-  Commercial & Partnership Preferences
+  Banking Information
 </h2>
 
 <p className="mb-6 text-slate-600">
-  Tell us how you would like to collaborate with UrbanLoop and what
-  types of opportunities you are interested in.
+  Payment details for collections, incentives and future settlements.
 </p>
-
-<div className="space-y-8">
-
-  <div>
-    <label className="mb-4 block text-sm font-medium text-slate-700">
-      Preferred Engagement Model
-    </label>
-
-    <div className="grid gap-4 md:grid-cols-2">
-
-      {[
-        "Material Purchase",
-        "Revenue Sharing",
-        "Collection Service Provider",
-        "Asset Recovery Partner",
-        "Refurbishment Partner",
-        "Recycling Partner",
-        "Auction Participation",
-        "Long-Term Strategic Partnership",
-      ].map((option) => (
-        <label
-          key={option}
-          className="flex cursor-pointer items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4 hover:border-[#72B543] hover:bg-[#F8FBF4]"
-        >
-          <input
-            type="checkbox"
-            className="h-4 w-4 accent-[#72B543]"
-          />
-
-          <span className="font-medium text-slate-700">
-            {option}
-          </span>
-        </label>
-      ))}
-
-    </div>
-  </div>
-
-  <div>
-    <label className="mb-4 block text-sm font-medium text-slate-700">
-      Preferred Material Categories
-    </label>
-
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-
-      {[
-        "Paper & Cardboard",
-        "Plastic",
-        "Metal",
-        "Glass",
-        "Furniture",
-        "Office Assets",
-        "Industrial Equipment",
-        "IT Assets",
-        "E-Waste",
-        "Wood",
-        "Packaging Waste",
-        "Textiles",
-      ].map((item) => (
-        <label
-          key={item}
-          className="flex cursor-pointer items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4 hover:border-[#72B543] hover:bg-[#F8FBF4]"
-        >
-          <input
-            type="checkbox"
-            className="h-4 w-4 accent-[#72B543]"
-          />
-
-          <span className="font-medium text-slate-700">
-            {item}
-          </span>
-        </label>
-      ))}
-
-    </div>
-  </div>
-
-  <div className="grid gap-6 md:grid-cols-2">
-
-    <div>
-      <label className="mb-2 block text-sm font-medium text-slate-700">
-        Preferred Payment Terms
-      </label>
-
-      <select className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3">
-        <option>Select Payment Terms</option>
-        <option>Immediate Payment</option>
-        <option>7 Days</option>
-        <option>15 Days</option>
-        <option>30 Days</option>
-        <option>Mutually Agreed Terms</option>
-      </select>
-    </div>
-
-    <div>
-      <label className="mb-2 block text-sm font-medium text-slate-700">
-        Minimum Transaction Size
-      </label>
-
-      <select className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3">
-        <option>Select Volume</option>
-        <option>Any Quantity</option>
-        <option>100 kg+</option>
-        <option>500 kg+</option>
-        <option>1 Ton+</option>
-        <option>5 Tons+</option>
-      </select>
-    </div>
-
-    <div>
-      <label className="mb-2 block text-sm font-medium text-slate-700">
-        Collection Service Available?
-      </label>
-
-      <select className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3">
-        <option>Select Option</option>
-        <option>Yes</option>
-        <option>No</option>
-      </select>
-    </div>
-
-    <div>
-      <label className="mb-2 block text-sm font-medium text-slate-700">
-        Nationwide Operations
-      </label>
-
-      <select className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3">
-        <option>Select Option</option>
-        <option>Yes</option>
-        <option>No</option>
-      </select>
-    </div>
-
-  </div>
-
-</div>
-
-<div className="pt-10">
-
-</div>
-
-{/* Communication Preferences */}
-
-<h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
-  Communication Preferences
-</h2>
-
-<p className="mb-6 text-slate-600">
-  Choose how UrbanLoop should communicate partnership opportunities,
-  collection requests, marketplace transactions and operational updates.
-</p>
-
-<div className="grid gap-4 md:grid-cols-2">
-
-  <label className="flex items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4 hover:border-[#72B543] hover:bg-[#F8FBF4]">
-    <input
-      type="checkbox"
-      className="h-4 w-4 accent-[#72B543]"
-    />
-    <span className="font-medium text-slate-700">
-      Email Notifications
-    </span>
-  </label>
-
-  <label className="flex items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4 hover:border-[#72B543] hover:bg-[#F8FBF4]">
-    <input
-      type="checkbox"
-      className="h-4 w-4 accent-[#72B543]"
-    />
-    <span className="font-medium text-slate-700">
-      SMS Notifications
-    </span>
-  </label>
-
-  <label className="flex items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4 hover:border-[#72B543] hover:bg-[#F8FBF4]">
-    <input
-      type="checkbox"
-      className="h-4 w-4 accent-[#72B543]"
-    />
-    <span className="font-medium text-slate-700">
-      WhatsApp Notifications
-    </span>
-  </label>
-
-  <label className="flex items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4 hover:border-[#72B543] hover:bg-[#F8FBF4]">
-    <input
-      type="checkbox"
-      className="h-4 w-4 accent-[#72B543]"
-    />
-    <span className="font-medium text-slate-700">
-      Marketplace Opportunities
-    </span>
-  </label>
-
-</div>
-
-<div className="pt-10"></div>
-
-{/* Referral Information */}
-
-<h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
-  Referral Information
-</h2>
 
 <div className="grid gap-6 md:grid-cols-2">
 
   <div>
     <label className="mb-2 block text-sm font-medium text-slate-700">
-      How Did You Hear About UrbanLoop?
-    </label>
-
-    <select className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3">
-      <option>Select Source</option>
-      <option>Google Search</option>
-      <option>Industry Association</option>
-      <option>Recycler Network</option>
-      <option>Existing Partner</option>
-      <option>Social Media</option>
-      <option>LinkedIn</option>
-      <option>Trade Event</option>
-      <option>Referral</option>
-      <option>Other</option>
-    </select>
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Referral Code (Optional)
+      Account Holder Name *
     </label>
 
     <input
       type="text"
-      placeholder="Enter Referral Code"
-      className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3"
+      value={accountHolderName}
+      onChange={(e) =>
+        setAccountHolderName(e.target.value)
+      }
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
     />
+  </div>
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      Bank Name *
+    </label>
+
+    <input
+      type="text"
+      value={bankName}
+      onChange={(e) =>
+        setBankName(e.target.value)
+      }
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    />
+  </div>
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      Account Number *
+    </label>
+
+    <input
+      type="text"
+      value={accountNumber}
+      onChange={(e) =>
+        setAccountNumber(
+          e.target.value.replace(/\D/g, "")
+        )
+      }
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    />
+  </div>
+
+  <div>
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      IFSC Code *
+    </label>
+
+    <input
+      type="text"
+      value={ifscCode}
+      onChange={(e) =>
+        setIfscCode(
+          e.target.value.toUpperCase()
+        )
+      }
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    />
+  </div>
+
+  <div className="md:col-span-2">
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      UPI ID (Optional)
+    </label>
+
+    <input
+      type="text"
+      value={upiId}
+      onChange={(e) =>
+        setUpiId(e.target.value)
+      }
+      placeholder="example@upi"
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+
+    />
+
+    <div className="mt-6">
+
+  <label className="mb-2 block text-sm font-medium text-slate-700">
+    Upload Cancelled Cheque / Bank Proof
+  </label>
+
+  <input
+    type="file"
+    accept=".pdf,.jpg,.jpeg,.png"
+    onChange={(e) =>
+      setCancelledChequeFile(
+        e.target.files?.[0] || null
+      )
+    }
+    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+  />
+
+</div>
   </div>
 
 </div>
 
-<div className="mt-6">
+{/* MATERIAL CATEGORIES */}
 
-  <label className="mb-2 block text-sm font-medium text-slate-700">
-    Additional Comments
-  </label>
+<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
 
-  <textarea
-    rows={4}
-    placeholder="Additional information, special capabilities or partnership requirements..."
-    className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3"
-  />
+<h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
+  Material Categories Handled
+</h2>
+
+<p className="mb-6 text-slate-600">
+  Select the material categories currently collected or processed.
+</p>
+
+<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+
+  {[
+    "Paper & Cardboard",
+    "Plastic",
+    "Metal",
+    "Glass",
+    "E-Waste",
+    "Textiles",
+    "Rubber",
+    "Organic Waste",
+    "Mixed Recyclables",
+  ].map((item) => (
+    <label
+      key={item}
+      className="flex items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4"
+    >
+      <input
+        type="checkbox"
+        checked={materialCategories.includes(item)}
+        onChange={() =>
+          toggleArrayValue(
+            item,
+            materialCategories,
+            setMaterialCategories
+          )
+        }
+        className="h-4 w-4 accent-[#72B543]"
+      />
+
+      <span>{item}</span>
+    </label>
+  ))}
 
 </div>
 
-<div className="pt-10"></div>
+{/* PARTNERSHIP INTERESTS */}
 
-{/* Declaration & Consent */}
+<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
+
+<h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
+  Partnership Interests
+</h2>
+
+<p className="mb-6 text-slate-600">
+  Select the collection opportunities you are interested in servicing.
+</p>
+
+<div className="grid gap-4 md:grid-cols-2">
+
+  {[
+    "Households",
+    "Apartment Communities",
+    "Retail Businesses",
+    "Restaurants & Hotels",
+    "Corporate Offices",
+    "Educational Institutions",
+    "Hospitals & Clinics",
+    "Bulk Waste Collection",
+    "Organic Waste Programs",
+    "E-Waste Collection",
+  ].map((item) => (
+    <label
+      key={item}
+      className="flex items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4"
+    >
+      <input
+        type="checkbox"
+        checked={partnershipInterests.includes(item)}
+        onChange={() =>
+          toggleArrayValue(
+            item,
+            partnershipInterests,
+            setPartnershipInterests
+          )
+        }
+        className="h-4 w-4 accent-[#72B543]"
+      />
+
+      <span>{item}</span>
+    </label>
+  ))}
+
+</div>
+
+{/* ADDITIONAL COMMENTS */}
+
+<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
+
+<h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
+  Additional Information
+</h2>
+
+<textarea
+  rows={5}
+  value={additionalComments}
+  onChange={(e) =>
+    setAdditionalComments(e.target.value)
+  }
+  placeholder="Tell us more about your operations, service areas, material handling capabilities, certifications, or anything else that may help us evaluate your partnership application."
+  className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+/>
+
+{/* DECLARATION */}
+
+<div className="pt-10"></div>
 
 <h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
   Declaration & Consent
@@ -936,68 +1065,78 @@ export default function RecyclerPartnerRegistrationPage() {
 <div className="space-y-5">
 
   <label className="flex items-start gap-3">
+
     <input
       type="checkbox"
+      checked={declarationConfirmed}
+      onChange={(e) =>
+        setDeclarationConfirmed(e.target.checked)
+      }
       className="mt-1 h-4 w-4 accent-[#72B543]"
     />
 
     <span className="text-slate-700">
-      I confirm that all information provided is accurate and complete.
+      I confirm that all information provided in this registration form is accurate and complete.
     </span>
+
   </label>
 
   <label className="flex items-start gap-3">
+
     <input
       type="checkbox"
+      checked={termsAccepted}
+      onChange={(e) =>
+        setTermsAccepted(e.target.checked)
+      }
       className="mt-1 h-4 w-4 accent-[#72B543]"
     />
 
     <span className="text-slate-700">
       I agree to UrbanLoop's Terms & Conditions and Privacy Policy.
     </span>
+
   </label>
 
   <label className="flex items-start gap-3">
+
     <input
       type="checkbox"
+      checked={communicationConsent}
+      onChange={(e) =>
+        setCommunicationConsent(e.target.checked)
+      }
       className="mt-1 h-4 w-4 accent-[#72B543]"
     />
 
     <span className="text-slate-700">
-      I consent to receiving partnership opportunities, collection requests,
-      marketplace notifications and sustainability updates.
+      I consent to receive updates regarding partnership opportunities, onboarding, collections and sustainability initiatives.
     </span>
+
   </label>
 
 </div>
 
-{/* Submit Button */}
+{/* SUBMIT */}
 
 <div className="mt-12 border-t border-[#E6EFE0] pt-10">
 
-  <div className="flex flex-col items-center text-center">
+  <div className="flex flex-col items-center">
 
     <button
       type="submit"
-      className="rounded-xl bg-[#72B543] px-10 py-4 text-lg font-semibold text-white shadow-[0_10px_25px_rgba(114,181,67,0.30)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#5FA032]"
+      className="rounded-xl bg-[#72B543] px-10 py-4 text-lg font-semibold text-white"
     >
-      Register As Recycler Partner
+      {loading
+        ? "Submitting..."
+        : "Register Recovery Partner"}
     </button>
-
-    <p className="mt-4 text-sm text-slate-500">
-      Our partnerships team will review your application and contact you
-      regarding onboarding and qualification.
-    </p>
 
   </div>
 
 </div>
 
-
-
-              </div>
-
-            </div>
+            </form>
 
           </div>
 
@@ -1006,6 +1145,20 @@ export default function RecyclerPartnerRegistrationPage() {
       </main>
 
       <Footer />
+
     </>
   );
 }
+
+function toggleArrayValue(
+  value: string,
+  current: string[],
+  setter: React.Dispatch<React.SetStateAction<string[]>>
+) {
+  if (current.includes(value)) {
+    setter(current.filter((item) => item !== value));
+  } else {
+    setter([...current, value]);
+  }
+}
+

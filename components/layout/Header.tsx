@@ -57,12 +57,33 @@ const [partnerOpen, setPartnerOpen] = useState(false);
             Services
           </Link>
 
-          <Link
-  href="/partner-program"
-  className="text-sm font-medium text-slate-700 transition hover:text-[#72B543]"
->
-  Partner Program
-</Link>
+ <div className="relative group">
+  <Link
+    href="/partner-program"
+    className="flex items-center gap-1 text-sm font-medium text-slate-700 transition hover:text-[#72B543]"
+  >
+    Partnership Program
+    <ChevronDown size={16} />
+  </Link>
+
+  <div className="absolute left-0 top-full invisible mt-2 w-64 rounded-2xl border border-slate-200 bg-white p-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:opacity-100">
+
+    <Link
+      href="/join-urbanloop/categories"
+      className="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:bg-[#F8FBF4] hover:text-[#72B543]"
+    >
+      Sustainability Partner Form
+    </Link>
+
+    <Link
+      href="/join-urbanloop/recycler-partner-registration"
+      className="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:bg-[#F8FBF4] hover:text-[#72B543]"
+    >
+      Recovery Partner Form
+    </Link>
+
+  </div>
+</div>         
 
           <Link
             href="/contact"
@@ -76,19 +97,19 @@ const [partnerOpen, setPartnerOpen] = useState(false);
         <div className="flex items-center gap-3">
           {/* Desktop CTA */}
           <Link
-            href="/schedule-pickup"
-            className="hidden rounded-xl bg-[#72B543] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5fa032] lg:block"
-          >
-            Schedule Pickup
-          </Link>
+  href="/signup"
+  className="hidden rounded-xl bg-[#72B543] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5fa032] lg:block"
+>
+  Sign Up
+</Link>
 
           {/* Mobile CTA */}
           <Link
-            href="/schedule-pickup"
-            className="rounded-lg bg-[#72B543] px-3 py-2 text-xs font-semibold text-white shadow-sm lg:hidden"
-          >
-            Pickup
-          </Link>
+  href="/signup"
+  className="rounded-lg bg-[#72B543] px-3 py-2 text-xs font-semibold text-white shadow-sm lg:hidden"
+>
+  Sign Up
+</Link>
 
           {/* Mobile Hamburger */}
           <button

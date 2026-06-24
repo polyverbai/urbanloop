@@ -254,7 +254,7 @@ business_profile_type:
 employee_count:
   employeeCount,
 
-monthly_waste_volume:
+monthly_recyclables:
   monthlyWasteVolume,
 
 material_categories:

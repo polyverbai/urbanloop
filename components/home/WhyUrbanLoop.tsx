@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Wallet,
   Scale,
@@ -49,9 +50,9 @@ export default function WhyUrbanLoop() {
 
   return (
     <section
-  id="why-urbanloop"
-  className="scroll-mt-28 bg-[#F8FBF4] py-28"
->
+      id="why-urbanloop"
+      className="scroll-mt-28 bg-[#F8FBF4] py-28"
+    >
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto mb-16 max-w-3xl text-center">
           <span className="inline-flex rounded-full bg-[#72B543]/10 px-4 py-2 text-sm font-medium text-[#72B543]">
@@ -77,9 +78,9 @@ export default function WhyUrbanLoop() {
               <div className="mb-6 inline-flex rounded-2xl bg-[#72B543]/10 p-4 transition-all duration-300 group-hover:scale-105 group-hover:bg-[#72B543]/15">
                 <feature.icon
                   size={52}
-  strokeWidth={1.8}
-  className="text-[#72B543] transition-transform duration-300 group-hover:scale-110"
-/>
+                  strokeWidth={1.8}
+                  className="text-[#72B543] transition-transform duration-300 group-hover:scale-110"
+                />
               </div>
 
               <h3 className="mb-4 text-2xl font-semibold text-slate-900">
@@ -91,6 +92,23 @@ export default function WhyUrbanLoop() {
               </p>
             </div>
           ))}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="mt-16 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <Link
+            href="/join-urbanloop/categories"
+            className="w-full max-w-[320px] rounded-xl bg-slate-100 px-8 py-4 text-center font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:bg-[#EAF7D7] hover:text-[#72B543] hover:shadow-lg"
+          >
+            Schedule Pickup
+          </Link>
+
+          <Link
+            href="/partner-program"
+            className="w-full max-w-[320px] rounded-xl bg-slate-100 px-8 py-4 text-center font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:bg-[#EAF7D7] hover:text-[#72B543] hover:shadow-lg"
+          >
+            Become A Partner
+          </Link>
         </div>
       </div>
     </section>

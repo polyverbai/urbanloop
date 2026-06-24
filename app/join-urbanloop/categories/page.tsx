@@ -203,13 +203,6 @@ export default function CategoriesPage() {
         Contact UrbanLoop
       </Link>
 
-      <Link
-        href="/about"
-        className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-8 py-4 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/20"
-      >
-        Learn More
-      </Link>
-
     </div>
 
   </div>

@@ -1,9 +1,11 @@
+import Link from "next/link";
+
 export default function Hero() {
   return (
     <section
-  id="home"
-  className="scroll-mt-28 bg-gradient-to-b from-[#EAF7D7] to-white"
->
+      id="home"
+      className="scroll-mt-28 bg-gradient-to-b from-[#EAF7D7] to-white"
+    >
       <div className="mx-auto max-w-7xl px-6 pt-15 pb-12">
         <div className="grid items-center gap-10 lg:grid-cols-2">
           {/* Left Content */}
@@ -25,14 +27,20 @@ export default function Hero() {
 
             {/* Desktop Buttons Only */}
             <div className="mt-10 hidden gap-4 lg:flex">
-              <button className="rounded-xl border border-slate-300 bg-white px-8 py-4 font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                Schedule Pickup
-              </button>
+  <a
+    href="#why-urbanloop"
+    className="rounded-xl bg-slate-200 px-8 py-4 font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#D7EFC2] hover:text-[#5FA032] hover:shadow-lg"
+  >
+    Why UrbanLoop
+  </a>
 
-              <button className="rounded-xl bg-[#72B543] px-8 py-4 font-semibold text-white shadow-[0_10px_25px_rgba(114,181,67,0.30)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(114,181,67,0.40)]">
-                Become A Partner
-              </button>
-            </div>
+  <a
+    href="#services"
+    className="rounded-xl bg-slate-200 px-8 py-4 font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#D7EFC2] hover:text-[#5FA032] hover:shadow-lg"
+  >
+    Our Services
+  </a>
+</div>
           </div>
 
           {/* Right Infographic */}
@@ -47,21 +55,27 @@ export default function Hero() {
             <img
               src="/images/urbanloop-circular-economy.png"
               alt="UrbanLoop Circular Economy Ecosystem"
-                className="pointer-events-none relative h-auto w-full max-w-[420px] drop-shadow-[0_25px_50px_rgba(15,76,129,0.15)]"
+              className="pointer-events-none relative h-auto w-full max-w-[420px] drop-shadow-[0_25px_50px_rgba(15,76,129,0.15)]"
             />
           </div>
         </div>
 
         {/* Mobile Buttons Only */}
         <div className="mt-8 flex flex-col items-center gap-4 lg:hidden">
-          <button className="w-full max-w-[320px] rounded-xl border border-slate-300 bg-white px-8 py-4 font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-            Schedule Pickup
-          </button>
+  <a
+    href="#why-urbanloop"
+    className="w-full max-w-[320px] rounded-xl bg-slate-100 px-8 py-4 text-center font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:bg-[#EAF7D7] hover:text-[#72B543] hover:shadow-lg"
+  >
+    Why UrbanLoop
+  </a>
 
-          <button className="w-full max-w-[320px] rounded-xl bg-[#72B543] px-8 py-4 font-semibold text-white shadow-[0_10px_25px_rgba(114,181,67,0.30)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(114,181,67,0.40)]">
-            Become A Partner
-          </button>
-        </div>
+  <a
+    href="#services"
+    className="w-full max-w-[320px] rounded-xl bg-slate-100 px-8 py-4 text-center font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:bg-[#EAF7D7] hover:text-[#72B543] hover:shadow-lg"
+  >
+    Our Services
+  </a>
+</div>
       </div>
     </section>
   );

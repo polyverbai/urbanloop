@@ -47,12 +47,11 @@ export default function ResidentialRegistrationPage() {
 
             {/* Residential Type Cards */}
 
-            <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-16 flex justify-center">
 
               <Link
-              
   href="/join-urbanloop/individual/individual"
-  className="group rounded-3xl border border-[#DDE8D0] bg-white p-5 shadow-sm transition-all duration-300 hover:border-[#72B543] hover:bg-[#F8FBF4] hover:shadow-lg"
+  className="group w-full max-w-md rounded-3xl border border-[#DDE8D0] bg-white p-8 shadow-sm transition-all duration-300 hover:border-[#72B543] hover:bg-[#F8FBF4] hover:shadow-lg"
 >
 
   <div className="mb-4 flex justify-end">
@@ -66,48 +65,7 @@ export default function ResidentialRegistrationPage() {
                 </h3>
 
                 <p className="mt-3 text-slate-600">
-                  Register a single household and schedule recyclable material
-                  pickups conveniently from your residence.
-                </p>
-              </Link>
-
-              <Link
-                href="/join-urbanloop/individual/individual"
-  className="group rounded-3xl border border-[#DDE8D0] bg-white p-5 shadow-sm transition-all duration-300 hover:border-[#72B543] hover:bg-[#F8FBF4] hover:shadow-lg"
->
-  <div className="mb-4 flex justify-end">
-    <ArrowUpRight
-      size={22}
-      className="text-[#72B543] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-    />
-  </div>
-                <h3 className="text-xl font-bold text-slate-900">
-                  Villa
-                </h3>
-
-                <p className="mt-3 text-slate-600">
-                  Register independent villas and manage recyclable waste,
-                  garden waste and sustainability initiatives efficiently.
-                </p>
-              </Link>
-
-              <Link
-  href="/join-urbanloop/individual/individual"
-  className="group rounded-3xl border border-[#DDE8D0] bg-white p-5 shadow-sm transition-all duration-300 hover:border-[#72B543] hover:bg-[#F8FBF4] hover:shadow-lg"
->
-  <div className="mb-4 flex justify-end">
-    <ArrowUpRight
-      size={22}
-      className="text-[#72B543] transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-    />
-  </div>
-                <h3 className="text-xl font-bold text-slate-900">
-                  Apartment & Community
-                </h3>
-
-                <p className="mt-3 text-slate-600">
-                  Register apartment complexes, gated communities and housing
-                  societies for centralized recycling and waste management.
+                  Register your apartment, villa, community, independent house, row house, or farm house with UrbanLoop.
                 </p>
               </Link>
 

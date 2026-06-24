@@ -24,16 +24,7 @@ export default function CTA() {
             into value while creating measurable environmental impact.
           </p>
 
-          <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
-            <button className="rounded-xl bg-white px-8 py-4 font-semibold text-[#72B543] shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-105">
-              Schedule Pickup
-            </button>
-
-            <button className="rounded-xl border border-white px-8 py-4 font-semibold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:text-[#72B543]">
-              Become A Partner
-            </button>
-          </div>
-
+          
           <div className="mt-14 grid gap-6 md:grid-cols-3">
             {/* Card 1 */}
             <div className="rounded-3xl bg-white/10 p-6 backdrop-blur-sm transition-all duration-300 hover:bg-white/15">
