@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
@@ -8,8 +9,9 @@ import Footer from "@/components/layout/Footer";
 import { ArrowUpRight } from "lucide-react";
 
 
-export default function ManufacturingRegistrationPage() {
+export default function ServiceRegistrationPage() {
   const [loading, setLoading] = useState(false);
+const router = useRouter();
 
   // Contact Information
   const [fullName, setFullName] = useState("");
@@ -225,7 +227,7 @@ if (
         )
         .insert([
           {
-            business_type: "manufacturing",
+            business_type: "Service Business",
 
             full_name: fullName,
             mobile_number: mobileNumber,
@@ -244,8 +246,8 @@ if (
             landmark,
 
             city,
-            state: stateName,
-            pin_code: pinCode,
+state_name: stateName,
+pin_code: pinCode,
 
                        
 business_profile_type:
@@ -302,9 +304,9 @@ material_categories:
       return;
     }
 
-    alert(
-      "Service Business registration submitted successfully"
-    );
+    router.push(
+  "/registration-success?type=Service%20Business%20Registration&return=/join-urbanloop/business-registration"
+);
   }
 
   return (
@@ -956,9 +958,15 @@ material_categories:
 
   <label className="flex items-start gap-3">
     <input
-      type="checkbox"
-      className="mt-1 h-4 w-4 accent-[#72B543]"
-    />
+  type="checkbox"
+  checked={declarationConfirmed}
+  onChange={(e) =>
+    setDeclarationConfirmed(
+      e.target.checked
+    )
+  }
+  className="mt-1 h-4 w-4 accent-[#72B543]"
+/>
 
     <span className="text-slate-700">
       I confirm that all information provided in this registration
@@ -968,9 +976,15 @@ material_categories:
 
   <label className="flex items-start gap-3">
     <input
-      type="checkbox"
-      className="mt-1 h-4 w-4 accent-[#72B543]"
-    />
+  type="checkbox"
+  checked={termsAccepted}
+  onChange={(e) =>
+    setTermsAccepted(
+      e.target.checked
+    )
+  }
+  className="mt-1 h-4 w-4 accent-[#72B543]"
+/>
 
     <span className="text-slate-700">
       I agree to UrbanLoop's Terms & Conditions and Privacy Policy.
@@ -979,9 +993,15 @@ material_categories:
 
   <label className="flex items-start gap-3">
     <input
-      type="checkbox"
-      className="mt-1 h-4 w-4 accent-[#72B543]"
-    />
+  type="checkbox"
+  checked={communicationConsent}
+  onChange={(e) =>
+    setCommunicationConsent(
+      e.target.checked
+    )
+  }
+  className="mt-1 h-4 w-4 accent-[#72B543]"
+/>
 
     <span className="text-slate-700">
       I consent to receiving service updates, pickup reminders,
