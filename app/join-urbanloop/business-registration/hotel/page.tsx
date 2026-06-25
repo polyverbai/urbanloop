@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { ArrowUpRight } from "lucide-react";
 
-
 export default function HotelRegistrationPage() {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   // Contact Information
   const [fullName, setFullName] = useState("");
@@ -196,25 +197,25 @@ if (
 
     // Declaration
     if (!declarationConfirmed) {
-      alert(
-        "Please confirm the declaration"
-      );
-      return;
-    }
+  alert(
+    "Please confirm the declaration"
+  );
+  return;
+}
 
-    if (!termsAccepted) {
-      alert(
-        "Please accept Terms & Conditions"
-      );
-      return;
-    }
+if (!termsAccepted) {
+  alert(
+    "Please accept Terms & Conditions"
+  );
+  return;
+}
 
-    if (!communicationConsent) {
-      alert(
-        "Please provide communication consent"
-      );
-      return;
-    }
+if (!communicationConsent) {
+  alert(
+    "Please provide communication consent"
+  );
+  return;
+}
 
     setLoading(true);
 
@@ -225,7 +226,7 @@ if (
         )
         .insert([
           {
-            business_type: "hotel",
+            business_type: "Hotel & Hospitality",
 
             full_name: fullName,
             mobile_number: mobileNumber,
@@ -244,8 +245,8 @@ if (
             landmark,
 
             city,
-            state: stateName,
-            pin_code: pinCode,
+state_name: stateName,
+pin_code: pinCode,
 
             business_profile_type:
               businessProfileType,
@@ -297,13 +298,13 @@ occupancy_percentage:
     setLoading(false);
 
     if (error) {
-      alert(error.message);
-      return;
-    }
+  alert(error.message);
+  return;
+}
 
-    alert(
-      "Hotel registration submitted successfully"
-    );
+    router.push(
+  "/registration-success?type=Hotel%20Registration&return=/join-urbanloop/business-registration"
+);
   }
 
   return (
@@ -565,6 +566,7 @@ occupancy_percentage:
 
 <div className="grid gap-6 md:grid-cols-2">
 
+  <div>
     <label className="mb-2 block text-sm font-medium text-slate-700">
       Hotel Category *
     </label>
@@ -620,6 +622,8 @@ occupancy_percentage:
       className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
     />
   </div>
+
+</div>
 
               {/* MATERIAL CATEGORIES */}
 <div className="grid gap-6 md:grid-cols-2 mb-5"></div>
@@ -930,34 +934,64 @@ occupancy_percentage:
 
 <div className="space-y-5">
 
+  <div className="flex items-start gap-3">
+  <input
+    type="checkbox"
+    checked={declarationConfirmed}
+    onChange={(e) => {
+      console.log(
+        "Declaration checkbox:",
+        e.target.checked
+      );
+      setDeclarationConfirmed(
+        e.target.checked
+      );
+    }}
+    className="mt-1 h-4 w-4 accent-[#72B543]"
+  />
+
+  <span className="text-slate-700">
+    I confirm that all information provided in this registration
+    form is accurate and complete to the best of my knowledge.
+  </span>
+</div>
+
+  <div className="flex items-start gap-3">
+  <input
+    type="checkbox"
+    checked={termsAccepted}
+    onChange={(e) => {
+      console.log(
+        "Terms checkbox:",
+        e.target.checked
+      );
+      setTermsAccepted(
+        e.target.checked
+      );
+    }}
+    className="mt-1 h-4 w-4 accent-[#72B543]"
+  />
+
+  <span className="text-slate-700">
+    I agree to UrbanLoop's Terms & Conditions and Privacy Policy.
+  </span>
+</div>
+
   <label className="flex items-start gap-3">
     <input
-      type="checkbox"
-      className="mt-1 h-4 w-4 accent-[#72B543]"
-    />
-
-    <span className="text-slate-700">
-      I confirm that all information provided in this registration
-      form is accurate and complete to the best of my knowledge.
-    </span>
-  </label>
-
-  <label className="flex items-start gap-3">
-    <input
-      type="checkbox"
-      className="mt-1 h-4 w-4 accent-[#72B543]"
-    />
-
-    <span className="text-slate-700">
-      I agree to UrbanLoop's Terms & Conditions and Privacy Policy.
-    </span>
-  </label>
-
-  <label className="flex items-start gap-3">
-    <input
-      type="checkbox"
-      className="mt-1 h-4 w-4 accent-[#72B543]"
-    />
+  type="checkbox"
+  checked={communicationConsent}
+  onChange={(e) => {
+  console.log(
+    "Communication checkbox:",
+    e.target.checked
+  );
+  setCommunicationConsent(
+    e.target.checked
+  );
+}}
+  className="mt-1 h-4 w-4 accent-[#72B543]"
+/>
 
     <span className="text-slate-700">
       I consent to receiving service updates, pickup reminders,

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
@@ -11,8 +12,10 @@ import { ArrowUpRight } from "lucide-react";
 
 export default function RetailRegistrationPage() {
   const [loading, setLoading] = useState(false);
+const router = useRouter();
 
   // Contact Information
+  
   const [fullName, setFullName] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [email, setEmail] = useState("");
@@ -247,8 +250,8 @@ export default function RetailRegistrationPage() {
             landmark,
 
             city,
-            state: stateName,
-            pin_code: pinCode,
+state_name: stateName,
+pin_code: pinCode,
 
             business_profile_type:
               businessProfileType,
@@ -307,9 +310,9 @@ export default function RetailRegistrationPage() {
       return;
     }
 
-    alert(
-      "Retail registration submitted successfully"
-    );
+    router.push(
+  "/registration-success?type=Retail%20Store"
+);
   }
 
   return (
@@ -997,9 +1000,13 @@ export default function RetailRegistrationPage() {
 
   <label className="flex items-start gap-3">
     <input
-      type="checkbox"
-      className="mt-1 h-4 w-4 accent-[#72B543]"
-    />
+  type="checkbox"
+  checked={declarationConfirmed}
+  onChange={(e) =>
+    setDeclarationConfirmed(e.target.checked)
+  }
+  className="mt-1 h-4 w-4 accent-[#72B543]"
+/>
 
     <span className="text-slate-700">
       I confirm that all information provided in this registration
@@ -1009,9 +1016,13 @@ export default function RetailRegistrationPage() {
 
   <label className="flex items-start gap-3">
     <input
-      type="checkbox"
-      className="mt-1 h-4 w-4 accent-[#72B543]"
-    />
+  type="checkbox"
+  checked={termsAccepted}
+  onChange={(e) =>
+    setTermsAccepted(e.target.checked)
+  }
+  className="mt-1 h-4 w-4 accent-[#72B543]"
+/>
 
     <span className="text-slate-700">
       I agree to UrbanLoop's Terms & Conditions and Privacy Policy.
@@ -1020,9 +1031,15 @@ export default function RetailRegistrationPage() {
 
   <label className="flex items-start gap-3">
     <input
-      type="checkbox"
-      className="mt-1 h-4 w-4 accent-[#72B543]"
-    />
+  type="checkbox"
+  checked={communicationConsent}
+  onChange={(e) =>
+    setCommunicationConsent(
+      e.target.checked
+    )
+  }
+  className="mt-1 h-4 w-4 accent-[#72B543]"
+/>
 
     <span className="text-slate-700">
       I consent to receiving service updates, pickup reminders,
