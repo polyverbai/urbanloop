@@ -62,7 +62,7 @@ export default function CategoriesPage() {
                 </p>
 
                 <Link
-                  href="/join-urbanloop/individual/"
+                  href="/join-urbanloop/individual/individual"
                   className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#72B543] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#5FA032]"
                 >
                   Register Now
@@ -85,7 +85,7 @@ export default function CategoriesPage() {
                 </p>
 
                 <Link
-                  href="/join-urbanloop/business-registration"
+                  href="/join-urbanloop/business-registration/retail"
                   className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#72B543] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#5FA032]"
                 >
                   Register Now
@@ -108,7 +108,7 @@ export default function CategoriesPage() {
                 </p>
 
                 <Link
-                  href="/join-urbanloop/corporate-registration"
+                  href="/join-urbanloop/corporate-registration/it-company"
                   className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#72B543] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#5FA032]"
                 >
                   Register Now
@@ -131,7 +131,7 @@ export default function CategoriesPage() {
                 </p>
 
                 <Link
-                  href="/join-urbanloop/educational-institution-registration"
+                  href="/join-urbanloop/educational-institution-registration/institutions/"
                   className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#72B543] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#5FA032]"
                 >
                   Register Now
@@ -154,7 +154,7 @@ export default function CategoriesPage() {
                 </p>
 
                 <Link
-                  href="/join-urbanloop/hospital-registration"
+                  href="/join-urbanloop/hospital-institutions-registration/institutions"
                   className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#72B543] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#5FA032]"
                 >
                   Register Now

@@ -181,7 +181,7 @@ const handleMaterialCategory = (value: string) => {
 <div className="mb-10 flex justify-center">
 
   <Link
-    href="/join-urbanloop/individual"
+    href="/join-urbanloop/categories"
     className="inline-flex items-center gap-2 rounded-xl border border-[#72B543] px-5 py-3 text-sm font-medium text-[#72B543] transition-all duration-300 hover:bg-[#72B543] hover:text-white"
   >
     ← Back

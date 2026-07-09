@@ -13,6 +13,8 @@ import { ArrowUpRight } from "lucide-react";
 export default function RetailRegistrationPage() {
   const [loading, setLoading] = useState(false);
 const router = useRouter();
+const [errors, setErrors] = useState<Record<string, string>>({});
+
 
   // Contact Information
   
@@ -116,111 +118,119 @@ const router = useRouter();
     }
   }
 
+  function validateForm() {
+  const newErrors: Record<string, string> = {};
+
+  if (!fullName.trim())
+    newErrors.fullName = "Full Name is required";
+
+  if (!/^\d{10}$/.test(mobileNumber))
+    newErrors.mobileNumber =
+      "Mobile number should be 10 digits";
+
+  if (
+    email &&
+    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+      email
+    )
+  ) {
+    newErrors.email =
+      "Email address is not correct";
+  }
+
+  if (
+    alternateMobile &&
+    !/^\d{10}$/.test(alternateMobile)
+  ) {
+    newErrors.alternateMobile =
+      "Alternate mobile should be 10 digits";
+  }
+
+  if (!shopNumber.trim())
+    newErrors.shopNumber = "Required";
+
+  if (!buildingName.trim())
+    newErrors.buildingName = "Required";
+
+  if (!streetArea.trim())
+    newErrors.streetArea = "Required";
+
+  if (!landmark.trim())
+    newErrors.landmark = "Required";
+
+  if (!city.trim())
+    newErrors.city = "Required";
+
+  if (!stateName.trim())
+    newErrors.stateName = "Required";
+
+  if (!pinCode.trim())
+    newErrors.pinCode = "Required";
+
+  if (!businessProfileType)
+    newErrors.businessProfileType =
+      "Please select Store Type";
+
+  if (!outletCount)
+    newErrors.outletCount = "Required";
+
+  if (!monthlyRecyclables)
+    newErrors.monthlyRecyclables = "Required";
+
+  if (!storageSpaceAvailable)
+    newErrors.storageSpaceAvailable =
+      "Required";
+
+  if (materialCategories.length === 0)
+    newErrors.materialCategories =
+      "Select at least one category";
+
+  if (requiredServices.length === 0)
+    newErrors.requiredServices =
+      "Select at least one service";
+
+  if (
+    communicationPreferences.length === 0
+  )
+    newErrors.communicationPreferences =
+      "Select at least one preference";
+
+  if (!referralSource)
+    newErrors.referralSource =
+      "Select referral source";
+
+  if (!declarationConfirmed)
+    newErrors.declarationConfirmed =
+      "Required";
+
+  if (!termsAccepted)
+    newErrors.termsAccepted =
+      "Required";
+
+  if (!communicationConsent)
+    newErrors.communicationConsent =
+      "Required";
+
+  return newErrors;
+}
+
   async function handleSubmit(
     e: React.FormEvent
   ) {
     e.preventDefault();
 
-    // Full Name
-    if (!fullName.trim()) {
-      alert("Full Name is required");
-      return;
-    }
+    const validationErrors =
+  validateForm();
 
-    // Mobile Number
-    if (!/^[0-9]{10}$/.test(mobileNumber)) {
-      alert(
-        "Mobile Number must contain exactly 10 digits"
-      );
-      return;
-    }
+if (
+  Object.keys(validationErrors).length > 0
+) {
+  setErrors(validationErrors);
+  return;
+}
 
-    // Email
-    if (
-      email &&
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
-        email
-      )
-    ) {
-      alert("Please enter a valid Email Address");
-      return;
-    }
+setErrors({});
 
-    // Address
-    if (
-      !shopNumber.trim() ||
-      !buildingName.trim() ||
-      !streetArea.trim() ||
-      !city.trim() ||
-      !stateName.trim() ||
-      !pinCode.trim()
-    ) {
-      alert(
-        "All Business Address fields are mandatory"
-      );
-      return;
-    }
-
-    // Retail Profile
-    if (
-      !businessProfileType ||
-      !outletCount ||
-      !monthlyRecyclables ||
-      !storageSpaceAvailable
-    ) {
-      alert(
-        "Please complete all Retail Profile fields"
-      );
-      return;
-    }
-
-    // Materials
-    if (materialCategories.length === 0) {
-      alert(
-        "Please select at least one Material Category"
-      );
-      return;
-    }
-
-    // Services
-    if (requiredServices.length === 0) {
-      alert(
-        "Please select at least one Required Service"
-      );
-      return;
-    }
-
-    // Communication
-    if (
-      communicationPreferences.length === 0
-    ) {
-      alert(
-        "Please select at least one Communication Preference"
-      );
-      return;
-    }
-
-    // Declaration
-    if (!declarationConfirmed) {
-      alert(
-        "Please confirm the declaration"
-      );
-      return;
-    }
-
-    if (!termsAccepted) {
-      alert(
-        "Please accept Terms & Conditions"
-      );
-      return;
-    }
-
-    if (!communicationConsent) {
-      alert(
-        "Please provide communication consent"
-      );
-      return;
-    }
 
     setLoading(true);
 
@@ -328,7 +338,7 @@ pin_code: pinCode,
             <div className="mb-12 text-center">
 
               <h1 className="mt-4 text-3xl font-bold text-slate-900 md:text-4xl">
-                Retail Store Registration
+                Retail & Commercial Establishments Registration
               </h1>
 
               <p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed text-slate-600">
@@ -344,7 +354,7 @@ pin_code: pinCode,
   <div className="mb-10 flex justify-center">
 
   <Link
-    href="/join-urbanloop/business-registration"
+    href="/join-urbanloop/categories"
     className="inline-flex items-center gap-2 rounded-xl border border-[#72B543] px-5 py-3 text-sm font-medium text-[#72B543] transition-all duration-300 hover:bg-[#72B543] hover:text-white"
   >
     ← Back
@@ -377,8 +387,19 @@ pin_code: pinCode,
                         e.target.value
                       )
                     }
-                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                    className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.fullName
+    ? "border-red-500"
+    : "border-slate-300"
+}`}
                   />
+
+                  {errors.fullName && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.fullName}
+  </p>
+)}
+
                 </div>
 
                 <div>
@@ -402,8 +423,19 @@ pin_code: pinCode,
                           )
                       )
                     }
-                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                    className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.mobileNumber
+    ? "border-red-500"
+    : "border-slate-300"
+}`}
                   />
+   
+   {errors.mobileNumber && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.mobileNumber}
+  </p>
+)}
+   
                 </div>
 
                 <div>
@@ -419,8 +451,19 @@ pin_code: pinCode,
                         e.target.value
                       )
                     }
-                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                    className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.email
+    ? "border-red-500"
+    : "border-slate-300"
+}`}
                   />
+
+{errors.email && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.email}
+  </p>
+)}
+
                 </div>
 
                 <div>
@@ -444,8 +487,19 @@ pin_code: pinCode,
                           )
                       )
                     }
-                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                    className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.alternateMobile
+    ? "border-red-500"
+    : "border-slate-300"
+}`}
                   />
+   
+   {errors.alternateMobile && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.alternateMobile}
+  </p>
+)}
+   
                 </div>
 
               </div>
@@ -469,8 +523,19 @@ pin_code: pinCode,
                     onChange={(e) =>
                       setShopNumber(e.target.value)
                     }
-                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                    className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.shopNumber
+    ? "border-red-500"
+    : "border-slate-300"
+}`}
                   />
+
+{errors.shopNumber && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.shopNumber}
+  </p>
+)}
+
                 </div>
 
                 <div>
@@ -484,8 +549,19 @@ pin_code: pinCode,
                     onChange={(e) =>
                       setBuildingName(e.target.value)
                     }
-                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                    className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.buildingName
+    ? "border-red-500"
+    : "border-slate-300"
+}`}
                   />
+
+{errors.buildingName && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.buildingName}
+  </p>
+)}
+
                 </div>
 
                 <div className="md:col-span-2">
@@ -499,8 +575,19 @@ pin_code: pinCode,
                     onChange={(e) =>
                       setStreetArea(e.target.value)
                     }
-                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                    className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.streetArea
+    ? "border-red-500"
+    : "border-slate-300"
+}`}
                   />
+
+{errors.streetArea && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.streetArea}
+  </p>
+)}
+
                 </div>
 
                 <div>
@@ -514,8 +601,19 @@ pin_code: pinCode,
                     onChange={(e) =>
                       setLandmark(e.target.value)
                     }
-                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                    className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.landmark
+    ? "border-red-500"
+    : "border-slate-300"
+}`}
                   />
+
+{errors.landmark && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.landmark}
+  </p>
+)}
+
                 </div>
 
                 <div>
@@ -533,8 +631,19 @@ pin_code: pinCode,
                           .slice(0, 6)
                       )
                     }
-                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                    className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.pinCode
+    ? "border-red-500"
+    : "border-slate-300"
+}`}
                   />
+   
+   {errors.pinCode && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.pinCode}
+  </p>
+)}
+   
                 </div>
 
                 <div>
@@ -548,8 +657,19 @@ pin_code: pinCode,
                     onChange={(e) =>
                       setCity(e.target.value)
                     }
-                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                    className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.city
+    ? "border-red-500"
+    : "border-slate-300"
+}`}
                   />
+
+{errors.city && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.city}
+  </p>
+)}
+
                 </div>
 
                 <div>
@@ -563,8 +683,19 @@ pin_code: pinCode,
                     onChange={(e) =>
                       setStateName(e.target.value)
                     }
-                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                    className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.stateName
+    ? "border-red-500"
+    : "border-slate-300"
+}`}
                   />
+   
+   {errors.stateName && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.stateName}
+  </p>
+)}
+   
                 </div>
 
               </div>
@@ -589,7 +720,11 @@ pin_code: pinCode,
                         e.target.value
                       )
                     }
-                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                    className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.businessProfileType
+    ? "border-red-500"
+    : "border-slate-300"
+}`}
                   >
                     <option value="">
                       Select Store Type
@@ -613,6 +748,12 @@ pin_code: pinCode,
                       Other
                     </option>
                   </select>
+   {errors.businessProfileType && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.businessProfileType}
+  </p>
+)}
+   
                 </div>
 
                 <div>
@@ -628,8 +769,19 @@ pin_code: pinCode,
                         e.target.value
                       )
                     }
-                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                    className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.outletCount
+    ? "border-red-500"
+    : "border-slate-300"
+}`}
                   />
+
+{errors.outletCount && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.outletCount}
+  </p>
+)}
+
                 </div>
 
                 <div>
@@ -644,7 +796,11 @@ pin_code: pinCode,
                         e.target.value
                       )
                     }
-                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                    className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.monthlyRecyclables
+    ? "border-red-500"
+    : "border-slate-300"
+}`}
                   >
                     <option value="">
                       Select Quantity
@@ -674,6 +830,13 @@ pin_code: pinCode,
                       5+ Tons
                     </option>
                   </select>
+   
+   {errors.monthlyRecyclables && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.monthlyRecyclables}
+  </p>
+)}
+   
                 </div>
 
                 <div>
@@ -688,7 +851,11 @@ pin_code: pinCode,
                         e.target.value
                       )
                     }
-                    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+                    className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.storageSpaceAvailable
+    ? "border-red-500"
+    : "border-slate-300"
+}`}
                   >
                     <option value="">
                       Select Option
@@ -706,6 +873,12 @@ pin_code: pinCode,
                       Limited
                     </option>
                   </select>
+   {errors.storageSpaceAvailable && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.storageSpaceAvailable}
+  </p>
+)}
+   
                 </div>
 
               </div>
@@ -720,7 +893,13 @@ pin_code: pinCode,
   Select recyclable materials generated by your retail business.
 </p>
 
-<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+<div
+  className={`grid gap-4 md:grid-cols-2 lg:grid-cols-3 rounded-xl p-3 ${
+    errors.materialCategories
+      ? "border-2 border-red-500"
+      : ""
+  }`}
+>
 
   {[
     "Paper & Cardboard",
@@ -754,14 +933,25 @@ pin_code: pinCode,
 
 </div>
 
+{errors.materialCategories && (
+  <p className="mt-2 text-sm text-red-500">
+    {errors.materialCategories}
+  </p>
+)}
+
 {/* SERVICE REQUIREMENTS */}
 <div className="grid gap-6 md:grid-cols-2 mb-5"></div>
 <h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
   Service Requirements
 </h2>
 
-<div className="grid gap-4 md:grid-cols-2">
-
+<div
+  className={`grid gap-4 md:grid-cols-2 rounded-xl p-3 ${
+    errors.requiredServices
+      ? "border-2 border-red-500"
+      : ""
+  }`}
+>
   {[
     "Recurring Collection",
     "One-Time Clearance",
@@ -794,6 +984,12 @@ pin_code: pinCode,
   ))}
 
 </div>
+
+{errors.requiredServices && (
+  <p className="mt-2 text-sm text-red-500">
+    {errors.requiredServices}
+  </p>
+)}
 
 <div className="mt-8 grid gap-6 md:grid-cols-3">
 
@@ -881,7 +1077,13 @@ pin_code: pinCode,
   Communication Preferences
 </h2>
 
-<div className="grid gap-4 md:grid-cols-2">
+<div
+  className={`grid gap-4 md:grid-cols-2 rounded-xl p-3 ${
+    errors.communicationPreferences
+      ? "border-2 border-red-500"
+      : ""
+  }`}
+>
 
   {[
     "Email Notifications",
@@ -914,6 +1116,12 @@ pin_code: pinCode,
 
 </div>
 
+{errors.communicationPreferences && (
+  <p className="mt-2 text-sm text-red-500">
+    {errors.communicationPreferences}
+  </p>
+)}
+
 {/* REFERRAL */}
 <div className="grid gap-6 md:grid-cols-2 mb-5"></div>
 <h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
@@ -929,7 +1137,11 @@ pin_code: pinCode,
         e.target.value
       )
     }
-    className="rounded-xl border-2 border-slate-300 px-4 py-3"
+    className={`rounded-xl border-2 px-4 py-3 ${
+  errors.referralSource
+    ? "border-red-500"
+    : "border-slate-300"
+}`}
   >
     <option value="">
       Select Source
@@ -959,6 +1171,12 @@ pin_code: pinCode,
       Other
     </option>
   </select>
+
+{errors.referralSource && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.referralSource}
+  </p>
+)}
 
   <input
     type="text"
@@ -996,7 +1214,15 @@ pin_code: pinCode,
   Declaration & Consent
 </h2>
 
-<div className="space-y-5">
+<div
+  className={`space-y-5 rounded-xl p-4 ${
+    errors.declarationConfirmed ||
+    errors.termsAccepted ||
+    errors.communicationConsent
+      ? "border-2 border-red-500"
+      : ""
+  }`}
+>
 
   <label className="flex items-start gap-3">
     <input
@@ -1048,6 +1274,14 @@ pin_code: pinCode,
   </label>
 
 </div>
+
+{(errors.declarationConfirmed ||
+  errors.termsAccepted ||
+  errors.communicationConsent) && (
+  <p className="mt-3 text-sm text-red-500">
+    Please accept all declarations and consents.
+  </p>
+)}
 
 {/* SUBMIT */}
 

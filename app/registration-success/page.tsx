@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function RegistrationSuccessPage() {
+function RegistrationSuccessContent() {
   const searchParams = useSearchParams();
 
   const type =
@@ -38,5 +39,19 @@ export default function RegistrationSuccessPage() {
 
       </div>
     </main>
+  );
+}
+
+export default function RegistrationSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          Loading...
+        </div>
+      }
+    >
+      <RegistrationSuccessContent />
+    </Suspense>
   );
 }

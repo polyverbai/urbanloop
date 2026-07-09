@@ -99,7 +99,7 @@ export default function CorporateRegistrationPage() {
               {/* Co-Working Space */}
 
               <Link
-                href="/join-urbanloop/corporate-registration/coworking"
+                href="/join-urbanloop/corporate-registration/coworking-space"
                 className="group rounded-3xl border border-[#DDE8D0] bg-white p-3 shadow-sm transition-all duration-300 hover:border-[#72B543] hover:bg-[#F8FBF4] hover:shadow-lg"
               >
 

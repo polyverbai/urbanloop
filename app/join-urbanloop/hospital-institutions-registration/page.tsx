@@ -45,7 +45,7 @@ return (
         <div className="mt-16 grid gap-4 md:grid-cols-3 lg:grid-cols-6">
 
           <Link
-            href="/join-urbanloop/educational-institution-registration/institutions"
+            href="/join-urbanloop/hospital-institutions-registration/institutions"
             className="group relative rounded-3xl border border-[#DDE8D0] bg-white p-3 shadow-sm transition-all duration-300 hover:border-[#72B543] hover:bg-[#F8FBF4]"
           >
 
@@ -66,7 +66,7 @@ return (
           </Link>
 
           <Link
-            href="/join-urbanloop/educational-institution-registration/college"
+            href="/join-urbanloop/hospital-institutions-registration/institutions"
             className="group relative rounded-3xl border border-[#DDE8D0] bg-white p-3 shadow-sm transition-all duration-300 hover:border-[#72B543] hover:bg-[#F8FBF4]"
           >
 

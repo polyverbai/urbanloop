@@ -7,36 +7,27 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
-export default function ITCompanyRegistrationPage() {
+export default function HospitalInstitutionRegistrationPage() {
   const router = useRouter();
 const [loading, setLoading] = useState(false);
+const [
+  institutionCategory,
+  setInstitutionCategory,
+] = useState("");
+
 const [errors, setErrors] = useState<Record<string, string>>({});
 
 // Company Information
-const [companyName, setCompanyName] =
+const [institutionName, setInstitutionName] =
   useState("");
 
 const [website, setWebsite] =
   useState("");
 
 const [
-  businessRegistrationNumber,
-  setBusinessRegistrationNumber,
-] = useState("");
-
-const [gstNumber, setGstNumber] =
-  useState("");
-
-const [
   yearEstablished,
   setYearEstablished,
 ] = useState("");
-
-const [
-  employeeCount,
-  setEmployeeCount,
-] = useState("");
-
 
 // Contact Information
 const [
@@ -55,8 +46,8 @@ const [email, setEmail] =
 
   // Address
 const [
-  officeAddress,
-  setOfficeAddress,
+  address,
+  setAddress,
 ] = useState("");
 
 const [landmark, setLandmark] =
@@ -78,11 +69,6 @@ const [
 ] = useState<string[]>([]);
 
 const [
-  sustainabilityInitiatives,
-  setSustainabilityInitiatives,
-] = useState<string[]>([]);
-
-const [
   communicationPreferences,
   setCommunicationPreferences,
 ] = useState<string[]>([]);
@@ -93,10 +79,6 @@ const [
   setPickupFrequency,
 ] = useState("");
 
-const [
-  monthlyRecyclables,
-  setMonthlyRecyclables,
-] = useState("");
 
 const [pickupDay, setPickupDay] =
   useState("");
@@ -157,9 +139,13 @@ function toggleArrayValue(
 function validateForm() {
   const newErrors: Record<string, string> = {};
 
-  if (!companyName.trim())
-    newErrors.companyName =
-      "Company Name is required";
+if (!institutionCategory)
+  newErrors.institutionCategory =
+    "Please select Institution Category";
+
+  if (!institutionName.trim())
+    newErrors.institutionName =
+      "Institution Name is required";
 
   if (!contactPersonName.trim())
     newErrors.contactPersonName =
@@ -179,12 +165,12 @@ function validateForm() {
     )
   ) {
     newErrors.email =
-      "Email address is not correct";
+        "Please enter a valid email address";
   }
 
-  if (!officeAddress.trim())
-    newErrors.officeAddress =
-      "Office Address is required";
+  if (!address.trim())
+    newErrors.address =
+      "Institution Address is required";
 
   if (!landmark.trim())
     newErrors.landmark =
@@ -206,21 +192,11 @@ function validateForm() {
     newErrors.materialCategories =
       "Select at least one category";
 
-  if (
-    sustainabilityInitiatives.length === 0
-  )
-    newErrors.sustainabilityInitiatives =
-      "Select at least one initiative";
-
-  if (!pickupFrequency)
+    if (!pickupFrequency)
     newErrors.pickupFrequency =
       "Select pickup frequency";
 
-  if (!monthlyRecyclables)
-    newErrors.monthlyRecyclables =
-      "Select monthly recyclables";
-
-  if (!pickupDay)
+    if (!pickupDay)
     newErrors.pickupDay =
       "Select pickup day";
 
@@ -275,29 +251,19 @@ async function handleSubmit(
   const { error } =
     await supabase
     .from(
-      "corporate_registrations"
+      "hospital_registrations"
     )
     .insert([
       {
-        company_category:
-  "IT & Technology Company",
+        institution_category:
+  institutionCategory,
 
-        company_name:
-          companyName,
+        institution_name:
+          institutionName,
 
         website,
 
-        business_registration_number:
-          businessRegistrationNumber,
-
-        gst_number:
-          gstNumber,
-
-        year_established:
-          yearEstablished,
-
-        employee_count:
-          employeeCount,
+        
 
         contact_person_name:
           contactPersonName,
@@ -310,7 +276,7 @@ async function handleSubmit(
         email,
 
         address:
-  officeAddress,
+  address,
 
         landmark,
 
@@ -325,14 +291,9 @@ async function handleSubmit(
         material_categories:
           materialCategories,
 
-        sustainability_initiatives:
-          sustainabilityInitiatives,
-
         pickup_frequency:
           pickupFrequency,
 
-        monthly_recyclables:
-          monthlyRecyclables,
 
         pickup_day:
           pickupDay,
@@ -371,7 +332,7 @@ if (error) {
 }
 
 router.push(
-  "/registration-success?type=IT%20Company%20Registration&return=/join-urbanloop/corporate-registration"
+    "/registration-success?type=Hospital%20%26%20Healthcare%20Institution&return=/join-urbanloop/hospital-institutions-registration/institutions"
 );
 
 }
@@ -393,13 +354,11 @@ router.push(
             <div className="mb-12 text-center">
 
 <h1 className="mt-4 text-3xl font-bold text-slate-900 md:text-4xl">
-                IT & Technology Company Registration
+                Hospital & Healthcare Institution Registration
               </h1>
 
 <p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed text-slate-600">
-                Register your technology organization with UrbanLoop and
-                streamline responsible recycling, e-waste recovery and
-                sustainability initiatives across your workplace.
+                Register your hospital or healthcare institution with UrbanLoop to responsibly recover recyclable materials, office assets and e-waste while building a cleaner and more sustainable healthcare environment.
               </p>
 
               <div className="mt-8 flex justify-center">
@@ -423,150 +382,118 @@ router.push(
 >
 
              <h2 className="mb-8 text-2xl font-bold text-slate-900">
-  Company Information
+  Institution Information
 </h2>
 
 <div className="grid gap-6 md:grid-cols-2">
 
+  {/* Institution Category */}
+
   <div>
     <label className="mb-2 block text-sm font-medium text-slate-700">
-      Company Name *
+      Institution Category *
     </label>
 
-    <input
-  type="text"
-  value={companyName}
-  onChange={(e) =>
-    setCompanyName(
-      e.target.value
-    )
-  }
-  className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.companyName
+    <select
+      value={institutionCategory}
+      onChange={(e) =>
+        setInstitutionCategory(e.target.value)
+      }
+      className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.institutionCategory
     ? "border-red-500"
     : "border-slate-300"
 }`}
-/>
+    >
+      <option value="">
+        Select Institution
+      </option>
 
-{errors.companyName && (
+      <option>Hospital</option>
+<option>Clinic</option>
+<option>Diagnostic Centre</option>
+<option>Nursing Home</option>
+<option>Medical College</option>
+<option>Blood Bank</option>
+<option>Rehabilitation Centre</option>
+<option>Healthcare Institution</option>
+<option>Other</option>
+
+    </select>
+
+{errors.institutionCategory && (
   <p className="mt-1 text-sm text-red-500">
-    {errors.companyName}
+    {errors.institutionCategory}
   </p>
 )}
 
   </div>
 
+  {/* Institution Name */}
+
   <div>
+
+    <label className="mb-2 block text-sm font-medium text-slate-700">
+      Institution Name *
+    </label>
+
+    <input
+      type="text"
+      value={institutionName}
+      onChange={(e) =>
+        setInstitutionName(e.target.value)
+      }
+      className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.institutionName
+    ? "border-red-500"
+    : "border-slate-300"
+}`}
+    />
+{errors.institutionName && (
+  <p className="mt-1 text-sm text-red-500">
+    {errors.institutionName}
+  </p>
+)}
+
+  </div>
+
+  {/* Website */}
+
+  <div>
+
     <label className="mb-2 block text-sm font-medium text-slate-700">
       Website
     </label>
 
     <input
-  type="text"
-  value={website}
-  onChange={(e) =>
-    setWebsite(
-      e.target.value
-    )
-  }
-  className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.contactPersonName
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-/>
+      type="text"
+      value={website}
+      onChange={(e) =>
+        setWebsite(e.target.value)
+      }
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    />
 
-{errors.contactPersonName && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.contactPersonName}
-  </p>
-)}
   </div>
 
-  <div>
-    <div>
-  <label className="mb-2 block text-sm font-medium text-slate-700">
-    Business Registration Number
-  </label>
-
-  <input
-    type="text"
-    value={businessRegistrationNumber}
-    onChange={(e) =>
-      setBusinessRegistrationNumber(
-        e.target.value
-      )
-    }
-    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
-  />
-</div>
-  </div>
+   {/* Year Established */}
 
   <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      GST Number
-    </label>
 
-    <input
-  type="text"
-  value={gstNumber}
-  onChange={(e) =>
-    setGstNumber(
-      e.target.value
-    )
-  }
-  className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
-/>
-  </div>
-
-  <div>
     <label className="mb-2 block text-sm font-medium text-slate-700">
       Year Established
     </label>
 
     <input
-  type="number"
-  value={yearEstablished}
-  onChange={(e) =>
-    setYearEstablished(
-      e.target.value
-    )
-  }
-  className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
-/>
+      type="number"
+      value={yearEstablished}
+      onChange={(e) =>
+        setYearEstablished(e.target.value)
+      }
+      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
+    />
+
   </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Number of Employees *
-    </label>
-
-    <select
-  value={employeeCount}
-  onChange={(e) =>
-    setEmployeeCount(
-      e.target.value
-    )
-  }
-  className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
->
-      <option>Select Employee Range</option>
-      <option>1 - 25</option>
-      <option>26 - 100</option>
-      <option>101 - 500</option>
-      <option>501 - 1000</option>
-      <option>1000+</option>
-    </select>
-  </div>
-
-</div>
-
-<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
-<h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
-  Primary Contact Information
-</h2>
-
-<div className="grid gap-6 md:grid-cols-2">
 
   <div>
   <label className="mb-2 block text-sm font-medium text-slate-700">
@@ -604,9 +531,7 @@ router.push(
     type="text"
     value={designation}
     onChange={(e) =>
-      setDesignation(
-        e.target.value
-      )
+      setDesignation(e.target.value)
     }
     className={`w-full rounded-xl border-2 px-4 py-3 ${
       errors.designation
@@ -681,61 +606,61 @@ router.push(
 
 <div className="grid gap-6 md:grid-cols-2 mb-5"></div>
 <h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
-  Office Address
+  Institution Address
 </h2>
 
 <div className="grid gap-6 md:grid-cols-2">
 
   <div className="md:col-span-2">
     <label className="mb-2 block text-sm font-medium text-slate-700">
-      Office Address *
+      Institution Address *
     </label>
 
     <input
-  type="text"
-  value={officeAddress}
-  onChange={(e) =>
-    setOfficeAddress(
-      e.target.value
-    )
-  }
-  className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.officeAddress
+      type="text"
+      value={address}
+      onChange={(e) =>
+        setAddress(e.target.value)
+      }
+      className={`w-full rounded-xl border-2 px-4 py-3 ${
+  errors.address
     ? "border-red-500"
     : "border-slate-300"
 }`}
-/>
-{errors.officeAddress && (
+    />
+
+{errors.address && (
   <p className="mt-1 text-sm text-red-500">
-    {errors.officeAddress}
+    {errors.address}
   </p>
 )}
+
   </div>
 
   <div>
     <label className="mb-2 block text-sm font-medium text-slate-700">
-  Landmark *
-</label>
+      Landmark *
+    </label>
 
     <input
-  type="text"
-  value={landmark}
-  onChange={(e) =>
-    setLandmark(
-      e.target.value
-    )
-  }
-  className={`w-full rounded-xl border-2 px-4 py-3 ${
+      type="text"
+      value={landmark}
+      onChange={(e) =>
+        setLandmark(e.target.value)
+      }
+      className={`w-full rounded-xl border-2 px-4 py-3 ${
   errors.landmark
     ? "border-red-500"
     : "border-slate-300"
 }`}
-/>
+
+    />
 {errors.landmark && (
   <p className="mt-1 text-sm text-red-500">
     {errors.landmark}
   </p>
 )}
+
   </div>
 
   <div>
@@ -744,27 +669,28 @@ router.push(
     </label>
 
     <input
-  type="text"
-  value={pinCode}
-  onChange={(e) =>
-    setPinCode(
-      e.target.value
-        .replace(/\D/g, "")
-        .slice(0, 6)
-    )
-  }
-  className={`w-full rounded-xl border-2 px-4 py-3 ${
+      type="text"
+      value={pinCode}
+      onChange={(e) =>
+        setPinCode(
+          e.target.value
+            .replace(/\D/g, "")
+            .slice(0, 6)
+        )
+      }
+      className={`w-full rounded-xl border-2 px-4 py-3 ${
   errors.pinCode
     ? "border-red-500"
     : "border-slate-300"
 }`}
-/>
-
-{errors.pinCode && (
+    />
+  
+  {errors.pinCode && (
   <p className="mt-1 text-sm text-red-500">
     {errors.pinCode}
   </p>
 )}
+  
   </div>
 
   <div>
@@ -773,25 +699,24 @@ router.push(
     </label>
 
     <input
-  type="text"
-  value={city}
-  onChange={(e) =>
-    setCity(
-      e.target.value
-    )
-  }
-  className={`w-full rounded-xl border-2 px-4 py-3 ${
+      type="text"
+      value={city}
+      onChange={(e) =>
+        setCity(e.target.value)
+      }
+      className={`w-full rounded-xl border-2 px-4 py-3 ${
   errors.city
     ? "border-red-500"
     : "border-slate-300"
 }`}
-/>
 
+    />
 {errors.city && (
   <p className="mt-1 text-sm text-red-500">
     {errors.city}
   </p>
 )}
+
   </div>
 
   <div>
@@ -800,148 +725,86 @@ router.push(
     </label>
 
     <input
-  type="text"
-  value={stateName}
-  onChange={(e) =>
-    setStateName(
-      e.target.value
-    )
-  }
-  className={`w-full rounded-xl border-2 px-4 py-3 ${
+      type="text"
+      value={stateName}
+      onChange={(e) =>
+        setStateName(e.target.value)
+      }
+      className={`w-full rounded-xl border-2 px-4 py-3 ${
   errors.stateName
     ? "border-red-500"
     : "border-slate-300"
 }`}
-/>
-
+    />
 {errors.stateName && (
   <p className="mt-1 text-sm text-red-500">
     {errors.stateName}
   </p>
 )}
+
   </div>
 
 </div>
 
 <div className="grid gap-6 md:grid-cols-2 mb-5"></div>
 <h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
-  Recyclable Materials Generated
+  Material Categories
 </h2>
 
 <p className="mb-6 text-slate-600">
-  Select the recyclable material categories applicable to your organization.
+Select the recyclable, non-biomedical materials generated within your hospital or healthcare institution.
 </p>
 
-<div
-  className={`grid gap-4 md:grid-cols-2 lg:grid-cols-3 rounded-xl p-3 ${
-    errors.materialCategories
-      ? "border-2 border-red-500"
-      : ""
-  }`}
+<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+
+{[
+"Paper & Cardboard",
+  "Plastic",
+  "Glass",
+  "Metal",
+  "E-Waste",
+  "Hospital Furniture",
+  "Medical Equipment (Non-Biomedical)",
+  "Electronic & Electrical Equipment",
+  "Packaging Materials",
+  "Medical Records & Archive Paper",
+  "Uniforms & Linen",
+  "Kitchen & Cafeteria Recyclables",
+  "Batteries",
+  "Lighting Fixtures"
+].map((item) => (
+
+<label
+key={item}
+className="flex cursor-pointer items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4 transition-all duration-300 hover:border-[#72B543] hover:bg-[#F8FBF4]"
 >
 
-  {[
-    "Paper & Cardboard",
-    "Plastic",
-    "Metal",
-    "Glass",
-    "E-Waste",
-    "Computer Equipment",
-    "Network Equipment",
-    "Furniture",
-    "Batteries",
-    "Lighting Equipment",
-    "Printer Consumables",
-    "Packaging Materials",
-  ].map((item) => (
-    <label
-      key={item}
-      className="flex cursor-pointer items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4 transition-all duration-300 hover:border-[#72B543] hover:bg-[#F8FBF4]"
-    >
-      <input
-  type="checkbox"
-  checked={materialCategories.includes(
-    item
-  )}
-  onChange={() =>
-    toggleArrayValue(
-      item,
-      materialCategories,
-      setMaterialCategories
-    )
-  }
-  className="h-4 w-4 accent-[#72B543]"
+<input
+type="checkbox"
+checked={materialCategories.includes(item)}
+onChange={() =>
+toggleArrayValue(
+item,
+materialCategories,
+setMaterialCategories
+)
+}
+className="h-4 w-4 accent-[#72B543]"
 />
 
-      <span className="font-medium text-slate-700">
-        {item}
-      </span>
-    </label>
-  ))}
+<span className="font-medium text-slate-700">
+{item}
+</span>
+
+</label>
+
+))}
 
 </div>
 
 {errors.materialCategories && (
   <p className="mt-2 text-sm text-red-500">
     {errors.materialCategories}
-  </p>
-)}
-
-<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
-<h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
-  Sustainability Initiatives
-</h2>
-
-<p className="mb-6 text-slate-600">
-  Select the sustainability initiatives currently implemented within your organization.
-</p>
-
-<div
-  className={`grid gap-4 md:grid-cols-2 lg:grid-cols-3 rounded-xl p-3 ${
-    errors.sustainabilityInitiatives
-      ? "border-2 border-red-500"
-      : ""
-  }`}
->
-
-  {[
-    "ESG Reporting",
-    "Carbon Reduction Program",
-    "Green Office Program",
-    "E-Waste Management",
-    "Plastic Reduction Program",
-    "CSR Initiatives",
-  ].map((item) => (
-    <label
-      key={item}
-      className="flex cursor-pointer items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4 transition-all duration-300 hover:border-[#72B543] hover:bg-[#F8FBF4]"
-    >
-      <input
-  type="checkbox"
-  checked={sustainabilityInitiatives.includes(
-    item
-  )}
-  onChange={() =>
-    toggleArrayValue(
-      item,
-      sustainabilityInitiatives,
-      setSustainabilityInitiatives
-    )
-  }
-  className="h-4 w-4 accent-[#72B543]"
-/>
-
-      <span className="font-medium text-slate-700">
-        {item}
-      </span>
-    </label>
-  ))}
-
-</div>
-
-{errors.sustainabilityInitiatives && (
-  <p className="mt-2 text-sm text-red-500">
-    {errors.sustainabilityInitiatives}
   </p>
 )}
 
@@ -1009,40 +872,6 @@ router.push(
 )}
 
   <div className="grid gap-6 md:grid-cols-2">
-
-    <div>
-      <label className="mb-2 block text-sm font-medium text-slate-700">
-  Estimated Monthly Recyclables Generated *
-</label>
-
-      <select
-  value={monthlyRecyclables}
-  onChange={(e) =>
-    setMonthlyRecyclables(
-      e.target.value
-    )
-  }
-  className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.monthlyRecyclables
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
->
-        <option>Select Quantity</option>
-        <option>Less than 100 kg</option>
-        <option>100 - 500 kg</option>
-        <option>500 - 1000 kg</option>
-        <option>1 - 5 Tons</option>
-        <option>5+ Tons</option>
-      </select>
-
-      {errors.monthlyRecyclables && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.monthlyRecyclables}
-  </p>
-)}
-
-    </div>
 
     <div>
       <label className="mb-2 block text-sm font-medium text-slate-700">
@@ -1139,7 +968,7 @@ router.push(
     "Email Notifications",
     "SMS Notifications",
     "WhatsApp Notifications",
-    "ESG & Sustainability Reports",
+    "Sustainability Reports",
   ].map((item) => (
     <label
       key={item}
@@ -1204,7 +1033,7 @@ router.push(
       <option>Social Media</option>
       <option>Friend / Family</option>
       <option>Corporate Partner</option>
-      <option>Educational Institution</option>
+      <option>Healthcare Institution</option>
       <option>Newspaper / Media</option>
       <option>Event / Campaign</option>
       <option>Other</option>
@@ -1344,7 +1173,7 @@ router.push(
 >
   {loading
     ? "Submitting..."
-    : "Register IT & Technology Company"}
+    : "Register Hospital & Healthcare Institution"}
 </button>
     <p className="mt-4 text-sm text-slate-500">
       Our team will review your registration and contact you shortly.
