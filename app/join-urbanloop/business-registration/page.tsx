@@ -1,5 +1,6 @@
 "use client";
-
+import { generateRegistrationNumber }
+from "@/lib/registration/generateRegistrationNumber";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -248,11 +249,13 @@ async function handleSubmit(
 
   setLoading(true);
 
-  const { error } =
+  try {
+
+  // Insert record first.
+
+  const { data, error } =
     await supabase
-      .from(
-        "business_registrations"
-      )
+      .from("business_registrations")
       .insert([
         {
           business_category:
@@ -330,18 +333,133 @@ async function handleSubmit(
           communication_consent:
             communicationConsent,
         },
-      ]);
+      ])
+      .select("id")
+      .single();
+
+  if (error) {
+    throw error;
+  }
+
+
+  // Get total registration count.
+
+  const {
+    count,
+    error: countError,
+  } = await supabase
+    .from(
+      "business_registrations"
+    )
+    .select("*", {
+      count: "exact",
+      head: true,
+    });
+
+  if (countError) {
+    throw countError;
+  }
+
+
+  // Generate registration number.
+
+  const registrationNumber =
+    generateRegistrationNumber(
+      "BUS",
+      count ?? 1
+    );
+
+
+  // Update registration number.
+
+  const {
+    error: updateError,
+  } = await supabase
+    .from(
+      "business_registrations"
+    )
+    .update({
+      registration_number:
+        registrationNumber,
+    })
+    .eq("id", data.id);
+
+
+  if (updateError) {
+    throw updateError;
+  }
+
+
+  // Redirect.
+
+  router.push(
+
+    `/registration-success?type=Business&registrationNumber=${registrationNumber}&return=/join-urbanloop`
+
+  );
+
+} catch (error: any) {
+
+  console.error(
+    "Business Registration Failed:",
+    error
+  );
+
+
+  const errorMessage =
+    error?.message?.toLowerCase() ??
+    "";
+
+
+  if (
+    errorMessage.includes(
+      "business_mobile_unique"
+    )
+  ) {
+
+    alert(
+      "A Business Registration already exists with this Mobile Number."
+    );
+
+  }
+
+  else if (
+    errorMessage.includes(
+      "business_email_unique"
+    )
+  ) {
+
+    alert(
+      "A Business Registration already exists with this Email Address."
+    );
+
+  }
+
+  else if (
+    errorMessage.includes(
+      "business_gst_unique"
+    )
+  ) {
+
+    alert(
+      "This GST Number has already been registered with UrbanLoop."
+    );
+
+  }
+
+  else {
+
+    alert(
+      "Something went wrong while submitting your registration. Please try again."
+    );
+
+  }
+
+} finally {
 
   setLoading(false);
 
-  if (error) {
-    alert(error.message);
-    return;
-  }
-
-  router.push(
-    "/registration-success?type=Business%20Registration&return=/join-urbanloop"
-  );
+}
 }
 
 return (

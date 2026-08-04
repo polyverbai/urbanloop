@@ -6,6 +6,8 @@ import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import RegistrationDuplicateModal
+from "@/components/common/RegistrationDuplicateModal";
 
 export default function EducationalInstitutionRegistrationPage() {
   const router = useRouter();
@@ -16,6 +18,19 @@ const [
 ] = useState("");
 
 const [errors, setErrors] = useState<Record<string, string>>({});
+
+const [showDuplicateModal,
+  setShowDuplicateModal] =
+  useState(false);
+
+const [duplicateField,
+  setDuplicateField] =
+  useState("");
+
+const [duplicateValue,
+  setDuplicateValue] =
+  useState("");
+
 
 // Company Information
 const [institutionName, setInstitutionName] =
@@ -248,7 +263,67 @@ async function handleSubmit(
 
   setLoading(true);
 
-  const { error } =
+  // Check duplicate Mobile Number.
+
+const { data: existingMobile } =
+await supabase
+  .from("educational_registrations")
+  .select("id")
+  .eq("mobile_number", mobileNumber);
+
+if (
+  existingMobile &&
+  existingMobile.length > 0
+) {
+
+  setDuplicateField(
+    "Mobile Number"
+  );
+
+  setDuplicateValue(
+    mobileNumber
+  );
+
+  setShowDuplicateModal(
+    true
+  );
+
+  setLoading(false);
+
+  return;
+
+}
+
+// Check duplicate Email Address.
+
+const { data: existingEmail } =
+await supabase
+  .from("educational_registrations")
+  .select("id")
+  .eq("email", email)
+  .maybeSingle();
+
+if (existingEmail) {
+
+  setDuplicateField(
+    "Email Address"
+  );
+
+  setDuplicateValue(
+    email
+  );
+
+  setShowDuplicateModal(
+    true
+  );
+
+  setLoading(false);
+
+  return;
+
+}
+
+  const { data, error } =
     await supabase
     .from(
       "educational_registrations"
@@ -263,7 +338,8 @@ async function handleSubmit(
 
         website,
 
-        
+year_established:
+  yearEstablished,
 
         contact_person_name:
           contactPersonName,
@@ -322,7 +398,9 @@ async function handleSubmit(
         communication_consent:
           communicationConsent,
       },
-    ]);
+    ])
+    .select("id")
+    .single();
 
     setLoading(false);
 
@@ -331,8 +409,36 @@ if (error) {
   return;
 }
 
+const { count } =
+await supabase
+  .from(
+    "educational_registrations"
+  )
+  .select("*", {
+    count: "exact",
+    head: true,
+  });
+
+const registrationNumber =
+  `UL-EDU-${String(
+    count
+  ).padStart(6, "0")}`;
+
+await supabase
+  .from(
+    "educational_registrations"
+  )
+  .update({
+    registration_number:
+      registrationNumber,
+  })
+  .eq(
+    "id",
+    data.id
+  );
+
 router.push(
-  "/registration-success?type=Educational%20Institution&return=/join-urbanloop/educational-institution-registration"
+  `/registration-success?type=Educational Institution Registration&registrationNumber=${registrationNumber}&return=/join-urbanloop/categories&returnText=Back To Categories`
 );
 
 }
@@ -1178,6 +1284,16 @@ className="h-4 w-4 accent-[#72B543]"
         </section>
 
       </main>
+
+<RegistrationDuplicateModal
+  type="Educational Institution Registration"
+  field={duplicateField}
+  value={duplicateValue}
+  isOpen={showDuplicateModal}
+  onClose={() =>
+    setShowDuplicateModal(false)
+  }
+/>
 
       <Footer />
     </>

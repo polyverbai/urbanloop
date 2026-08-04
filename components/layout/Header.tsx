@@ -76,10 +76,10 @@ const [partnerOpen, setPartnerOpen] = useState(false);
     </Link>
 
     <Link
-      href="/join-urbanloop/recycler-partner-registration"
+      href="/partner-program/collection-partner"
       className="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:bg-[#F8FBF4] hover:text-[#72B543]"
     >
-      Recovery Partner Form
+      Collection Partner Form
     </Link>
 
   </div>

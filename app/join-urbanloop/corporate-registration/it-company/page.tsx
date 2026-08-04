@@ -6,11 +6,25 @@ import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import RegistrationDuplicateModal
+from "@/components/common/RegistrationDuplicateModal";
 
 export default function ITCompanyRegistrationPage() {
   const router = useRouter();
 const [loading, setLoading] = useState(false);
 const [errors, setErrors] = useState<Record<string, string>>({});
+
+const [showDuplicateModal,
+  setShowDuplicateModal] =
+  useState(false);
+
+const [duplicateField,
+  setDuplicateField] =
+  useState("");
+
+const [duplicateValue,
+  setDuplicateValue] =
+  useState("");
 
 // Company Information
 const [companyName, setCompanyName] =
@@ -272,7 +286,75 @@ async function handleSubmit(
 
   setLoading(true);
 
-  const { error } =
+// Check duplicate Mobile Number.
+
+const { data: existingMobile } =
+await supabase
+  .from("corporate_registrations")
+  .select("id")
+  .eq(
+    "mobile_number",
+    mobileNumber
+  );
+
+if (
+  existingMobile &&
+  existingMobile.length > 0
+) {
+
+  setDuplicateField(
+    "Mobile Number"
+  );
+
+  setDuplicateValue(
+    mobileNumber
+  );
+
+  setShowDuplicateModal(
+    true
+  );
+
+  setLoading(false);
+
+  return;
+
+}
+
+// Check duplicate Email Address.
+
+const { data: existingEmail } =
+await supabase
+  .from("corporate_registrations")
+  .select("id")
+  .eq(
+    "email",
+    email
+  );
+
+if (
+  existingEmail &&
+  existingEmail.length > 0
+) {
+
+  setDuplicateField(
+    "Email Address"
+  );
+
+  setDuplicateValue(
+    email
+  );
+
+  setShowDuplicateModal(
+    true
+  );
+
+  setLoading(false);
+
+  return;
+
+}
+
+  const { data, error } =
     await supabase
     .from(
       "corporate_registrations"
@@ -361,7 +443,9 @@ async function handleSubmit(
         communication_consent:
           communicationConsent,
       },
-    ]);
+    ])
+    .select("id")
+    .single();
 
     setLoading(false);
 
@@ -370,8 +454,36 @@ if (error) {
   return;
 }
 
+const { count } =
+await supabase
+  .from(
+    "corporate_registrations"
+  )
+  .select("*", {
+    count: "exact",
+    head: true,
+  });
+
+const registrationNumber =
+  `UL-COR-${String(
+    count
+  ).padStart(6, "0")}`;
+
+await supabase
+  .from(
+    "corporate_registrations"
+  )
+  .update({
+    registration_number:
+      registrationNumber,
+  })
+  .eq(
+    "id",
+    data.id
+  );
+
 router.push(
-  "/registration-success?type=IT%20Company%20Registration&return=/join-urbanloop/corporate-registration"
+  `/registration-success?type=IT & Technology Company Registration&registrationNumber=${registrationNumber}&return=/join-urbanloop/categories&returnText=Back To Categories`
 );
 
 }
@@ -1357,6 +1469,16 @@ router.push(
         </section>
 
       </main>
+
+<RegistrationDuplicateModal
+  type="IT & Technology Company Registration"
+  field={duplicateField}
+  value={duplicateValue}
+  isOpen={showDuplicateModal}
+  onClose={() =>
+    setShowDuplicateModal(false)
+  }
+/>
 
       <Footer />
     </>

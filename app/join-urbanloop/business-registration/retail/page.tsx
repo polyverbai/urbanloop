@@ -1,13 +1,31 @@
 "use client";
 
+import { validateRetailRegistration } from "./components/validation";
+import BusinessContactSection from "./components/BusinessContactSection";
+import BusinessAddressSection from "./components/BusinessAddressSection";
+import RetailBusinessProfileSection from "./components/RetailBusinessProfileSection";
+import MaterialCategoriesSection from "./components/MaterialCategoriesSection";
+import ServiceRequirementsSection from "./components/ServiceRequirementsSection";
+import CommunicationPreferencesSection from "./components/CommunicationPreferencesSection";
+import CollectionPreferencesSection from "./components/CollectionPreferencesSection"; 
+import ReferralInformationSection from "./components/ReferralInformationSection";
+import DeclarationConsentSection from "./components/DeclarationConsentSection";
+
+import { generateRegistrationNumber }
+from "@/lib/registration/generateRegistrationNumber";
+import { createCustomerAccount }
+from "@/lib/customerAccounts";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { ArrowUpRight } from "lucide-react";
+import RegistrationDuplicateModal
 
+
+
+from "@/components/common/RegistrationDuplicateModal";
 
 
 export default function RetailRegistrationPage() {
@@ -15,6 +33,17 @@ export default function RetailRegistrationPage() {
 const router = useRouter();
 const [errors, setErrors] = useState<Record<string, string>>({});
 
+const [showDuplicateModal,
+  setShowDuplicateModal] =
+  useState(false);
+
+const [duplicateField,
+  setDuplicateField] =
+  useState("");
+
+const [duplicateValue,
+  setDuplicateValue] =
+  useState("");
 
   // Contact Information
   
@@ -100,127 +129,48 @@ const [errors, setErrors] = useState<Record<string, string>>({});
     setCommunicationConsent] =
     useState(false);
 
-  function toggleArrayValue(
-    value: string,
-    current: string[],
-    setter: React.Dispatch<
-      React.SetStateAction<string[]>
-    >
-  ) {
-    if (current.includes(value)) {
-      setter(
-        current.filter(
-          (item) => item !== value
-        )
-      );
-    } else {
-      setter([...current, value]);
-    }
-  }
-
-  function validateForm() {
-  const newErrors: Record<string, string> = {};
-
-  if (!fullName.trim())
-    newErrors.fullName = "Full Name is required";
-
-  if (!/^\d{10}$/.test(mobileNumber))
-    newErrors.mobileNumber =
-      "Mobile number should be 10 digits";
-
-  if (
-    email &&
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
-      email
-    )
-  ) {
-    newErrors.email =
-      "Email address is not correct";
-  }
-
-  if (
-    alternateMobile &&
-    !/^\d{10}$/.test(alternateMobile)
-  ) {
-    newErrors.alternateMobile =
-      "Alternate mobile should be 10 digits";
-  }
-
-  if (!shopNumber.trim())
-    newErrors.shopNumber = "Required";
-
-  if (!buildingName.trim())
-    newErrors.buildingName = "Required";
-
-  if (!streetArea.trim())
-    newErrors.streetArea = "Required";
-
-  if (!landmark.trim())
-    newErrors.landmark = "Required";
-
-  if (!city.trim())
-    newErrors.city = "Required";
-
-  if (!stateName.trim())
-    newErrors.stateName = "Required";
-
-  if (!pinCode.trim())
-    newErrors.pinCode = "Required";
-
-  if (!businessProfileType)
-    newErrors.businessProfileType =
-      "Please select Store Type";
-
-  if (!outletCount)
-    newErrors.outletCount = "Required";
-
-  if (!monthlyRecyclables)
-    newErrors.monthlyRecyclables = "Required";
-
-  if (!storageSpaceAvailable)
-    newErrors.storageSpaceAvailable =
-      "Required";
-
-  if (materialCategories.length === 0)
-    newErrors.materialCategories =
-      "Select at least one category";
-
-  if (requiredServices.length === 0)
-    newErrors.requiredServices =
-      "Select at least one service";
-
-  if (
-    communicationPreferences.length === 0
-  )
-    newErrors.communicationPreferences =
-      "Select at least one preference";
-
-  if (!referralSource)
-    newErrors.referralSource =
-      "Select referral source";
-
-  if (!declarationConfirmed)
-    newErrors.declarationConfirmed =
-      "Required";
-
-  if (!termsAccepted)
-    newErrors.termsAccepted =
-      "Required";
-
-  if (!communicationConsent)
-    newErrors.communicationConsent =
-      "Required";
-
-  return newErrors;
-}
-
   async function handleSubmit(
     e: React.FormEvent
   ) {
     e.preventDefault();
 
-    const validationErrors =
-  validateForm();
+    const validationErrors = validateRetailRegistration({
+  fullName,
+  mobileNumber,
+  email,
+  alternateMobile,
+
+  shopNumber,
+  buildingName,
+  streetArea,
+  landmark,
+  city,
+  stateName,
+  pinCode,
+
+  businessProfileType,
+  outletCount,
+  monthlyRecyclables,
+  storageSpaceAvailable,
+
+  materialCategories,
+
+  requiredServices,
+
+  collectionFrequency,
+  collectionDay,
+  collectionTime,
+
+  communicationPreferences,
+
+  referralSource,
+  referralCode,
+  additionalComments,
+
+  declarationConfirmed,
+  termsAccepted,
+  communicationConsent,
+});
 
 if (
   Object.keys(validationErrors).length > 0
@@ -234,95 +184,247 @@ setErrors({});
 
     setLoading(true);
 
-    const { error } =
-      await supabase
-        .from(
-          "business_registrations"
-        )
-        .insert([
-          {
-            business_type: "retail",
+    try {
 
-            full_name: fullName,
-            mobile_number: mobileNumber,
-            email,
+// Check duplicate Mobile Number.
 
-            alternate_mobile:
-              alternateMobile,
+const { data: existingMobile } =
+await supabase
+  .from("business_registrations")
+  .select("id")
+  .eq("mobile_number", mobileNumber)
+  .maybeSingle();
 
-            shop_number: shopNumber,
-            building_name:
-              buildingName,
+if (existingMobile) {
 
-            street_area:
-              streetArea,
+  setDuplicateField(
+    "Mobile Number"
+  );
 
-            landmark,
+  setDuplicateValue(
+    mobileNumber
+  );
 
-            city,
-state_name: stateName,
-pin_code: pinCode,
+  setShowDuplicateModal(
+    true
+  );
 
-            business_profile_type:
-              businessProfileType,
+  setLoading(false);
 
-            outlet_count:
-              outletCount,
+  return;
 
-            monthly_recyclables:
-              monthlyRecyclables,
+}
 
-            storage_space_available:
-              storageSpaceAvailable,
+// Check duplicate Email Address.
 
-            material_categories:
-              materialCategories,
+const { data: existingEmail } =
+await supabase
+  .from("business_registrations")
+  .select("id")
+  .eq("email", email)
+  .maybeSingle();
 
-            required_services:
-              requiredServices,
+if (existingEmail) {
 
-            collection_frequency:
-              collectionFrequency,
+  setDuplicateField(
+    "Email Address"
+  );
 
-            collection_day:
-              collectionDay,
+  setDuplicateValue(
+    email
+  );
 
-            collection_time:
-              collectionTime,
+  setShowDuplicateModal(
+    true
+  );
 
-            communication_preferences:
-              communicationPreferences,
+  setLoading(false);
 
-            referral_source:
-              referralSource,
+  return;
 
-            referral_code:
-              referralCode,
+}
 
-            additional_comments:
-              additionalComments,
+  // Insert record.
 
-            declaration_confirmed:
-              declarationConfirmed,
+  const { data, error } =
+    await supabase
+      .from("business_registrations")
+      .insert([
+        {
 
-            terms_accepted:
-              termsAccepted,
+full_name: fullName,
+    mobile_number: mobileNumber,
+    email: email,
+    alternate_mobile: alternateMobile,
 
-            communication_consent:
-              communicationConsent,
-          },
-        ]);
+    shop_number: shopNumber,
+    building_name: buildingName,
+    street_area: streetArea,
+    landmark: landmark,
+    city: city,
+    state_name: stateName,
+    pin_code: pinCode,
 
-    setLoading(false);
+    business_profile_type:
+      businessProfileType,
 
-    if (error) {
-      alert(error.message);
-      return;
-    }
+    outlet_count:
+      outletCount,
+
+    monthly_recyclables:
+      monthlyRecyclables,
+
+    storage_space_available:
+      storageSpaceAvailable,
+
+    material_categories:
+      materialCategories,
+
+    required_services:
+      requiredServices,
+
+    collection_frequency:
+      collectionFrequency,
+
+    collection_day:
+      collectionDay,
+
+    collection_time:
+      collectionTime,
+
+    communication_preferences:
+      communicationPreferences,
+
+    referral_source:
+      referralSource,
+
+    referral_code:
+      referralCode,
+
+    additional_comments:
+      additionalComments,
+
+    declaration_confirmed:
+      declarationConfirmed,
+
+    terms_accepted:
+      termsAccepted,
+
+    communication_consent:
+      communicationConsent,
+
+        },
+      ])
+      .select("id")
+      .single();
+
+  if (error) {
+    throw error;
+  }
+
+
+  // Get registration count.
+
+  const {
+    count,
+    error: countError,
+  } = await supabase
+    .from("business_registrations")
+    .select("*", {
+      count: "exact",
+      head: true,
+    });
+
+  if (countError) {
+    throw countError;
+  }
+
+
+  // Generate registration number.
+
+  const registrationNumber =
+    generateRegistrationNumber(
+      "BUS",
+      count ?? 1
+    );
+
+
+  // Update registration number.
+
+  const {
+    error: updateError,
+  } = await supabase
+    .from("business_registrations")
+    .update({
+      registration_number:
+        registrationNumber,
+    })
+    .eq("id", data.id);
+
+
+  if (updateError) {
+    throw updateError;
+  }
+
+
+  // Redirect to common success page.
+
+router.push(
+  `/registration-success?type=Business Registration&registrationNumber=${registrationNumber}&returnUrl=/join-urbanloop/categories&returnText=Back To Categories`
+);
+
+
+} catch (error: any) {
+
+  console.error(
+    "Business Registration Failed:",
+    error
+  );
+
+  console.log(error);
+console.log(error.message);
+  const errorMessage =
+    error?.message?.toLowerCase() ?? "";
+
+
+  if (
+    errorMessage.includes(
+      "business_mobile_unique"
+    )
+  ) {
 
     router.push(
-  "/registration-success?type=Retail%20Store"
+  `/registration-duplicate?type=Business Registration&field=Mobile Number&value=${mobileNumber}&returnUrl=/join-urbanloop/business-registration/retail&returnText=Back To Registration Form`
 );
+
+  }
+
+  else if (
+    errorMessage.includes(
+      "business_email_unique"
+    )
+  ) {
+
+    router.push(
+  `/registration-duplicate?type=Business Registration&field=Email Address&value=${email}&returnUrl=/join-urbanloop/business-registration/retail&returnText=Back To Registration Form`
+);
+
+  }
+
+  
+  else {
+
+    alert(
+      "Something went wrong while submitting your registration. Please try again."
+    );
+
+  }
+
+} finally {
+
+  setLoading(false);
+
+}
   }
 
   return (
@@ -366,922 +468,98 @@ pin_code: pinCode,
               className="rounded-[32px] border-2 border-[#DDE8D0] bg-white p-8 md:p-10 shadow-[0_20px_60px_rgba(15,76,129,0.08)]"
             >
 
-              {/* CONTACT INFORMATION */}
-
-              <h2 className="mb-8 text-2xl font-bold text-slate-900">
-                Business Contact Information
-              </h2>
-
-              <div className="grid gap-6 md:grid-cols-2">
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Full Name *
-                  </label>
-
-                  <input
-                    type="text"
-                    value={fullName}
-                    onChange={(e) =>
-                      setFullName(
-                        e.target.value
-                      )
-                    }
-                    className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.fullName
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-                  />
-
-                  {errors.fullName && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.fullName}
-  </p>
-)}
-
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Mobile Number *
-                  </label>
-
-                  <input
-                    type="tel"
-                    value={mobileNumber}
-                    onChange={(e) =>
-                      setMobileNumber(
-                        e.target.value
-                          .replace(
-                            /\D/g,
-                            ""
-                          )
-                          .slice(
-                            0,
-                            10
-                          )
-                      )
-                    }
-                    className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.mobileNumber
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-                  />
-   
-   {errors.mobileNumber && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.mobileNumber}
-  </p>
-)}
-   
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Email Address
-                  </label>
-
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) =>
-                      setEmail(
-                        e.target.value
-                      )
-                    }
-                    className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.email
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-                  />
-
-{errors.email && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.email}
-  </p>
-)}
-
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Alternate Mobile
-                  </label>
-
-                  <input
-                    type="tel"
-                    value={alternateMobile}
-                    onChange={(e) =>
-                      setAlternateMobile(
-                        e.target.value
-                          .replace(
-                            /\D/g,
-                            ""
-                          )
-                          .slice(
-                            0,
-                            10
-                          )
-                      )
-                    }
-                    className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.alternateMobile
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-                  />
-   
-   {errors.alternateMobile && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.alternateMobile}
-  </p>
-)}
-   
-                </div>
-
-              </div>
-
-              {/* ADDRESS SECTION */}
-<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
-              <h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
-                Business Address
-              </h2>
-
-              <div className="grid gap-6 md:grid-cols-2">
-
-             <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Unit / Shop Number *
-                  </label>
-
-                  <input
-                    type="text"
-                    value={shopNumber}
-                    onChange={(e) =>
-                      setShopNumber(e.target.value)
-                    }
-                    className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.shopNumber
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-                  />
-
-{errors.shopNumber && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.shopNumber}
-  </p>
-)}
-
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Business / Building Name *
-                  </label>
-
-                  <input
-                    type="text"
-                    value={buildingName}
-                    onChange={(e) =>
-                      setBuildingName(e.target.value)
-                    }
-                    className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.buildingName
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-                  />
-
-{errors.buildingName && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.buildingName}
-  </p>
-)}
-
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Street / Area *
-                  </label>
-
-                  <input
-                    type="text"
-                    value={streetArea}
-                    onChange={(e) =>
-                      setStreetArea(e.target.value)
-                    }
-                    className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.streetArea
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-                  />
-
-{errors.streetArea && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.streetArea}
-  </p>
-)}
-
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Landmark
-                  </label>
-
-                  <input
-                    type="text"
-                    value={landmark}
-                    onChange={(e) =>
-                      setLandmark(e.target.value)
-                    }
-                    className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.landmark
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-                  />
-
-{errors.landmark && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.landmark}
-  </p>
-)}
-
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">
-                    PIN Code *
-                  </label>
-
-                  <input
-                    type="text"
-                    value={pinCode}
-                    onChange={(e) =>
-                      setPinCode(
-                        e.target.value
-                          .replace(/\D/g, "")
-                          .slice(0, 6)
-                      )
-                    }
-                    className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.pinCode
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-                  />
-   
-   {errors.pinCode && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.pinCode}
-  </p>
-)}
-   
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">
-                    City *
-                  </label>
-
-                  <input
-                    type="text"
-                    value={city}
-                    onChange={(e) =>
-                      setCity(e.target.value)
-                    }
-                    className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.city
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-                  />
-
-{errors.city && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.city}
-  </p>
-)}
-
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">
-                    State *
-                  </label>
-
-                  <input
-                    type="text"
-                    value={stateName}
-                    onChange={(e) =>
-                      setStateName(e.target.value)
-                    }
-                    className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.stateName
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-                  />
-   
-   {errors.stateName && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.stateName}
-  </p>
-)}
-   
-                </div>
-
-              </div>
-
-              {/* RETAIL PROFILE */}
-<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
-              <h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
-                Retail Business Profile
-              </h2>
-
-              <div className="grid gap-6 md:grid-cols-2">
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Store Type *
-                  </label>
-
-                  <select
-                    value={businessProfileType}
-                    onChange={(e) =>
-                      setBusinessProfileType(
-                        e.target.value
-                      )
-                    }
-                    className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.businessProfileType
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-                  >
-                    <option value="">
-                      Select Store Type
-                    </option>
-                    <option>
-                      Supermarket
-                    </option>
-                    <option>
-                      Department Store
-                    </option>
-                    <option>
-                      Electronics Store
-                    </option>
-                    <option>
-                      Fashion Store
-                    </option>
-                    <option>
-                      Convenience Store
-                    </option>
-                    <option>
-                      Other
-                    </option>
-                  </select>
-   {errors.businessProfileType && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.businessProfileType}
-  </p>
-)}
-   
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Number of Outlets *
-                  </label>
-
-                  <input
-                    type="number"
-                    value={outletCount}
-                    onChange={(e) =>
-                      setOutletCount(
-                        e.target.value
-                      )
-                    }
-                    className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.outletCount
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-                  />
-
-{errors.outletCount && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.outletCount}
-  </p>
-)}
-
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Monthly Recyclables Generated *
-                  </label>
-
-                  <select
-                    value={monthlyRecyclables}
-                    onChange={(e) =>
-                      setMonthlyRecyclables(
-                        e.target.value
-                      )
-                    }
-                    className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.monthlyRecyclables
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-                  >
-                    <option value="">
-                      Select Quantity
-                    </option>
-
-                    <option>
-                      Less than 50 kg
-                    </option>
-
-                    <option>
-                      50 - 250 kg
-                    </option>
-
-                    <option>
-                      250 - 500 kg
-                    </option>
-
-                    <option>
-                      500 kg - 1 Ton
-                    </option>
-
-                    <option>
-                      1 - 5 Tons
-                    </option>
-
-                    <option>
-                      5+ Tons
-                    </option>
-                  </select>
-   
-   {errors.monthlyRecyclables && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.monthlyRecyclables}
-  </p>
-)}
-   
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Storage Space Available *
-                  </label>
-
-                  <select
-                    value={storageSpaceAvailable}
-                    onChange={(e) =>
-                      setStorageSpaceAvailable(
-                        e.target.value
-                      )
-                    }
-                    className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.storageSpaceAvailable
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-                  >
-                    <option value="">
-                      Select Option
-                    </option>
-
-                    <option>
-                      Yes
-                    </option>
-
-                    <option>
-                      No
-                    </option>
-
-                    <option>
-                      Limited
-                    </option>
-                  </select>
-   {errors.storageSpaceAvailable && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.storageSpaceAvailable}
-  </p>
-)}
-   
-                </div>
-
-              </div>
-
-              {/* MATERIAL CATEGORIES */}
-<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
-<h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
-  Material Categories
-</h2>
-
-<p className="mb-6 text-slate-600">
-  Select recyclable materials generated by your retail business.
-</p>
-
-<div
-  className={`grid gap-4 md:grid-cols-2 lg:grid-cols-3 rounded-xl p-3 ${
-    errors.materialCategories
-      ? "border-2 border-red-500"
-      : ""
-  }`}
->
-
-  {[
-    "Paper & Cardboard",
-    "Plastic Packaging",
-    "Metal",
-    "Glass",
-    "E-Waste",
-    "Display Fixtures",
-    "Wooden Crates",
-  ].map((item) => (
-    <label
-      key={item}
-      className="flex items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4"
-    >
-      <input
-        type="checkbox"
-        checked={materialCategories.includes(item)}
-        onChange={() =>
-          toggleArrayValue(
-            item,
-            materialCategories,
-            setMaterialCategories
-          )
-        }
-        className="h-4 w-4 accent-[#72B543]"
-      />
-
-      <span>{item}</span>
-    </label>
-  ))}
-
-</div>
-
-{errors.materialCategories && (
-  <p className="mt-2 text-sm text-red-500">
-    {errors.materialCategories}
-  </p>
-)}
-
-{/* SERVICE REQUIREMENTS */}
-<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
-<h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
-  Service Requirements
-</h2>
-
-<div
-  className={`grid gap-4 md:grid-cols-2 rounded-xl p-3 ${
-    errors.requiredServices
-      ? "border-2 border-red-500"
-      : ""
-  }`}
->
-  {[
-    "Recurring Collection",
-    "One-Time Clearance",
-    "Asset Recovery",
-    "Furniture Recovery",
-    "IT Asset Recovery",
-    "E-Waste Collection",
-    "Sustainability Reporting",
-    "CSR & ESG Reporting Support",
-  ].map((option) => (
-    <label
-      key={option}
-      className="flex items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4"
-    >
-      <input
-        type="checkbox"
-        checked={requiredServices.includes(option)}
-        onChange={() =>
-          toggleArrayValue(
-            option,
-            requiredServices,
-            setRequiredServices
-          )
-        }
-        className="h-4 w-4 accent-[#72B543]"
-      />
-
-      <span>{option}</span>
-    </label>
-  ))}
-
-</div>
-
-{errors.requiredServices && (
-  <p className="mt-2 text-sm text-red-500">
-    {errors.requiredServices}
-  </p>
-)}
-
-<div className="mt-8 grid gap-6 md:grid-cols-3">
-
-  <select
-    value={collectionFrequency}
-    onChange={(e) =>
-      setCollectionFrequency(
-        e.target.value
-      )
-    }
-    className="rounded-xl border-2 border-slate-300 px-4 py-3"
-  >
-    <option value="">
-      Select Frequency
-    </option>
-    <option>Daily</option>
-    <option>Weekly</option>
-    <option>Bi-Weekly</option>
-    <option>Monthly</option>
-    <option>Quarterly</option>
-    <option>On-Demand</option>
-  </select>
-
-  <select
-    value={collectionDay}
-    onChange={(e) =>
-      setCollectionDay(
-        e.target.value
-      )
-    }
-    className="rounded-xl border-2 border-slate-300 px-4 py-3"
-  >
-    <option value="">
-      Select Day
-    </option>
-    <option>Monday</option>
-    <option>Tuesday</option>
-    <option>Wednesday</option>
-    <option>Thursday</option>
-    <option>Friday</option>
-    <option>Saturday</option>
-    <option>Sunday</option>
-  </select>
-
-  <select
-    value={collectionTime}
-    onChange={(e) =>
-      setCollectionTime(
-        e.target.value
-      )
-    }
-    className="rounded-xl border-2 border-slate-300 px-4 py-3"
-  >
-    <option value="">
-      Select Time Slot
-    </option>
-
-    <option>
-      08:00 AM - 10:00 AM
-    </option>
-
-    <option>
-      10:00 AM - 12:00 PM
-    </option>
-
-    <option>
-      12:00 PM - 03:00 PM
-    </option>
-
-    <option>
-      03:00 PM - 06:00 PM
-    </option>
-
-    <option>
-      06:00 PM - 08:00 PM
-    </option>
-
-  </select>
-
-</div>
-
-{/* COMMUNICATION */}
-<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
-<h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
-  Communication Preferences
-</h2>
-
-<div
-  className={`grid gap-4 md:grid-cols-2 rounded-xl p-3 ${
-    errors.communicationPreferences
-      ? "border-2 border-red-500"
-      : ""
-  }`}
->
-
-  {[
-    "Email Notifications",
-    "SMS Notifications",
-    "WhatsApp Notifications",
-    "Sustainability & Impact Reports",
-  ].map((option) => (
-    <label
-      key={option}
-      className="flex items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4"
-    >
-      <input
-        type="checkbox"
-        checked={communicationPreferences.includes(
-          option
-        )}
-        onChange={() =>
-          toggleArrayValue(
-            option,
-            communicationPreferences,
-            setCommunicationPreferences
-          )
-        }
-        className="h-4 w-4 accent-[#72B543]"
-      />
-
-      <span>{option}</span>
-    </label>
-  ))}
-
-</div>
-
-{errors.communicationPreferences && (
-  <p className="mt-2 text-sm text-red-500">
-    {errors.communicationPreferences}
-  </p>
-)}
-
-{/* REFERRAL */}
-<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
-<h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
-  Referral Information
-</h2>
-
-<div className="grid gap-6 md:grid-cols-2">
-
-  <select
-    value={referralSource}
-    onChange={(e) =>
-      setReferralSource(
-        e.target.value
-      )
-    }
-    className={`rounded-xl border-2 px-4 py-3 ${
-  errors.referralSource
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-  >
-    <option value="">
-      Select Source
-    </option>
-
-    <option>
-      Google Search
-    </option>
-
-    <option>
-      LinkedIn
-    </option>
-
-    <option>
-      Industry Event
-    </option>
-
-    <option>
-      Existing Customer
-    </option>
-
-    <option>
-      Social Media
-    </option>
-
-    <option>
-      Other
-    </option>
-  </select>
-
-{errors.referralSource && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.referralSource}
-  </p>
-)}
-
-  <input
-    type="text"
-    value={referralCode}
-    onChange={(e) =>
-      setReferralCode(
-        e.target.value
-      )
-    }
-    placeholder="Referral Code"
-    className="rounded-xl border-2 border-slate-300 px-4 py-3"
-  />
-
-</div>
-
-<div className="mt-6">
-
-  <textarea
-    rows={4}
-    value={additionalComments}
-    onChange={(e) =>
-      setAdditionalComments(
-        e.target.value
-      )
-    }
-    placeholder="Additional Comments"
-    className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
-  />
-
-</div>
-
-{/* Declaration & Consent */}
-<div className="pt-10"></div>
-<h2 className="mt-12 mb-8 text-2xl font-bold text-slate-900">
-  Declaration & Consent
-</h2>
-
-<div
-  className={`space-y-5 rounded-xl p-4 ${
-    errors.declarationConfirmed ||
-    errors.termsAccepted ||
-    errors.communicationConsent
-      ? "border-2 border-red-500"
-      : ""
-  }`}
->
-
-  <label className="flex items-start gap-3">
-    <input
-  type="checkbox"
-  checked={declarationConfirmed}
-  onChange={(e) =>
-    setDeclarationConfirmed(e.target.checked)
-  }
-  className="mt-1 h-4 w-4 accent-[#72B543]"
+<BusinessContactSection
+  fullName={fullName}
+  mobileNumber={mobileNumber}
+  email={email}
+  alternateMobile={alternateMobile}
+  errors={errors}
+  setFullName={setFullName}
+  setMobileNumber={setMobileNumber}
+  setEmail={setEmail}
+  setAlternateMobile={setAlternateMobile}
 />
 
-    <span className="text-slate-700">
-      I confirm that all information provided in this registration
-      form is accurate and complete to the best of my knowledge.
-    </span>
-  </label>
-
-  <label className="flex items-start gap-3">
-    <input
-  type="checkbox"
-  checked={termsAccepted}
-  onChange={(e) =>
-    setTermsAccepted(e.target.checked)
-  }
-  className="mt-1 h-4 w-4 accent-[#72B543]"
+              <BusinessAddressSection
+  shopNumber={shopNumber}
+  buildingName={buildingName}
+  streetArea={streetArea}
+  landmark={landmark}
+  city={city}
+  stateName={stateName}
+  pinCode={pinCode}
+  errors={errors}
+  setShopNumber={setShopNumber}
+  setBuildingName={setBuildingName}
+  setStreetArea={setStreetArea}
+  setLandmark={setLandmark}
+  setCity={setCity}
+  setStateName={setStateName}
+  setPinCode={setPinCode}
 />
 
-    <span className="text-slate-700">
-      I agree to UrbanLoop's Terms & Conditions and Privacy Policy.
-    </span>
-  </label>
-
-  <label className="flex items-start gap-3">
-    <input
-  type="checkbox"
-  checked={communicationConsent}
-  onChange={(e) =>
-    setCommunicationConsent(
-      e.target.checked
-    )
-  }
-  className="mt-1 h-4 w-4 accent-[#72B543]"
+              <RetailBusinessProfileSection
+  businessProfileType={businessProfileType}
+  outletCount={outletCount}
+  monthlyRecyclables={monthlyRecyclables}
+  storageSpaceAvailable={storageSpaceAvailable}
+  errors={errors}
+  setBusinessProfileType={setBusinessProfileType}
+  setOutletCount={setOutletCount}
+  setMonthlyRecyclables={setMonthlyRecyclables}
+  setStorageSpaceAvailable={setStorageSpaceAvailable}
 />
 
-    <span className="text-slate-700">
-      I consent to receiving service updates, pickup reminders,
-      payment notifications and sustainability reports.
-    </span>
-  </label>
+<MaterialCategoriesSection
+  businessProfileType={businessProfileType}
+  materialCategories={materialCategories}
+  errors={errors}
+  setMaterialCategories={setMaterialCategories}
+/>
 
-</div>
+<ServiceRequirementsSection
+  requiredServices={requiredServices}
+  errors={errors}
+  setRequiredServices={setRequiredServices}
+/>
 
-{(errors.declarationConfirmed ||
-  errors.termsAccepted ||
-  errors.communicationConsent) && (
-  <p className="mt-3 text-sm text-red-500">
-    Please accept all declarations and consents.
-  </p>
-)}
+<CollectionPreferencesSection
+  collectionFrequency={collectionFrequency}
+  collectionDay={collectionDay}
+  collectionTime={collectionTime}
+
+  errors={errors}
+
+  setCollectionFrequency={setCollectionFrequency}
+  setCollectionDay={setCollectionDay}
+  setCollectionTime={setCollectionTime}
+/>
+
+<CommunicationPreferencesSection
+  communicationPreferences={communicationPreferences}
+  errors={errors}
+  setCommunicationPreferences={setCommunicationPreferences}
+/>
+
+<ReferralInformationSection
+  referralSource={referralSource}
+  referralCode={referralCode}
+  additionalComments={additionalComments}
+  errors={errors}
+  setReferralSource={setReferralSource}
+  setReferralCode={setReferralCode}
+  setAdditionalComments={setAdditionalComments}
+/>
+
+<DeclarationConsentSection
+  declarationConfirmed={declarationConfirmed}
+  termsAccepted={termsAccepted}
+  communicationConsent={communicationConsent}
+  errors={errors}
+  setDeclarationConfirmed={setDeclarationConfirmed}
+  setTermsAccepted={setTermsAccepted}
+  setCommunicationConsent={setCommunicationConsent}
+/>
 
 {/* SUBMIT */}
 
@@ -1290,13 +568,16 @@ pin_code: pinCode,
   <div className="flex flex-col items-center">
 
     <button
-      type="submit"
-      className="rounded-xl bg-[#72B543] px-10 py-4 text-lg font-semibold text-white"
-    >
-      {loading
-        ? "Submitting..."
-        : "Register Retail Store"}
-    </button>
+  type="submit"
+  disabled={loading}
+  className={`rounded-xl px-10 py-4 text-lg font-semibold text-white transition-colors ${
+    loading
+      ? "cursor-not-allowed bg-gray-400"
+      : "bg-[#72B543] hover:bg-[#5f9b38]"
+  }`}
+>
+  {loading ? "Submitting..." : "Register Retail Store"}
+</button>
 
   </div>
 
@@ -1309,6 +590,16 @@ pin_code: pinCode,
         </section>
 
       </main>
+
+<RegistrationDuplicateModal
+  type="Business Registration"
+  field={duplicateField}
+  value={duplicateValue}
+  isOpen={showDuplicateModal}
+  onClose={() =>
+    setShowDuplicateModal(false)
+  }
+/>
 
       <Footer />
 

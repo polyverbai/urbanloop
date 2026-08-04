@@ -2,7 +2,12 @@
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { supabase } from "@/lib/supabase";
 import {
   Home,
   Briefcase,
@@ -14,6 +19,73 @@ import {
 } from "lucide-react";
 
 export default function CategoriesPage() {
+const router = useRouter();
+
+const [loading, setLoading] =
+  useState(true);
+
+const [customerType, setCustomerType] =
+  useState<string | null>(null);
+
+  useEffect(() => {
+  async function loadCustomer() {
+
+    const {
+      data: { user },
+    } =
+      await supabase.auth.getUser();
+
+    if (!user) {
+
+      router.push("/login");
+
+      return;
+    }
+
+    const {
+      data: customer,
+      error,
+    } = await supabase
+      .from("customer_accounts")
+      .select("customer_type")
+      .eq(
+        "auth_user_id",
+        user.id
+      )
+      .maybeSingle();
+
+    if (error) {
+
+      console.error(error);
+
+      setLoading(false);
+
+      return;
+    }
+
+    if (customer) {
+      setCustomerType(
+        customer.customer_type
+      );
+    }
+
+    setLoading(false);
+  }
+
+  loadCustomer();
+
+}, [router]);
+
+if (loading) {
+
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      Loading...
+    </div>
+  );
+
+}
+
   return (
     <>
       <Header />

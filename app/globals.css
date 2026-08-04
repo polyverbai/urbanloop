@@ -45,3 +45,63 @@ a {
 html {
   scroll-behavior: smooth;
 }
+
+/* ===========================================
+   UrbanLoop Notification Animations
+=========================================== */
+
+@keyframes slideInRight {
+
+  from {
+
+    opacity: 0;
+
+    transform: translateX(40px);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform: translateX(0);
+
+  }
+
+}
+
+@keyframes fadeOut {
+
+  from {
+
+    opacity: 1;
+
+  }
+
+  to {
+
+    opacity: 0;
+
+  }
+
+}
+
+/* ===========================================
+   UrbanLoop Notification Progress Bar
+=========================================== */
+
+@keyframes progressBar {
+
+  from {
+
+    transform: scaleX(1);
+
+  }
+
+  to {
+
+    transform: scaleX(0);
+
+  }
+
+}
