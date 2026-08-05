@@ -12,17 +12,15 @@ export const RESIDENTIAL_CATEGORIES = [
 
 // Recyclable Materials
 export const MATERIAL_CATEGORIES = [
-  "Paper & Cardboard",
+  "All",
+  "Paper & Books",
   "Plastic",
-  "Glass",
   "Metal",
+  "Glass",
   "E-Waste",
-  "Electronic Devices",
   "Furniture",
-  "Textiles",
+  "Electronic Devices",
   "Packaging Materials",
-  "Garden Waste",
-  "Other",
 ];
 
 // Collection Frequencies
