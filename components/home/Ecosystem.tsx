@@ -9,7 +9,7 @@ export default function Ecosystem() {
   ];
 
   return (
-    <section className="bg-white py-28">
+    <section className="bg-[#F5F7FA] py-28">
       <div className="mx-auto max-w-7xl px-6">
         {/* Section Header */}
         <div className="mx-auto mb-20 max-w-3xl text-center">
@@ -29,7 +29,7 @@ export default function Ecosystem() {
 
         <div className="grid items-center gap-16 lg:grid-cols-2">
           {/* LEFT SIDE - FLOW */}
-          <div className="rounded-[32px] border border-slate-200 bg-[#F8FBF4] p-10 shadow-sm">
+          <div className="rounded-[32px] border border-slate-200 bg-white p-10 shadow-sm">
             <div className="space-y-6 text-center">
               <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                 <div className="rounded-2xl bg-white p-4 shadow-sm">

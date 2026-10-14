@@ -55,12 +55,12 @@ export default function HowItWorks() {
 
   return (
     <section
-      id="how-it-works"
-      className="bg-[#F8FBF4] py-24"
-    >
+  id="how-it-works"
+  className="relative py-15"
+>
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto mb-16 max-w-3xl text-center">
-          <span className="inline-flex rounded-full bg-[#72B543]/10 px-4 py-2 text-sm font-medium text-[#72B543]">
+          <span className="inline-flex rounded-full border border-[#72B543]/20 bg-[#72B543]/15 px-5 py-2 text-sm font-medium tracking-wide text-[#72B543]">
             HOW IT WORKS
           </span>
 

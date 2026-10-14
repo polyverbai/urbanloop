@@ -1,4 +1,4 @@
-import Header from "../components/layout/Header";
+  import Header from "../components/layout/Header";
 import Hero from "../components/home/Hero";
 import ImpactCounter from "../components/home/ImpactCounter";
 import HowItWorks from "../components/home/HowItWorks";

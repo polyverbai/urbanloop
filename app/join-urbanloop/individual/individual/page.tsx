@@ -444,9 +444,9 @@ return (
     <>
       <Header />
 
-      <main className="bg-white min-h-screen">
+      <main className="min-h-screen">
 
-        <section className="bg-gradient-to-b from-[#EAF7D7] via-white to-white py-20">
+        <section className="py-20">
 
           <div className="mx-auto max-w-5xl px-6">
 
@@ -465,11 +465,11 @@ return (
               <div className="mt-8 flex justify-center">
 
                 <Link
-                      href="/join-urbanloop/categories"
-                  className="inline-flex items-center gap-2 rounded-xl border border-[#72B543] px-5 py-3 text-sm font-medium text-[#72B543] transition-all duration-300 hover:bg-[#72B543] hover:text-white"
-                >
-                  ← Back
-                </Link>
+  href="/join-urbanloop/categories"
+  className="inline-flex items-center gap-2 rounded-xl bg-[#D7EFC2] px-5 py-3 text-sm font-medium text-black shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-black hover:shadow-lg"
+>
+  ← Back
+</Link>
 
               </div>
 
@@ -563,11 +563,16 @@ return (
 
     <button
   type="submit"
-  className="rounded-xl bg-[#72B543] px-8 py-4 text-lg font-semibold text-white shadow-[0_10px_25px_rgba(114,181,67,0.30)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#5FA032]"
+  disabled={loading}
+  className={`rounded-xl bg-[#D7EFC2] px-8 py-3 text-sm font-medium text-black shadow-sm transition-all duration-300 hover:-translate-y-1 ${
+    loading
+      ? "cursor-not-allowed bg-gray-400 text-white"
+      : "hover:bg-[#72B543] hover:text-black hover:shadow-lg"
+  }`}
 >
   {loading
     ? "Submitting..."
-    : "Register Your Residence"}
+    : "Submit Registration"}
 </button>
     <p className="mt-4 text-sm text-slate-500">
       Our team will review your registration and contact you shortly.

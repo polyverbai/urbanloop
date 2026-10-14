@@ -10,12 +10,8 @@ import CommunicationPreferencesSection from "./components/CommunicationPreferenc
 import CollectionPreferencesSection from "./components/CollectionPreferencesSection"; 
 import ReferralInformationSection from "./components/ReferralInformationSection";
 import DeclarationConsentSection from "./components/DeclarationConsentSection";
-
-import { generateRegistrationNumber }
-from "@/lib/registration/generateRegistrationNumber";
-import { createCustomerAccount }
-from "@/lib/customerAccounts";
 import { useState } from "react";
+import { useNotification } from "@/components/ui/notification/useNotification";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
@@ -31,6 +27,7 @@ from "@/components/common/RegistrationDuplicateModal";
 export default function RetailRegistrationPage() {
   const [loading, setLoading] = useState(false);
 const router = useRouter();
+const notify = useNotification();
 const [errors, setErrors] = useState<Record<string, string>>({});
 
 const [showDuplicateModal,
@@ -186,191 +183,126 @@ setErrors({});
 
     try {
 
-// Check duplicate Mobile Number.
+const {
+  data: { user },
+} = await supabase.auth.getUser();
 
-const { data: existingMobile } =
-await supabase
-  .from("business_registrations")
-  .select("id")
-  .eq("mobile_number", mobileNumber)
-  .maybeSingle();
-
-if (existingMobile) {
-
-  setDuplicateField(
-    "Mobile Number"
+if (!user) {
+  throw new Error(
+    "User authentication required."
   );
-
-  setDuplicateValue(
-    mobileNumber
-  );
-
-  setShowDuplicateModal(
-    true
-  );
-
-  setLoading(false);
-
-  return;
-
 }
 
-// Check duplicate Email Address.
+const payload = {
+  full_name: fullName,
+  mobile_number: mobileNumber,
+  email,
+  alternate_mobile: alternateMobile,
 
-const { data: existingEmail } =
-await supabase
-  .from("business_registrations")
-  .select("id")
-  .eq("email", email)
-  .maybeSingle();
+  shop_number: shopNumber,
+  building_name: buildingName,
+  street_area: streetArea,
+  landmark,
+  city,
+  state_name: stateName,
+  pin_code: pinCode,
 
-if (existingEmail) {
+  business_profile_type:
+    businessProfileType,
 
-  setDuplicateField(
-    "Email Address"
-  );
+  outlet_count:
+    outletCount,
 
-  setDuplicateValue(
-    email
-  );
+  monthly_recyclables:
+    monthlyRecyclables,
 
-  setShowDuplicateModal(
-    true
-  );
+  storage_space_available:
+    storageSpaceAvailable,
 
-  setLoading(false);
+  material_categories:
+    materialCategories,
 
-  return;
+  required_services:
+    requiredServices,
 
-}
+  collection_frequency:
+    collectionFrequency,
 
-  // Insert record.
+  collection_day:
+    collectionDay,
 
-  const { data, error } =
-    await supabase
-      .from("business_registrations")
-      .insert([
-        {
+  collection_time:
+    collectionTime,
 
-full_name: fullName,
-    mobile_number: mobileNumber,
-    email: email,
-    alternate_mobile: alternateMobile,
+  communication_preferences:
+    communicationPreferences,
 
-    shop_number: shopNumber,
-    building_name: buildingName,
-    street_area: streetArea,
-    landmark: landmark,
-    city: city,
-    state_name: stateName,
-    pin_code: pinCode,
+  referral_source:
+    referralSource,
 
-    business_profile_type:
-      businessProfileType,
+  referral_code:
+    referralCode,
 
-    outlet_count:
-      outletCount,
+  additional_comments:
+    additionalComments,
 
-    monthly_recyclables:
-      monthlyRecyclables,
+  declaration_confirmed:
+    declarationConfirmed,
 
-    storage_space_available:
-      storageSpaceAvailable,
+  terms_accepted:
+    termsAccepted,
 
-    material_categories:
-      materialCategories,
+  communication_consent:
+    communicationConsent,
 
-    required_services:
-      requiredServices,
+  auth_user_id:
+    user.id,
+};
 
-    collection_frequency:
-      collectionFrequency,
-
-    collection_day:
-      collectionDay,
-
-    collection_time:
-      collectionTime,
-
-    communication_preferences:
-      communicationPreferences,
-
-    referral_source:
-      referralSource,
-
-    referral_code:
-      referralCode,
-
-    additional_comments:
-      additionalComments,
-
-    declaration_confirmed:
-      declarationConfirmed,
-
-    terms_accepted:
-      termsAccepted,
-
-    communication_consent:
-      communicationConsent,
-
-        },
-      ])
-      .select("id")
-      .single();
-
-  if (error) {
-    throw error;
+const response = await fetch(
+  "/api/business-registration",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type":
+        "application/json",
+    },
+    body: JSON.stringify(payload),
   }
+);
 
+const result =
+  await response.json();
 
-  // Get registration count.
+if (!response.ok) {
 
-  const {
-    count,
-    error: countError,
-  } = await supabase
-    .from("business_registrations")
-    .select("*", {
-      count: "exact",
-      head: true,
-    });
+  if (response.status === 409) {
 
-  if (countError) {
-    throw countError;
-  }
-
-
-  // Generate registration number.
-
-  const registrationNumber =
-    generateRegistrationNumber(
-      "BUS",
-      count ?? 1
+    setDuplicateField(
+      result.field ?? "Information"
     );
 
+    setDuplicateValue(
+      result.value ?? ""
+    );
 
-  // Update registration number.
+    setShowDuplicateModal(
+      true
+    );
 
-  const {
-    error: updateError,
-  } = await supabase
-    .from("business_registrations")
-    .update({
-      registration_number:
-        registrationNumber,
-    })
-    .eq("id", data.id);
-
-
-  if (updateError) {
-    throw updateError;
+    return;
   }
+
+  throw new Error(
+    result.message
+  );
+}
 
 
   // Redirect to common success page.
 
 router.push(
-  `/registration-success?type=Business Registration&registrationNumber=${registrationNumber}&returnUrl=/join-urbanloop/categories&returnText=Back To Categories`
+  `/registration-success?type=Business Registration&registrationNumber=${result.registrationNumber}&returnUrl=/join-urbanloop/categories&returnText=Back To Categories`
 );
 
 
@@ -431,9 +363,9 @@ console.log(error.message);
     <>
       <Header />
 
-      <main className="bg-white min-h-screen">
+      <main className="min-h-screen">
 
-        <section className="bg-gradient-to-b from-[#EAF7D7] via-white to-white py-20">
+        <section className="py-20">
 
           <div className="mx-auto max-w-5xl px-6">
 
@@ -457,8 +389,7 @@ console.log(error.message);
 
   <Link
     href="/join-urbanloop/categories"
-    className="inline-flex items-center gap-2 rounded-xl border border-[#72B543] px-5 py-3 text-sm font-medium text-[#72B543] transition-all duration-300 hover:bg-[#72B543] hover:text-white"
-  >
+  className="inline-flex items-center gap-2 rounded-xl bg-[#D7EFC2] px-5 py-3 text-sm font-medium text-black shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-black hover:shadow-lg">
     ← Back
   </Link>
 
@@ -570,14 +501,19 @@ console.log(error.message);
     <button
   type="submit"
   disabled={loading}
-  className={`rounded-xl px-10 py-4 text-lg font-semibold text-white transition-colors ${
+  className={`rounded-xl bg-[#D7EFC2] px-8 py-3 text-sm font-medium text-black shadow-sm transition-all duration-300 hover:-translate-y-1 ${
     loading
-      ? "cursor-not-allowed bg-gray-400"
-      : "bg-[#72B543] hover:bg-[#5f9b38]"
+      ? "cursor-not-allowed bg-gray-400 text-white"
+      : "hover:bg-[#72B543] hover:text-black hover:shadow-lg"
   }`}
 >
-  {loading ? "Submitting..." : "Register Retail Store"}
+  {loading
+    ? "Submitting..."
+    : "Submit Registration"}
 </button>
+<p className="mt-4 text-sm text-slate-500">
+      Our team will review your registration and contact you shortly.
+    </p>
 
   </div>
 

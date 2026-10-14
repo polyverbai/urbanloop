@@ -3,14 +3,14 @@ import Link from "next/link";
 export default function Hero() {
   return (
     <section
-      id="home"
-      className="scroll-mt-28 bg-gradient-to-b from-[#EAF7D7] to-white"
-    >
-      <div className="mx-auto max-w-7xl px-6 pt-15 pb-12">
+  id="home"
+  className="scroll-mt-28"
+>
+      <div className="mx-auto max-w-7xl px-6 pt-24 pb-20">
         <div className="grid items-center gap-10 lg:grid-cols-2">
           {/* Left Content */}
           <div>
-            <span className="inline-flex rounded-full bg-[#72B543]/10 px-5 py-2 text-sm font-medium text-[#72B543]">
+            <span className="inline-flex rounded-full border border-[#72B543]/20 bg-[#72B543]/15 px-5 py-2 text-sm font-medium text-[#72B543]">
               POWERING THE CIRCULAR ECONOMY
             </span>
 
@@ -19,7 +19,7 @@ export default function Hero() {
               <span className="text-[#72B543]">Wealth</span>
             </h1>
 
-            <p className="mt-6 max-w-2xl text-xl leading-relaxed text-slate-600">
+            <p className="mt-6 max-w-xl text-xl leading-relaxed text-slate-600">
               UrbanLoop helps households, apartments, businesses and
               institutions transform waste into value through smart recycling,
               rewards, composting and measurable environmental impact.
@@ -28,16 +28,15 @@ export default function Hero() {
             {/* Desktop Buttons Only */}
             <div className="mt-10 hidden gap-4 lg:flex">
   <a
-    href="#why-urbanloop"
-    className="rounded-xl bg-slate-200 px-8 py-4 font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#D7EFC2] hover:text-[#5FA032] hover:shadow-lg"
-  >
+  href="#why-urbanloop"
+className="rounded-xl bg-[#CFE9AE] px-8 py-4 font-semibold text-[#2B5E1A] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-white hover:shadow-lg active:bg-[#5FA235]"
+>
     Why UrbanLoop
   </a>
 
   <a
     href="#services"
-    className="rounded-xl bg-slate-200 px-8 py-4 font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#D7EFC2] hover:text-[#5FA032] hover:shadow-lg"
-  >
+className="rounded-xl bg-[#CFE9AE] px-8 py-4 font-semibold text-[#2B5E1A] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-white hover:shadow-lg active:bg-[#5FA235]"  >
     Our Services
   </a>
 </div>
@@ -46,16 +45,16 @@ export default function Hero() {
           {/* Right Infographic */}
           <div className="relative flex justify-center lg:justify-end pointer-events-none">
             {/* Green Glow */}
-            <div className="absolute left-10 top-20 h-56 w-56 rounded-full bg-[#72B543]/20 blur-3xl"></div>
+            <div className="absolute left-10 top-20 h-56 w-56 rounded-full bg-[#72B543]/20 blur-[120px]"></div>
 
             {/* Blue Glow */}
-            <div className="absolute right-10 bottom-16 h-56 w-56 rounded-full bg-[#2A6FA3]/20 blur-3xl"></div>
+            <div className="absolute right-10 bottom-16 h-56 w-56 rounded-full bg-[#2A6FA3]/20 blur-[120px]"></div>
 
             {/* Infographic */}
             <img
               src="/images/urbanloop-circular-economy.png"
               alt="UrbanLoop Circular Economy Ecosystem"
-              className="pointer-events-none relative h-auto w-full max-w-[420px] drop-shadow-[0_25px_50px_rgba(15,76,129,0.15)]"
+              className="pointer-events-none relative h-auto w-full max-w-[520px] drop-shadow-[0_25px_50px_rgba(15,76,129,0.15)]"
             />
           </div>
         </div>

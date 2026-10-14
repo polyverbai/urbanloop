@@ -5,10 +5,19 @@ html {
 }
 
 :root {
-  --primary-green: #72b543;
-  --light-green: #a7d46a;
-  --primary-blue: #0f4c81;
-  --secondary-blue: #2a6fa3;
+  --primary-green: #72B543;
+  --light-green: #A7D46A;
+  --primary-blue: #0F4C81;
+  --secondary-blue: #2A6FA3;
+
+  --page-background:
+    linear-gradient(
+      180deg,
+      #F8FCF5 0%,
+      #F3F9EE 35%,
+      #EDF6E7 70%,
+      #E8F3E1 100%
+    );
 }
 
 * {
@@ -22,7 +31,7 @@ html {
 body {
   font-family: var(--font-inter), sans-serif;
   color: #1f2937;
-  background: #ffffff;
+  background: var(--page-background);
   margin: 0;
   padding: 0;
 }

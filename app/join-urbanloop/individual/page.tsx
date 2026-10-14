@@ -10,7 +10,7 @@ export default function ResidentialRegistrationPage() {
     <>
       <Header />
 
-      <main className="bg-white min-h-screen">
+      <main className="min-h-screen bg-white">
 
 
         {/* CTA Section */}

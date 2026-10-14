@@ -15,6 +15,12 @@ export default async function uploadDocument(
     // Create storage path.
     const filePath = `${folderName}/${fileName}`;
 
+const {
+  data: { session },
+} = await supabase.auth.getSession();
+
+console.log("Session:", session);
+
     // Upload file.
     const { error } = await supabase.storage
       .from(bucketName)

@@ -90,10 +90,10 @@ if (loading) {
     <>
       <Header />
 
-      <main className="bg-white">
+      <main className="min-h-screen">
 
         {/* Hero Section */}
-        <section className="bg-gradient-to-b from-[#EAF7D7] via-white to-white py-20">
+        <section className="py-20">
           <div className="mx-auto max-w-5xl px-6 text-center">
             <h1 className="mt-4 text-3xl font-bold text-slate-900 md:text-4xl">
               Select The Category
@@ -115,7 +115,7 @@ if (loading) {
         {/* Category Cards */}
 
 
-        <section className="bg-white">
+        <section>
           <div className="mx-auto max-w-7xl px-6">
 
             <div className="grid gap-2 md:grid-cols-3 xl:grid-cols-5">
@@ -135,7 +135,7 @@ if (loading) {
 
                 <Link
                   href="/join-urbanloop/individual/individual"
-                  className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#72B543] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#5FA032]"
+                  className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#D7EFC2] px-4 py-2 text-sm font-medium text-black shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-black hover:shadow-lg"
                 >
                   Register Now
                   <ArrowRight size={16} />
@@ -158,7 +158,7 @@ if (loading) {
 
                 <Link
                   href="/join-urbanloop/business-registration/retail"
-                  className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#72B543] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#5FA032]"
+                  className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#D7EFC2] px-4 py-2 text-sm font-medium text-black shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-black hover:shadow-lg"
                 >
                   Register Now
                   <ArrowRight size={16} />
@@ -181,7 +181,7 @@ if (loading) {
 
                 <Link
                   href="/join-urbanloop/corporate-registration/it-company"
-                  className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#72B543] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#5FA032]"
+                  className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#D7EFC2] px-4 py-2 text-sm font-medium text-black shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-black hover:shadow-lg"
                 >
                   Register Now
                   <ArrowRight size={16} />
@@ -204,7 +204,7 @@ if (loading) {
 
                 <Link
                   href="/join-urbanloop/educational-institution-registration/institutions/"
-                  className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#72B543] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#5FA032]"
+                  className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#D7EFC2] px-4 py-2 text-sm font-medium text-black shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-black hover:shadow-lg"
                 >
                   Register Now
                   <ArrowRight size={16} />
@@ -227,7 +227,7 @@ if (loading) {
 
                 <Link
                   href="/join-urbanloop/hospital-institutions-registration/institutions"
-                  className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#72B543] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#5FA032]"
+                  className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#D7EFC2] px-4 py-2 text-sm font-medium text-black shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-black hover:shadow-lg"
                 >
                   Register Now
                   <ArrowRight size={16} />
@@ -241,18 +241,26 @@ if (loading) {
         </section>
 {/* CTA SECTION */}
 
-<section className="mt-24 bg-gradient-to-br from-[#72B543] to-[#5FA032] py-24">
-  <div className="mx-auto max-w-5xl px-6 text-center">
+<section className="py-20">
+  
 
-    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm">
-      <Handshake
-        size={40}
-        strokeWidth={1.8}
-        className="text-white"
-      />
-    </div>
+    <div className="mx-auto max-w-7xl px-6">
+        <div className="relative mt-12 overflow-visible rounded-[40px] bg-gradient-to-r from-[#157A24] via-[#4E9A2E] to-[#8BC34A] px-10 pt-20 pb-16 text-center shadow-[0_30px_80px_rgba(21,122,36,0.25)] md:px-16">
 
-    <h2 className="mt-8 text-4xl font-bold text-white md:text-5xl">
+<div className="mb-8 flex justify-center">
+  <div className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-white bg-[#EAF7D7] shadow-xl">
+    <Handshake
+      size={40}
+      strokeWidth={1.8}
+      className="text-[#72B543]"
+    />
+  </div>
+</div>
+
+        <div className="mx-auto max-w-4xl text-center">
+
+          <h2 className="text-4xl font-bold text-white">
+
       Ready To Join
       <span className="block">
         UrbanLoop?
@@ -270,14 +278,15 @@ if (loading) {
 
       <Link
         href="/contact"
-        className="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 font-semibold text-[#72B543] shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+        className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#D7EFC2] px-4 py-2 text-sm font-medium text-black shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-black hover:shadow-lg"
       >
         Contact UrbanLoop
       </Link>
 
     </div>
-
-  </div>
+</div>
+</div>
+</div>
 </section>
       </main>
 

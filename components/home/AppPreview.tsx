@@ -9,7 +9,7 @@ export default function AppPreview() {
   ];
 
   return (
-    <section className="bg-[#F8FBF4] py-28">
+    <section className="py-28">
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid items-center gap-20 lg:grid-cols-2">
           {/* PHONE MOCKUP */}

@@ -15,6 +15,7 @@ interface SelectFieldProps {
   placeholder?: string;
   error?: string;
   disabled?: boolean;
+  className?: string;
 }
 
 export default function SelectField({
@@ -27,9 +28,10 @@ export default function SelectField({
   placeholder = "Select",
   error,
   disabled = false,
+  className = "",
 }: SelectFieldProps) {
   return (
-    <div className="space-y-2">
+    <div className={`space-y-2 ${className}`}>
       <label
         htmlFor={name}
         className="block text-sm font-semibold text-gray-700"

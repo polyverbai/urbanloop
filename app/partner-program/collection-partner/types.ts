@@ -2,16 +2,19 @@ export interface BusinessInformation {
   collectionPartnerCategory: string;
   shopName: string;
   ownerName: string;
-  primaryContactPerson: string;
   mobileNumber: string;
-  alternateMobileNumber: string;
   email: string;
-  whatsappNumber: string;
-  website: string;
   yearEstablished: string;
-  gstNumber: string;
-  panNumber: string;
   numberOfEmployees: string;
+
+panAvailable: "" | "Yes" | "No";
+panNumber: string;
+
+tradeLicenseAvailable: "" | "Yes" | "No";
+  tradeLicenseNumber: string;
+
+  gstAvailable: "" | "Yes" | "No";
+  gstNumber: string;
 }
 
 export interface BusinessVerification {
@@ -39,8 +42,18 @@ export interface BusinessAddress {
 export interface MaterialCollection {
   materialsHandled: string[];
   collectionServices: string[];
+
   dailyCollectionCapacity: string;
-  monthlyProcessingCapacity: string;
+  monthlyCollectionCapacity: string;
+  collectionCapacityUnit: string;
+
+  sortingFacilityAvailable: string;
+  sortingCapacity: string;
+
+  storageSpaceAvailable: string;
+
+  storageCapacity: string;
+  storageCapacityUnit: string;
 }
 
 export interface FacilityTransportation {
@@ -53,14 +66,25 @@ export interface FacilityTransportation {
 
 export interface CoveragePayment {
   operatingAreas: string[];
+
   preferredPickupDays: string[];
+
   preferredPickupTime: string;
+
   bankName: string;
+
   accountHolderName: string;
+
   accountNumber: string;
+
+  confirmAccountNumber: string;
+
   ifscCode: string;
+
   upiId: string;
+
   emergencyContactName: string;
+
   emergencyContactNumber: string;
 }
 
@@ -75,7 +99,34 @@ export interface CollectionPartnerForm {
   businessVerification: BusinessVerification;
   businessAddress: BusinessAddress;
   materialCollection: MaterialCollection;
+
+  segregationFacility: {
+    segregationFacilityAvailable: string;
+    segregationCapacity: string;
+    segregationCapacityUnit: string;
+  };
+
+  selfTransportation: {
+  vehicleAvailable: "" | "Yes" | "No";
+  vehicleTypes: string[];
+
+  numberOfVehicles: string;
+
+  primaryCity: string;
+  district: string;
+  state: string;
+  pinCodes: string;
+  collectionRadius: string;
+  vehicleNumbers: string;
+
+  drivingLicence: File | null;
+};
+
+
   facilityTransportation: FacilityTransportation;
-  coveragePayment: CoveragePayment;
-  declaration: Declaration;
+
+coveragePayment: CoveragePayment;
+
+declaration: Declaration;
 }
+

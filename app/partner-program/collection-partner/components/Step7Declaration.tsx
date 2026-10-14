@@ -49,7 +49,7 @@ export default function Step7Declaration({
 
             <div>✅ Material Collection Completed</div>
 
-            <div>✅ Processing Facility Completed</div>
+            <div>✅ Self Transportation Completed</div>
 
             <div>✅ Coverage & Payment Completed</div>
 

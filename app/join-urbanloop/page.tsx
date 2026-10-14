@@ -37,11 +37,11 @@ const [openFaq, setOpenFaq] = useState<number | null>(0);
     <>
       <Header />
 
-      <main className="bg-white">
+      <main className="min-h-screen bg-white">
 
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-[#EAF7D7] via-white to-white">
-          <div className="mx-auto max-w-7xl px-6 py-16 lg:py-20">
+        <section className="relative overflow-hidden bg-white">
+  <div className="mx-auto max-w-7xl px-6 py-16 lg:py-20">
 
             <div className="grid items-center gap-16 lg:grid-cols-2">
 
@@ -722,7 +722,7 @@ const [openFaq, setOpenFaq] = useState<number | null>(0);
 </section>
 
 {/* Final CTA */}
-<section className="bg-gradient-to-br from-[#72B543] to-[#5FA032] py-24">
+<section className="bg-white py-24">
   <div className="mx-auto max-w-5xl px-6 text-center">
 
     <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm">

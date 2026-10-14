@@ -70,31 +70,32 @@ export const MATERIAL_TYPES = [
   "All Materials",
   "Paper",
   "Cardboard",
-  "Plastic",
+  "PET Bottles",
+  "HDPE Bottles",
+  "Mixed Plastics",
   "Glass",
-  "Metal",
+  "Iron Scraps",
+  "Steel Scraps",
   "Aluminium",
-  "Iron",
   "Copper",
   "Brass",
-  "Steel",
   "E-Waste",
   "Batteries",
   "Textiles",
-  "Rubber",
-  "Wood",
-  "Organic Waste",
-  "Construction Waste",
+  "Tyres",
+  "Automobile & Parts"
 ];
 
 export const COLLECTION_SERVICES = [
   "All Services",
-  "Doorstep Collection",
-  "Bulk Collection",
-  "Scheduled Pickup",
-  "On-demand Pickup",
-  "Industrial Waste Collection",
-  "Commercial Waste Collection",
+
+  "Door-to-Door Collection",
+  "Pickup on Request",
+  "Bulk Waste Collection",
+  "Industrial Collection",
+  
+  "Commercial Collection",
+  "Residential Collection",
 ];
 
 // ======================================================
@@ -106,18 +107,6 @@ export const STORAGE_CAPACITY = [
   { label: "500 Kg - 1 Ton", value: "500-1000" },
   { label: "1 Ton - 5 Ton", value: "1000-5000" },
   { label: "Above 5 Ton", value: ">5000" },
-];
-
-export const VEHICLE_TYPES = [
-  "All Vehicles",
-  "Bicycle",
-  "Two Wheeler",
-  "Three Wheeler",
-  "Mini Truck",
-  "Pickup Van",
-  "Tempo",
-  "Truck",
-  "Container Vehicle",
 ];
 
 // ======================================================
@@ -172,4 +161,29 @@ export const INDIAN_STATES = [
   "Uttar Pradesh",
   "Uttarakhand",
   "West Bengal",
+];
+
+export const CAPACITY_UNITS = [
+  { label: "Kilograms (Kg)", value: "Kg" },
+  { label: "Metric Ton", value: "Ton" },
+  { label: "Quintal", value: "Quintal" },
+  { label: "Grams", value: "Gram" },
+];
+
+// ======================================================
+// SELF TRANSPORT
+// ======================================================
+
+export const VEHICLE_TYPES = [
+  "All Vehicles",
+  "Bicycle",
+  "Two Wheeler",
+  "Three Wheeler",
+  "Mini Truck",
+  "Pickup Van",
+  "Tata Ace",
+  "LCV",
+  "Truck",
+  "Container",
+  "Other",
 ];

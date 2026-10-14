@@ -11,9 +11,9 @@ return (
 
 <Header />
 
-  <main className="bg-white min-h-screen">
+  <main className="min-h-screen bg-white">
 
-    <section className="bg-gradient-to-b from-[#EAF7D7] via-white to-white py-20">
+    <section className="bg-white py-20">
 
       <div className="mx-auto max-w-7xl px-6">
 

@@ -36,10 +36,9 @@ export default function AboutPage() {
     <>
       <Header />
 
-      <main className="bg-white">
-
+      <main className="min-h-screen">
         {/* Hero Section */}
-        <section className="bg-gradient-to-b from-[#EAF7D7] via-white to-white py-24">
+        <section className="scroll-mt-28 py-28">
           <div className="mx-auto max-w-7xl px-6">
 
             <div className="mx-auto max-w-4xl text-center">
@@ -66,14 +65,14 @@ export default function AboutPage() {
 
                 <Link
                   href="/join-urbanloop/categories"
-                  className="rounded-xl bg-[#72B543] px-8 py-4 font-semibold text-white shadow-[0_10px_25px_rgba(114,181,67,0.30)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#5FA032]"
+                    className="rounded-xl bg-[#CFE9AE] px-8 py-4 font-semibold text-[#2B5E1A] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-white hover:shadow-lg active:bg-[#5FA235]"
                 >
                   Schedule Pickup
                 </Link>
 
                 <Link
                   href="/partner-program"
-                  className="rounded-xl bg-slate-200 px-8 py-4 font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#D7EFC2] hover:text-[#5FA032] hover:shadow-lg"
+                  className="rounded-xl bg-[#CFE9AE] px-8 py-4 font-semibold text-[#2B5E1A] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-white hover:shadow-lg active:bg-[#5FA235]"
                 >
                   Become A Partner
                 </Link>
@@ -83,10 +82,11 @@ export default function AboutPage() {
             </div>
 
           </div>
-        </section>
+        
 
 {/* Who We Are */}
-<section className="py-24">
+
+<section className="py-28">
   <div className="mx-auto max-w-5xl px-6">
 
     <div>
@@ -124,6 +124,7 @@ export default function AboutPage() {
 
       <div className="mx-auto mt-24 mb-10 max-w-4xl text-center">
 
+
         <h3 className="text-3xl font-bold text-slate-900 md:text-4xl">
           The UrbanLoop Circular Economy
         </h3>
@@ -142,18 +143,19 @@ export default function AboutPage() {
           src="/images/urbanloop-circular-economy-story.png"
           alt="UrbanLoop Circular Economy Story"
           className="w-full rounded-2xl"
-        />
+        />  
 
       </div>
 
     </div>
 
   </div>
-</section>
-      </main>
+  </section>
+
 
 {/* The Challenge We Are Solving */}
-<section className="bg-[#F8FBF4] py-24">
+<section className="py-1">
+
   <div className="mx-auto max-w-7xl px-6">
 
     <div className="mx-auto max-w-4xl text-center">
@@ -249,8 +251,10 @@ export default function AboutPage() {
   </div>
 </section>
 
+
 {/* Why UrbanLoop Is Different */}
 <section className="py-24">
+
   <div className="mx-auto max-w-7xl px-6">
 
     <div className="mx-auto max-w-4xl text-center">
@@ -342,7 +346,7 @@ export default function AboutPage() {
 </section>
 
 {/* Sustainability That Rewards Participation */}
-<section className="bg-[#F8FBF4] py-24">
+<section className="py-24">
   <div className="mx-auto max-w-7xl px-6">
 
     <div className="mx-auto max-w-4xl text-center">
@@ -476,7 +480,8 @@ export default function AboutPage() {
 </section>
 
 {/* Creating Value From Organic Waste */}
-<section className="py-24">
+<section className="py-22">
+
   <div className="mx-auto max-w-7xl px-6">
 
     <div className="mx-auto max-w-4xl text-center">
@@ -621,8 +626,9 @@ export default function AboutPage() {
   </div>
 </section>
 
+
 {/* Empowering Recovery Partners */}
-<section className="bg-[#F8FBF4] py-24">
+<section className="py-24">
   <div className="mx-auto max-w-7xl px-6">
 
     <div className="mx-auto max-w-4xl text-center">
@@ -768,6 +774,7 @@ export default function AboutPage() {
   </div>
 </section>
 
+
 {/* Technology At The Core */}
 <section className="py-24">
   <div className="mx-auto max-w-7xl px-6">
@@ -890,7 +897,7 @@ export default function AboutPage() {
 
 
 {/* Vision & Mission */}
-<section className="bg-[#F8FBF4] py-24">
+<section className="py-24">
   <div className="mx-auto max-w-7xl px-6">
 
     <div className="mx-auto mb-16 max-w-4xl text-center">
@@ -965,6 +972,7 @@ export default function AboutPage() {
 
   </div>
 </section>
+
 
 {/* Impact We Aim To Create */}
 <section className="py-24">
@@ -1042,8 +1050,9 @@ export default function AboutPage() {
   </div>
 </section>
 
+
 {/* Take Action */}
-<section className="bg-[#F8FBF4] py-20">
+<section className="py-24">
   <div className="mx-auto max-w-7xl px-6">
 
     <div className="text-center">
@@ -1063,14 +1072,15 @@ export default function AboutPage() {
 
         <Link
           href="/join-urbanloop/categories"
-          className="rounded-xl bg-[#72B543] px-8 py-4 font-semibold text-white shadow-[0_10px_25px_rgba(114,181,67,0.30)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#5FA032]"
+            className="rounded-xl bg-[#EAF7D7] px-8 py-4 font-semibold text-[#72B543] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-white hover:shadow-lg"
+
         >
           Schedule Pickup
         </Link>
 
         <Link
           href="/partner-program"
-          className="rounded-xl bg-slate-200 px-8 py-4 font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#D7EFC2] hover:text-[#5FA032] hover:shadow-lg"
+          className="rounded-xl bg-[#EAF7D7] px-8 py-4 font-semibold text-[#72B543] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-white hover:shadow-lg"
         >
           Become A Partner
         </Link>
@@ -1081,6 +1091,8 @@ export default function AboutPage() {
 
   </div>
 </section>
+</section>
+</main>
       <Footer />
     </>
   );

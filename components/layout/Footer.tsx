@@ -6,7 +6,7 @@ export default function Footer() {
   return (
    <footer
   id="contact"
-  className="scroll-mt-28 bg-gradient-to-br from-[#234F32] via-[#1E4D2B] to-[#0B1F12] text-white"
+  className="scroll-mt-28 bg-gradient-to-br from-[#3E6F28] via-[#2F5D22] to-[#1A3812] text-white"
 >
       <div className="mx-auto max-w-7xl px-6 py-20">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-5">
@@ -21,9 +21,10 @@ export default function Footer() {
 />
 
             <p className="mx-auto lg:mx-0 mt-5 max-w-md leading-relaxed text-white/70">
-              Transforming waste into value through smart recycling,
-              rewards, circular economy initiatives and measurable
-              environmental impact.
+              UrbanLoop is India's smart circular economy platform,
+connecting households, businesses and recycling partners
+to transform recyclable waste into measurable environmental
+and economic value.
             </p>
 
             <div className="mt-8 flex justify-center gap-4 lg:justify-start">
@@ -42,51 +43,69 @@ export default function Footer() {
           </div>
 
           {/* Company */}
-          <div>
-            <h3 className="mb-5 text-lg font-semibold text-white">
-              Company
-            </h3>
+<div>
+  <h3 className="mb-5 text-lg font-semibold text-white">
+    Company
+  </h3>
 
-            <ul className="space-y-3 text-white/70">
-              <li>
-                <Link href="/" className="transition hover:text-white">
-                  About Us
-                </Link>
-              </li>
+  <ul className="space-y-3 text-white/70">
 
-              <li>
-                <Link href="/" className="transition hover:text-white">
-                  Our Mission
-                </Link>
-              </li>
+    <li>
+      <Link href="/" className="transition hover:text-white">
+        Home
+      </Link>
+    </li>
 
-              <li>
-                <Link href="/" className="transition hover:text-white">
-                  Impact
-                </Link>
-              </li>
+    <li>
+      <Link href="/about" className="transition hover:text-white">
+        About UrbanLoop
+      </Link>
+    </li>
 
-              <li>
-                <Link href="/" className="transition hover:text-white">
-                  Careers
-                </Link>
-              </li>
-            </ul>
-          </div>
+    <li>
+      <Link href="/#services" className="transition hover:text-white">
+  Services
+</Link>
+    </li>
 
-          {/* Services */}
-          <div>
-            <h3 className="mb-5 text-lg font-semibold text-white">
-              Services
-            </h3>
+    <li>
+      <Link href="/partner-program" className="transition hover:text-white">
+        Partner Program
+      </Link>
+    </li>
 
-            <ul className="space-y-3 text-white/70">
-              <li>Dry Waste Collection</li>
-              <li>Wet Waste Composting</li>
-              <li>E-Waste Management</li>
-              <li>Business Recycling</li>
-            </ul>
-          </div>
+    <li>
+      <Link href="/contact" className="transition hover:text-white">
+        Contact Us
+      </Link>
+    </li>
+
+  </ul>
+</div>
+
+          {/* Partner Program */}
+<div>
+  <h3 className="mb-5 text-lg font-semibold text-white">
+    Partner Program
+  </h3>
+
+  <ul className="space-y-3 text-white/70">
+
+      <li>
+      <Link href="/join-urbanloop/categories" className="transition hover:text-white">
+        Join UrbanLoop
+      </Link>
+    </li>
+
+    <Link
+  href="/partner-program#join-partners"
+  className="transition hover:text-white"
+>
+  Become a Partner
+</Link>
+
+      </ul>
+</div>
 
           {/* Contact */}
           <div>
@@ -95,10 +114,28 @@ export default function Footer() {
             </h3>
 
             <ul className="space-y-3 text-white/70">
-              <li>Bengaluru, India</li>
-              <li>hello@urbanloop.in</li>
-              <li>+91 XXXXX XXXXX</li>
-            </ul>
+
+  <li>Bengaluru, Karnataka, India</li>
+
+  <li>
+    <a
+      href="mailto:hello@urbanloop.in"
+      className="transition hover:text-white"
+    >
+      hello@urbanloop.in
+    </a>
+  </li>
+
+  <li>
+    <a
+      href="tel:+91XXXXXXXXXX"
+      className="transition hover:text-white"
+    >
+      +91 XXXXX XXXXX
+    </a>
+  </li>
+
+</ul>
           </div>
         </div>
 
@@ -123,7 +160,7 @@ export default function Footer() {
                 className="flex-1 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-white placeholder:text-white/50 outline-none"
               />
 
-              <button className="rounded-xl bg-[#72B543] px-8 py-4 font-semibold text-white shadow-[0_10px_25px_rgba(114,181,67,0.30)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(114,181,67,0.40)]">
+              <button className="rounded-xl bg-[#D7EFC2] px-6 py-3 text-sm font-medium text-black shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-black hover:shadow-lg">
                 Subscribe
               </button>
             </div>
@@ -132,8 +169,9 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="mt-12 border-t border-white/10 pt-8 text-center text-sm text-white/50">
-          © 2026 UrbanLoop. All rights reserved. Building a circular economy,
-          one pickup at a time.
+          © 2026 UrbanLoop. All Rights Reserved.
+
+Empowering India's Circular Economy Through Smart Recycling.
         </div>
       </div>
     </footer>

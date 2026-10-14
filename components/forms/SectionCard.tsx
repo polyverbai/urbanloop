@@ -15,9 +15,9 @@ export default function SectionCard({
 }: SectionCardProps) {
   return (
     <section
-  className={`bg-white rounded-2xl border border-gray-200 shadow-sm p-6 ${className}`}
+  className={`bg-white p-8 border-b border-gray-200 last:border-b-0 ${className}`}
 >
-      <div className="mb-5">
+      <div className="mb-6">
         <h2 className="text-xl font-bold text-gray-900">
           {title}
         </h2>
@@ -29,7 +29,7 @@ export default function SectionCard({
         )}
       </div>
 
-      <div className="space-y-5">
+      <div className="space-y-6">
         {children}
       </div>
     </section>

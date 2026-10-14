@@ -6,9 +6,9 @@ import {
 
 export default function CTA() {
   return (
-    <section className="py-24">
+    <section className="py-15">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="overflow-hidden rounded-[40px] bg-gradient-to-r from-[#72B543] to-[#2A6FA3] px-10 py-16 text-center text-white shadow-[0_30px_80px_rgba(42,111,163,0.25)] md:px-16">
+        <div className="overflow-hidden rounded-[40px] bg-gradient-to-r from-[#157A24] via-[#4E9A2E] to-[#8BC34A] px-10 py-16 text-center text-white shadow-[0_30px_80px_rgba(21,122,36,0.25)] md:px-16">
 
           <span className="inline-flex rounded-full bg-white/20 px-4 py-2 text-sm font-medium backdrop-blur">
             JOIN THE MOVEMENT

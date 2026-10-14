@@ -3,6 +3,8 @@
 import SectionCard from "@/components/forms/SectionCard";
 import CheckboxGroup from "@/components/forms/CheckboxGroup";
 import InputField from "@/components/forms/InputField";
+import RadioGroup from "@/components/forms/RadioGroup";
+import SelectField from "@/components/forms/SelectField";
 
 import {
   MATERIAL_TYPES,
@@ -192,20 +194,112 @@ updateField(
           />
 
           <InputField
-            label="Monthly Processing Capacity (Kg)"
-            name="monthlyProcessingCapacity"
-            value={data.monthlyProcessingCapacity}
-            placeholder="Example: 10000"
-            required
-            error={errors.monthlyProcessingCapacity}
-            onChange={(value) =>
-              updateField(
-                "materialCollection",
-                "monthlyProcessingCapacity",
-                value.replace(/\D/g, "")
-              )
-            }
-          />
+  label="Monthly Collection Capacity"
+  name="monthlyCollectionCapacity"
+  value={data.monthlyCollectionCapacity}
+  placeholder="Example: 10000"
+  required
+  error={errors.monthlyCollectionCapacity}
+  onChange={(value) =>
+    updateField(
+      "materialCollection",
+      "monthlyCollectionCapacity",
+      value.replace(/\D/g, "")
+    )
+  }
+/>
+
+<SelectField
+  label="Collection Capacity Unit"
+  name="collectionCapacityUnit"
+  value={data.collectionCapacityUnit}
+  required
+  error={errors.collectionCapacityUnit}
+  options={[
+    { label: "Kg", value: "Kg" },
+    { label: "Ton", value: "Ton" },
+    { label: "Quintal", value: "Quintal" },
+  ]}
+  onChange={(value) =>
+    updateField(
+      "materialCollection",
+      "collectionCapacityUnit",
+      value
+    )
+  }
+/>
+
+<SelectField
+  label="Sorting Facility Available"
+  name="sortingFacilityAvailable"
+  value={data.sortingFacilityAvailable}
+  required
+  error={errors.sortingFacilityAvailable}
+  options={[
+    { label: "Yes", value: "Yes" },
+    { label: "No", value: "No" },
+  ]}
+  onChange={(value) =>
+    updateField(
+      "materialCollection",
+      "sortingFacilityAvailable",
+      value
+    )
+  }
+/>
+
+<SelectField
+  label="Storage Space Available"
+  name="storageSpaceAvailable"
+  value={data.storageSpaceAvailable}
+  required
+  error={errors.storageSpaceAvailable}
+  options={[
+    { label: "Yes", value: "Yes" },
+    { label: "No", value: "No" },
+  ]}
+  onChange={(value) =>
+    updateField(
+      "materialCollection",
+      "storageSpaceAvailable",
+      value
+    )
+  }
+/>
+
+<InputField
+  label="Storage Capacity"
+  name="storageCapacity"
+  value={data.storageCapacity}
+  placeholder="Example: 5000"
+  required
+  error={errors.storageCapacity}
+  onChange={(value) =>
+    updateField(
+      "materialCollection",
+      "storageCapacity",
+      value.replace(/\D/g, "")
+    )
+  }
+/>
+
+<InputField
+  label="Storage Capacity Unit"
+  name="storageCapacityUnit"
+  value={data.storageCapacityUnit}
+  placeholder="Example: Kg"
+  required
+  error={errors.storageCapacityUnit}
+  onChange={(value) =>
+    updateField(
+      "materialCollection",
+      "storageCapacityUnit",
+      value
+    )
+  }
+/>
+
+
 
         </div>
 

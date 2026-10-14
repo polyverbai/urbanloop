@@ -3,6 +3,7 @@
 import SectionCard from "@/components/forms/SectionCard";
 import InputField from "@/components/forms/InputField";
 import SelectField from "@/components/forms/SelectField";
+import RadioGroup from "@/components/forms/RadioGroup";
 
 import type {
   BusinessInformation,
@@ -14,10 +15,10 @@ import {
   EMPLOYEE_OPTIONS,
 } from "../constants";
 
-
 interface Step1BusinessInformationProps {
   data: BusinessInformation;
   errors: Record<string, string>;
+
   updateField: <
     T extends keyof CollectionPartnerForm,
     K extends keyof CollectionPartnerForm[T]
@@ -36,11 +37,17 @@ export default function Step1BusinessInformation({
   return (
     <div className="space-y-8">
 
-      <SectionCard
+
+
+      {/* =================================================
+          BUSINESS INFORMATION
+      ================================================= */}
+
+       <SectionCard
         title="Business Information"
-        description="Provide your basic business information."
+        description="Provide your basic business details."
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 
           <SelectField
             label="Collection Partner Category"
@@ -62,7 +69,7 @@ export default function Step1BusinessInformation({
             label="Business / Shop Name"
             name="shopName"
             value={data.shopName}
-            placeholder="Enter business / shop name"
+            placeholder="Enter Business / Shop Name"
             required
             error={errors.shopName}
             onChange={(value) =>
@@ -78,7 +85,7 @@ export default function Step1BusinessInformation({
             label="Owner Name"
             name="ownerName"
             value={data.ownerName}
-            placeholder="Enter owner name"
+            placeholder="Enter Owner Name"
             required
             error={errors.ownerName}
             onChange={(value) =>
@@ -91,16 +98,63 @@ export default function Step1BusinessInformation({
           />
 
           <InputField
-            label="Primary Contact Person"
-            name="primaryContactPerson"
-            value={data.primaryContactPerson}
-            placeholder="Enter contact person"
+            label="Mobile Number"
+            name="mobileNumber"
+            value={data.mobileNumber}
+            placeholder="Enter Mobile Number"
             required
-            error={errors.primaryContactPerson}
+            error={errors.mobileNumber}
             onChange={(value) =>
               updateField(
                 "businessInformation",
-                "primaryContactPerson",
+                "mobileNumber",
+                value
+              )
+            }
+          />
+
+          <InputField
+            label="Email Address"
+            name="email"
+            type="email"
+            value={data.email}
+            placeholder="Enter Email Address"
+            required
+            error={errors.email}
+            onChange={(value) =>
+              updateField(
+                "businessInformation",
+                "email",
+                value
+              )
+            }
+          />
+
+          <InputField
+            label="Year Established"
+            name="yearEstablished"
+            value={data.yearEstablished}
+            placeholder="Enter Year Established"
+            error={errors.yearEstablished}
+            onChange={(value) =>
+              updateField(
+                "businessInformation",
+                "yearEstablished",
+                value
+              )
+            }
+          />
+
+          <SelectField
+            label="Number of Employees"
+            name="numberOfEmployees"
+            value={data.numberOfEmployees}
+            options={EMPLOYEE_OPTIONS}
+            error={errors.numberOfEmployees}
+            onChange={(value) =>
+              updateField(
+                "businessInformation",
+                "numberOfEmployees",
                 value
               )
             }
@@ -109,169 +163,80 @@ export default function Step1BusinessInformation({
         </div>
       </SectionCard>
 
-<SectionCard
-  title="Contact Information"
-  description="Provide your primary contact details."
->
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* =================================================
+          CONTACT INFORMATION
+      ================================================= */}
 
-    <InputField
-      label="Mobile Number"
-      name="mobileNumber"
-      value={data.mobileNumber}
-      placeholder="Enter mobile number"
-      required
-      maxLength={10}
-      error={errors.mobileNumber}
-      onChange={(value) =>
-        updateField(
-          "businessInformation",
-          "mobileNumber",
-          value.replace(/\D/g, "").slice(0, 10)
-        )
-      }
-    />
+      <SectionCard
+        title="Contact Information"
+        description="Provide your primary contact details."
+      >
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 
-    <InputField
-      label="Alternate Mobile Number"
-      name="alternateMobileNumber"
-      value={data.alternateMobileNumber}
-      placeholder="Enter alternate mobile number"
-      maxLength={10}
-      error={errors.alternateMobileNumber}
-      onChange={(value) =>
-        updateField(
-          "businessInformation",
-          "alternateMobileNumber",
-          value.replace(/\D/g, "").slice(0, 10)
-        )
-      }
-    />
+          <InputField
+            label="Mobile Number"
+            name="mobileNumber"
+            value={data.mobileNumber}
+            placeholder="Enter mobile number"
+            required
+            maxLength={10}
+            error={errors.mobileNumber}
+            onChange={(value) =>
+              updateField(
+                "businessInformation",
+                "mobileNumber",
+                value.replace(/\D/g, "").slice(0, 10)
+              )
+            }
+          />
 
-    <InputField
-      label="WhatsApp Number"
-      name="whatsappNumber"
-      value={data.whatsappNumber}
-      placeholder="Enter WhatsApp number"
-      maxLength={10}
-      error={errors.whatsappNumber}
-      onChange={(value) =>
-        updateField(
-          "businessInformation",
-          "whatsappNumber",
-          value.replace(/\D/g, "").slice(0, 10)
-        )
-      }
-    />
-
-    <InputField
-      label="Email Address"
-      name="email"
-      type="email"
-      value={data.email}
-      placeholder="Enter email address"
-      required
-      error={errors.email}
-      onChange={(value) =>
-        updateField(
-          "businessInformation",
-          "email",
-          value
-        )
-      }
-    />
-
-    <div className="md:col-span-2">
-      <InputField
-        label="Website"
-        name="website"
-        value={data.website}
-        placeholder="https://example.com"
-        onChange={(value) =>
-          updateField(
-            "businessInformation",
-            "website",
-            value
-          )
-        }
-      />
-    </div>
-
-  </div>
-</SectionCard>
-
-<SectionCard
-  title="Business Registration"
-  description="Provide your business registration details."
->
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-    <InputField
-      label="Year Established"
-      name="yearEstablished"
-      type="number"
-      value={data.yearEstablished}
-      placeholder="Enter year"
-      onChange={(value) =>
-        updateField(
-          "businessInformation",
-          "yearEstablished",
-          value
-        )
-      }
-    />
-
-    <InputField
-      label="GST Number"
-      name="gstNumber"
-      value={data.gstNumber}
-      required
-      placeholder="Enter GST Number"
-      error={errors.gstNumber}
-      onChange={(value) =>
-        updateField(
-          "businessInformation",
-          "gstNumber",
-          value.toUpperCase()
-        )
-      }
-    />
-
-    <InputField
-      label="PAN Number"
-      name="panNumber"
-      value={data.panNumber}
-      required
-      placeholder="Enter PAN Number"
-      error={errors.panNumber}
-      onChange={(value) =>
-        updateField(
-          "businessInformation",
-          "panNumber",
-          value.toUpperCase()
-        )
-      }
-    />
-
-    <SelectField
-      label="Number of Employees"
-      name="numberOfEmployees"
-      value={data.numberOfEmployees}
-      placeholder="Select"
-      options={EMPLOYEE_OPTIONS}
-      onChange={(value) =>
-        updateField(
-          "businessInformation",
-          "numberOfEmployees",
-          value
-        )
-      }
-    />
-
-  </div>
-</SectionCard>
+                 </div>
+      </SectionCard>
 
 
+      {/* =================================================
+          BUSINESS REGISTRATION
+      ================================================= */}
+
+      <SectionCard
+        title="Business Registration"
+        description="Provide your transport business registration and operating details."
+      >
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+
+          <InputField
+            label="PAN Number"
+            name="panNumber"
+            value={data.panNumber}
+            placeholder="Enter PAN Number"
+            required
+            error={errors.panNumber}
+            onChange={(value) =>
+              updateField(
+                "businessInformation",
+                "panNumber",
+                value.toUpperCase()
+              )
+            }
+          />
+
+          <InputField
+            label="GST Number"
+            name="gstNumber"
+            value={data.gstNumber}
+            placeholder="Enter GST Number, if applicable"
+            error={errors.gstNumber}
+            onChange={(value) =>
+              updateField(
+                "businessInformation",
+                "gstNumber",
+                value.toUpperCase()
+              )
+            }
+          />
+
+        </div>
+      </SectionCard>
 
     </div>
   );

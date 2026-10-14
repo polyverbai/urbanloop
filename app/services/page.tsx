@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
@@ -28,10 +29,10 @@ export default function ServicesPage() {
     <>
     <Header />
 
-    <main className="bg-white">
+    <main className="min-h-screen py-5">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#EAF7D7] via-white to-white">
-        <div className="mx-auto max-w-7xl px-6 py-16 lg:py-17">
+      <section className="py-4">
+          <div className="mx-auto max-w-7xl px-6 py-16 lg:py-17">
           <div className="grid items-center gap-16 lg:grid-cols-2">
 
             {/* Left Content */}
@@ -56,14 +57,20 @@ export default function ServicesPage() {
 </p>
 
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-                <button className="rounded-xl bg-[#72B543] px-8 py-4 font-semibold text-white shadow-[0_10px_25px_rgba(114,181,67,0.30)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(114,181,67,0.40)]">
-                  Schedule Pickup
-                </button>
+  <Link
+  href="/join-urbanloop/categories"
+  className="rounded-xl bg-[#D7EFC2] px-8 py-4 text-sm font-medium text-black shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-black hover:shadow-lg"
+>
+  Schedule Pickup
+</Link>
 
-                <button className="rounded-xl border border-slate-300 bg-white px-8 py-4 font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  Become A Partner
-                </button>
-              </div>
+  <Link
+  href="/partner-program"
+  className="rounded-xl bg-[#D7EFC2] px-8 py-4 text-sm font-medium text-black shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-black hover:shadow-lg"
+>
+  Become A Partner
+</Link>
+</div>
             </div>
 
             {/* Right Visual */}
@@ -198,10 +205,9 @@ export default function ServicesPage() {
     </main>
 
 {/* Resources For Recovery */}
-<section className="bg-white py-24">
   <div className="mx-auto max-w-7xl px-6">
 
-    <div className="mx-auto mb-16 max-w-3xl text-center">
+    <div className="mx-auto mb-10 max-w-3xl text-center">
       <span className="inline-flex rounded-full bg-[#72B543]/10 px-4 py-2 text-sm font-medium text-[#72B543]">
         RESOURCES FOR RECOVERY
       </span>
@@ -329,10 +335,10 @@ export default function ServicesPage() {
 
     </div>
   </div>
-</section>
+
 
 {/* How UrbanLoop Creates Value */}
-<section className="bg-[#F8FBF4] py-24">
+<section className="py-28">
   <div className="mx-auto max-w-7xl px-6">
 
     <div className="mx-auto mb-16 max-w-3xl text-center">
@@ -450,7 +456,7 @@ export default function ServicesPage() {
 </section>
 
 {/* Compost Ecosystem */}
-<section className="bg-white py-24">
+<section className="py-5">
   <div className="mx-auto max-w-7xl px-6">
 
     <div className="mx-auto mb-16 max-w-3xl text-center">
@@ -727,7 +733,8 @@ export default function ServicesPage() {
 </section>
 
 {/* Why Choose UrbanLoop */}
-<section className="bg-[#F8FBF4] py-24">
+<section className="py-28">
+
   <div className="mx-auto max-w-7xl px-6">
 
     <div className="mx-auto mb-16 max-w-3xl text-center">
@@ -891,7 +898,8 @@ export default function ServicesPage() {
 </section>
 
 {/* Final CTA */}
-<section className="bg-gradient-to-b from-[#EAF7D7] to-white py-24">
+<section className="py-15">
+
   <div className="mx-auto max-w-7xl px-6">
 
     <div className="mx-auto max-w-5xl rounded-[36px] border border-[#DDE8D0] bg-white p-10 text-center shadow-[0_20px_50px_rgba(15,76,129,0.08)]">
@@ -989,13 +997,19 @@ export default function ServicesPage() {
       {/* Buttons */}
       <div className="mt-12 flex flex-col justify-center gap-4 sm:flex-row">
 
-        <button className="rounded-xl bg-[#72B543] px-8 py-4 font-semibold text-white shadow-[0_10px_25px_rgba(114,181,67,0.30)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(114,181,67,0.40)]">
-          Schedule Pickup
-        </button>
+        <Link
+  href="/join-urbanloop/categories"
+  className="rounded-xl bg-[#D7EFC2] px-8 py-4 text-sm font-medium text-black shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-black hover:shadow-lg"
+>
+  Schedule Pickup
+</Link>
 
-        <button className="rounded-xl border border-slate-300 bg-white px-8 py-4 font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-          Become A Partner
-        </button>
+        <Link
+  href="/partner-program"
+  className="rounded-xl bg-[#D7EFC2] px-8 py-4 text-sm font-medium text-black shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-black hover:shadow-lg"
+>
+  Become A Partner
+</Link>
 
       </div>
 

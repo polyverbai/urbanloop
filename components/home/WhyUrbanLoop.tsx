@@ -50,12 +50,12 @@ export default function WhyUrbanLoop() {
 
   return (
     <section
-      id="why-urbanloop"
-      className="scroll-mt-28 bg-[#F8FBF4] py-28"
-    >
+  id="why-urbanloop"
+  className="scroll-mt-28 relative py-15"
+>
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto mb-16 max-w-3xl text-center">
-          <span className="inline-flex rounded-full bg-[#72B543]/10 px-4 py-2 text-sm font-medium text-[#72B543]">
+          <span className="inline-flex rounded-full border border-[#72B543]/20 bg-[#72B543]/15 px-5 py-2 text-sm font-medium tracking-wide text-[#72B543]">
             WHY URBANLOOP
           </span>
 
@@ -98,14 +98,13 @@ export default function WhyUrbanLoop() {
         <div className="mt-16 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Link
             href="/join-urbanloop/categories"
-            className="w-full max-w-[320px] rounded-xl bg-slate-100 px-8 py-4 text-center font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:bg-[#EAF7D7] hover:text-[#72B543] hover:shadow-lg"
-          >
+className="rounded-xl bg-[#CFE9AE] px-8 py-4 font-semibold text-[#2B5E1A] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-white hover:shadow-lg active:bg-[#5FA235]"          >
             Schedule Pickup
           </Link>
 
           <Link
             href="/partner-program"
-            className="w-full max-w-[320px] rounded-xl bg-slate-100 px-8 py-4 text-center font-semibold text-slate-800 shadow-sm transition-all duration-300 hover:bg-[#EAF7D7] hover:text-[#72B543] hover:shadow-lg"
+className="rounded-xl bg-[#CFE9AE] px-8 py-4 font-semibold text-[#2B5E1A] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-white hover:shadow-lg active:bg-[#5FA235]"
           >
             Become A Partner
           </Link>

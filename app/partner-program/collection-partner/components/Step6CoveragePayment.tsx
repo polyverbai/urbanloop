@@ -202,6 +202,21 @@ export default function Step6CoveragePayment({
             }
           />
 
+<InputField
+    label="Confirm Account Number"
+    name="confirmAccountNumber"
+    value={data.confirmAccountNumber}
+    required
+    error={errors.confirmAccountNumber}
+    onChange={(value) =>
+        updateField(
+            "coveragePayment",
+            "confirmAccountNumber",
+            value.replace(/\D/g, "")
+        )
+    }
+/>
+
           <InputField
             label="IFSC Code"
             name="ifscCode"

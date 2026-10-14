@@ -51,7 +51,7 @@ const [partnerOpen, setPartnerOpen] = useState(false);
           </Link>
 
           <Link
-            href="services"
+            href="/services"
             className="text-sm font-medium text-slate-700 transition hover:text-[#72B543]"
           >
             Services
@@ -82,6 +82,20 @@ const [partnerOpen, setPartnerOpen] = useState(false);
       Collection Partner Form
     </Link>
 
+<Link
+  href="/partner-program/transport-partner-registration"
+  className="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:bg-[#F8FBF4] hover:text-[#72B543]"
+>
+  Transport Partner Form
+</Link>
+
+<Link
+  href="/partner-program/recycler-partner-registration"
+  className="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:bg-[#F8FBF4] hover:text-[#72B543]"
+>
+  Recycler Partner Form
+</Link>
+
   </div>
 </div>         
 
@@ -97,7 +111,7 @@ const [partnerOpen, setPartnerOpen] = useState(false);
         <div className="flex items-center gap-3">
           {/* Desktop CTA */}
           <Link
-  href="/signup"
+  href="/login"
   className="hidden rounded-xl bg-[#72B543] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#5fa032] lg:block"
 >
   Sign Up
@@ -105,7 +119,7 @@ const [partnerOpen, setPartnerOpen] = useState(false);
 
           {/* Mobile CTA */}
           <Link
-  href="/signup"
+  href="/login"
   className="rounded-lg bg-[#72B543] px-3 py-2 text-xs font-semibold text-white shadow-sm lg:hidden"
 >
   Sign Up

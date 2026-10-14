@@ -4,129 +4,72 @@ export interface ValidationErrors {
   [key: string]: string;
 }
 
-export function validateStep1(
+export function validateForm(
   formData: CollectionPartnerForm
 ): ValidationErrors {
+
+  return {
+  ...validateBusinessInformation(formData),
+  ...validateBusinessAddress(formData),
+  ...validateMaterialCollection(formData),
+  ...validateSegregationFacility(formData),
+  ...validateSelfTransportation(formData),
+  ...validateBusinessVerification(formData),
+  ...validateCoveragePayment(formData),
+  ...validateDeclaration(formData),
+};
+
+}
+
+export function validateBusinessInformation(
+  formData: CollectionPartnerForm
+): ValidationErrors {
+
   const errors: ValidationErrors = {};
 
-  const info = formData.businessInformation;
+  const business = formData.businessInformation;
 
-  if (!info.collectionPartnerCategory.trim()) {
+  if (!business.collectionPartnerCategory.trim()) {
     errors.collectionPartnerCategory =
-      "Please select a Collection Partner Category.";
+      "Collection Partner Category is required.";
   }
 
-  if (!info.shopName.trim()) {
-    errors.shopName = "Business / Shop Name is required.";
+  if (!business.shopName.trim()) {
+    errors.shopName = "Shop Name is required.";
   }
 
-  if (!info.ownerName.trim()) {
+  if (!business.ownerName.trim()) {
     errors.ownerName = "Owner Name is required.";
   }
 
-  if (!info.primaryContactPerson.trim()) {
-    errors.primaryContactPerson =
-      "Primary Contact Person is required.";
+  if (!business.mobileNumber.trim()) {
+    errors.mobileNumber = "Mobile Number is required.";
   }
 
-  if (!/^[0-9]{10}$/.test(info.mobileNumber)) {
-    errors.mobileNumber =
-      "Enter a valid 10-digit Mobile Number.";
-  }
-
-  if (
-    info.alternateMobileNumber &&
-    !/^[0-9]{10}$/.test(info.alternateMobileNumber)
-  ) {
-    errors.alternateMobileNumber =
-      "Enter a valid Alternate Mobile Number.";
+  if (business.panAvailable === "Yes" &&
+      !business.panNumber.trim()) {
+    errors.panNumber = "PAN Number is required.";
   }
 
   if (
-    info.whatsappNumber &&
-    !/^[0-9]{10}$/.test(info.whatsappNumber)
+    business.tradeLicenseAvailable === "Yes" &&
+    !business.tradeLicenseNumber.trim()
   ) {
-    errors.whatsappNumber =
-      "Enter a valid WhatsApp Number.";
+    errors.tradeLicenseNumber =
+      "Trade License Number is required.";
   }
 
   if (
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(info.email)
+    business.gstAvailable === "Yes" &&
+    !business.gstNumber.trim()
   ) {
-    errors.email = "Enter a valid Email Address.";
-  }
-
-  if (!info.gstNumber.trim()) {
-  errors.gstNumber =
-    "GST Number is required.";
-} else if (
-  !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{3}$/.test(
-    info.gstNumber.toUpperCase()
-  )
-) {
-  errors.gstNumber =
-    "Invalid GST Number.";
-}
-
-  if (!info.panNumber.trim()) {
-  errors.panNumber =
-    "PAN Number is required.";
-} else if (
-  !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(
-    info.panNumber.toUpperCase()
-  )
-) {
-  errors.panNumber =
-    "Invalid PAN Number.";
-}
-
-  return errors;
-}
-
-export function validateStep2(
-  formData: CollectionPartnerForm
-): ValidationErrors {
-
-  const errors: ValidationErrors = {};
-
-  const docs = formData.businessVerification;
-
-  if (!docs.gstCertificate) {
-    errors.gstCertificate =
-      "GST Registration Certificate is required.";
-  }
-
-  if (!docs.panCard) {
-    errors.panCard =
-      "PAN Card is required.";
-  }
-
-  if (!docs.tradeLicense) {
-    errors.tradeLicense =
-      "Trade / Shop License is required.";
-  }
-
-  // Pollution Certificate is Optional
-
-  if (!docs.aadhaarFront) {
-    errors.aadhaarFront =
-      "Aadhaar Front is required.";
-  }
-
-  if (!docs.aadhaarBack) {
-    errors.aadhaarBack =
-      "Aadhaar Back is required.";
-  }
-
-  if (!docs.ownerPhoto) {
-    errors.ownerPhoto =
-      "Owner Photograph is required.";
+    errors.gstNumber = "GST Number is required.";
   }
 
   return errors;
 }
 
-export function validateStep3(
+export function validateBusinessAddress(
   formData: CollectionPartnerForm
 ): ValidationErrors {
 
@@ -135,199 +78,310 @@ export function validateStep3(
   const address = formData.businessAddress;
 
   if (!address.shopNumber.trim()) {
-    errors.shopNumber =
-      "Shop Number is required.";
+    errors.shopNumber = "Shop Number is required.";
   }
 
   if (!address.buildingName.trim()) {
-    errors.buildingName =
-      "Building Name is required.";
+    errors.buildingName = "Building Name is required.";
   }
 
   if (!address.streetArea.trim()) {
-    errors.streetArea =
-      "Street / Area is required.";
+    errors.streetArea = "Street / Area is required.";
   }
 
   if (!address.city.trim()) {
-    errors.city =
-      "City is required.";
+    errors.city = "City is required.";
   }
 
   if (!address.state.trim()) {
-    errors.state =
-      "Please select a State.";
+    errors.state = "State is required.";
   }
 
-  if (!/^[0-9]{6}$/.test(address.pinCode)) {
-    errors.pinCode =
-      "Please enter a valid 6-digit PIN Code.";
+  if (!address.pinCode.trim()) {
+    errors.pinCode = "PIN Code is required.";
   }
 
   return errors;
 }
 
-export function validateStep4(
+export function validateMaterialCollection(
   formData: CollectionPartnerForm
 ): ValidationErrors {
 
   const errors: ValidationErrors = {};
 
-  const material = formData.materialCollection;
-
-  if (material.materialsHandled.length === 0) {
+  if (
+    formData.materialCollection.materialsHandled.length === 0
+  ) {
     errors.materialsHandled =
-      "Please select at least one material type.";
+      "Select at least one material";
   }
 
-  if (material.collectionServices.length === 0) {
+  if (
+    formData.materialCollection.collectionServices.length === 0
+  ) {
     errors.collectionServices =
-      "Please select at least one collection service.";
+      "Select at least one collection service";
   }
 
-  if (!material.dailyCollectionCapacity.trim()) {
+  if (
+    !formData.materialCollection.dailyCollectionCapacity.trim()
+  ) {
     errors.dailyCollectionCapacity =
-      "Daily Collection Capacity is required.";
-  }
-
-  if (!material.monthlyProcessingCapacity.trim()) {
-    errors.monthlyProcessingCapacity =
-      "Monthly Processing Capacity is required.";
-  }
-
-  return errors;
-}
-
-export function validateStep5(
-  formData: CollectionPartnerForm
-): ValidationErrors {
-
-  const errors: ValidationErrors = {};
-
-  const facility = formData.facilityTransportation;
-
-  if (!facility.processingFacilityAvailable.trim()) {
-    errors.processingFacilityAvailable =
-      "Please select Processing Facility Availability.";
+      "Daily Collection Capacity is required";
   }
 
   if (
-    facility.processingFacilityAvailable === "Yes" &&
-    !facility.facilityAddress.trim()
+    !formData.materialCollection.monthlyCollectionCapacity.trim()
   ) {
-    errors.facilityAddress =
-      "Facility Address is required.";
+    errors.monthlyCollectionCapacity =
+      "Monthly Collection Capacity is required";
   }
 
-  if (!facility.storageCapacity.trim()) {
-    errors.storageCapacity =
-      "Storage Capacity is required.";
-  }
-
-  if (facility.vehicleTypes.length === 0) {
-    errors.vehicleTypes =
-      "Please select at least one vehicle type.";
-  }
-
-  if (!facility.numberOfVehicles.trim()) {
-    errors.numberOfVehicles =
-      "Number of Vehicles is required.";
+  if (
+    !formData.materialCollection.collectionCapacityUnit.trim()
+  ) {
+    errors.collectionCapacityUnit =
+      "Collection Capacity Unit is required";
   }
 
   return errors;
 }
 
-export function validateStep6(
+export function validateSegregationFacility(
   formData: CollectionPartnerForm
 ): ValidationErrors {
 
   const errors: ValidationErrors = {};
 
-  const coverage = formData.coveragePayment;
+  if (
+    !formData.segregationFacility
+      .segregationFacilityAvailable
+  ) {
+    errors.segregationFacilityAvailable =
+      "Please select Yes or No";
 
-  if (coverage.operatingAreas.length === 0) {
+    return errors;
+  }
+
+  if (
+    formData.segregationFacility
+      .segregationFacilityAvailable === "Yes"
+  ) {
+
+    if (
+      !formData.segregationFacility
+        .segregationCapacity
+        .trim()
+    ) {
+      errors.segregationCapacity =
+        "Segregation Capacity is required";
+    }
+
+    if (
+      !formData.segregationFacility
+        .segregationCapacityUnit
+        .trim()
+    ) {
+      errors.segregationCapacityUnit =
+        "Capacity Unit is required";
+    }
+  }
+
+  return errors;
+}
+
+export function validateSelfTransportation(
+  formData: CollectionPartnerForm
+): ValidationErrors {
+
+  const errors: ValidationErrors = {};
+
+  if (!formData.selfTransportation.vehicleAvailable) {
+    errors.vehicleAvailable = "Please select Yes or No";
+    return errors;
+  }
+
+  if (formData.selfTransportation.vehicleAvailable === "Yes") {
+
+    if (formData.selfTransportation.vehicleTypes.length === 0) {
+      errors.vehicleTypes =
+        "Select at least one vehicle type";
+    }
+
+    if (!formData.selfTransportation.numberOfVehicles.trim()) {
+      errors.numberOfVehicles =
+        "Number of Vehicles is required";
+    }
+
+    if (!formData.selfTransportation.vehicleNumbers.trim()) {
+      errors.vehicleNumbers =
+        "Vehicle Registration Number is required";
+    }
+
+    if (!formData.selfTransportation.drivingLicence) {
+      errors.drivingLicence =
+        "Driving Licence is required";
+    }
+
+  }
+
+  return errors;
+}
+
+export function validateBusinessVerification(
+  formData: CollectionPartnerForm
+): ValidationErrors {
+
+  const errors: ValidationErrors = {};
+
+  if (
+  formData.businessInformation.gstAvailable === "Yes" &&
+  !formData.businessVerification.gstCertificate
+) {
+  errors.gstCertificate = "GST Certificate is required";
+}
+
+ if (
+  formData.businessInformation.panAvailable === "Yes" &&
+  !formData.businessVerification.panCard
+) {
+  errors.panCard = "PAN Card is required";
+}
+
+ if (
+  formData.businessInformation.tradeLicenseAvailable === "Yes" &&
+  !formData.businessVerification.tradeLicense
+) {
+  errors.tradeLicense = "Trade License is required";
+}
+
+  if (!formData.businessVerification.aadhaarFront) {
+    errors.aadhaarFront = "Aadhaar Front is required";
+  }
+
+  if (!formData.businessVerification.aadhaarBack) {
+    errors.aadhaarBack = "Aadhaar Back is required";
+  }
+
+  if (!formData.businessVerification.ownerPhoto) {
+    errors.ownerPhoto = "Owner Photo is required";
+  }
+
+  return errors;
+}
+
+export function validateCoveragePayment(
+  formData: CollectionPartnerForm
+): ValidationErrors {
+
+  const errors: ValidationErrors = {};
+
+  // Operating Area
+  if (
+    formData.coveragePayment.operatingAreas.length === 0
+  ) {
     errors.operatingAreas =
-      "Please select at least one operating area.";
+      "Select at least one operating area";
   }
 
-  if (coverage.preferredPickupDays.length === 0) {
-    errors.preferredPickupDays =
-      "Please select at least one preferred pickup day.";
-  }
-
-  if (!coverage.preferredPickupTime.trim()) {
-    errors.preferredPickupTime =
-      "Preferred Pickup Time is required.";
-  }
-
-  if (!coverage.bankName.trim()) {
-    errors.bankName =
-      "Bank Name is required.";
-  }
-
-  if (!coverage.accountHolderName.trim()) {
-    errors.accountHolderName =
-      "Account Holder Name is required.";
-  }
-
-  if (!coverage.accountNumber.trim()) {
-    errors.accountNumber =
-      "Account Number is required.";
-  }
-
-  if (!coverage.ifscCode.trim()) {
-    errors.ifscCode =
-      "IFSC Code is required.";
-  } else if (
-    !/^[A-Z]{4}0[A-Z0-9]{6}$/.test(
-      coverage.ifscCode.toUpperCase()
-    )
-  ) {
-    errors.ifscCode =
-      "Please enter a valid IFSC Code.";
-  }
-
-  // UPI ID is optional.
-
-  if (!coverage.emergencyContactName.trim()) {
-    errors.emergencyContactName =
-      "Emergency Contact Name is required.";
-  }
-
+  // Pickup Days
   if (
-    !/^[0-9]{10}$/.test(
-      coverage.emergencyContactNumber
-    )
+    formData.coveragePayment.preferredPickupDays.length === 0
   ) {
-    errors.emergencyContactNumber =
-      "Please enter a valid 10-digit Emergency Contact Number.";
+    errors.preferredPickupDays =
+      "Select at least one pickup day";
   }
+
+  // Pickup Time
+  if (
+    !formData.coveragePayment.preferredPickupTime
+  ) {
+    errors.preferredPickupTime =
+      "Please select preferred pickup time";
+  }
+
+// Bank Details
+
+if (!formData.coveragePayment.bankName.trim()) {
+  errors.bankName = "Bank Name is required";
+}
+
+if (!formData.coveragePayment.accountHolderName.trim()) {
+  errors.accountHolderName = "Account Holder Name is required";
+}
+
+if (!formData.coveragePayment.accountNumber.trim()) {
+  errors.accountNumber = "Account Number is required";
+}
+
+if (!formData.coveragePayment.confirmAccountNumber.trim()) {
+  errors.confirmAccountNumber = "Please confirm account number";
+}
+
+if (
+  formData.coveragePayment.accountNumber !==
+  formData.coveragePayment.confirmAccountNumber
+) {
+  errors.confirmAccountNumber =
+    "Account numbers do not match";
+}
+
+if (!formData.coveragePayment.ifscCode.trim()) {
+  errors.ifscCode = "IFSC Code is required";
+}
+
+// UPI ID is optional
+
+if (
+  formData.coveragePayment.emergencyContactName.trim() &&
+  !formData.coveragePayment.emergencyContactNumber.trim()
+) {
+  errors.emergencyContactNumber =
+    "Emergency Contact Number is required";
+}
+
+console.log("Step 6 Validation Errors");
+console.log(errors);
 
   return errors;
 }
 
-export function validateStep7(
+
+export function validateDeclaration(
   formData: CollectionPartnerForm
 ): ValidationErrors {
 
   const errors: ValidationErrors = {};
 
-  const declaration = formData.declaration;
-
-  if (!declaration.declarationAccepted) {
+  if (!formData.declaration.declarationAccepted) {
     errors.declarationAccepted =
       "Please accept the declaration.";
   }
 
-  if (!declaration.termsAccepted) {
+  if (!formData.declaration.termsAccepted) {
     errors.termsAccepted =
-      "Please accept the Terms and Conditions.";
+      "Please accept the terms and conditions.";
   }
 
-  if (!declaration.communicationConsent) {
+  if (!formData.declaration.communicationConsent) {
     errors.communicationConsent =
       "Please provide communication consent.";
   }
 
   return errors;
 }
+
+export const validateStep1 = validateBusinessInformation;
+
+export const validateStep2 = validateBusinessVerification;
+
+export const validateStep3 = validateBusinessAddress;
+
+export const validateStep4 = validateMaterialCollection;
+
+export const validateStep5 = validateSelfTransportation;
+
+export const validateStep6 = validateCoveragePayment;
+
+export const validateStep7 = validateDeclaration;

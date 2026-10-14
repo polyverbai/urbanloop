@@ -466,8 +466,8 @@ return (
   <>
     <Header />
 
-    <main className="bg-white min-h-screen">
-      <section className="bg-gradient-to-b from-[#EAF7D7] via-white to-white py-20">
+    <main className="min-h-screen bg-white">
+      <section className="bg-white py-20">
         <div className="mx-auto max-w-5xl px-6">
 
           <div className="mb-12 text-center">

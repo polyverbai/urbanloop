@@ -5,6 +5,8 @@ interface RadioOption {
   value: string;
 }
 
+import { ReactNode } from "react";
+
 interface RadioGroupProps {
   label: string;
   options: RadioOption[];
@@ -12,6 +14,8 @@ interface RadioGroupProps {
   onChange: (value: string) => void;
   required?: boolean;
   error?: string;
+
+  children?: ReactNode;
 }
 
 export default function RadioGroup({
@@ -25,20 +29,23 @@ export default function RadioGroup({
   return (
     <div className="space-y-3">
 
-      <label className="block text-sm font-semibold text-gray-700">
-        {label}
-        {required && (
-          <span className="text-red-500 ml-1">*</span>
-        )}
-      </label>
-
       <div
-        className={`rounded-lg border p-4 space-y-3 ${
-          error
-            ? "border-red-500"
-            : "border-gray-300"
-        }`}
-      >
+  className={`space-y-3 ${
+    error ? "" : ""
+  }`}
+>
+
+  <div className="flex flex-col gap-3">
+
+    <label className="text-sm font-semibold text-gray-700">
+      {label}
+      {required && (
+        <span className="ml-1 text-red-500">*</span>
+      )}
+    </label>
+
+    <div className="flex items-center gap-8">
+
         {options.map((option) => (
           <label
             key={option.value}
@@ -56,7 +63,12 @@ export default function RadioGroup({
             </span>
           </label>
         ))}
-      </div>
+
+    </div>
+
+  </div>
+
+</div>
 
       {error && (
         <p className="text-sm text-red-600">

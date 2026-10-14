@@ -1,6 +1,7 @@
+import "./globals.css";
+import PageBackground from "@/components/layout/PageBackground";
 import type { Metadata, Viewport } from "next";
 import { Poppins, Inter } from "next/font/google";
-import "./globals.css";
 import NotificationProvider from "@/components/ui/notification/NotificationProvider";
 import ConfirmProvider from "@/components/ui/dialog/ConfirmProvider";
 
@@ -45,7 +46,9 @@ export default function RootLayout({
 
     <ConfirmProvider>
 
-      {children}
+      <PageBackground>
+  {children}
+</PageBackground>
 
     </ConfirmProvider>
 

@@ -2,1300 +2,582 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
+
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import RegistrationDuplicateModal
-from "@/components/common/RegistrationDuplicateModal";
+import RegistrationDuplicateModal from "@/components/common/RegistrationDuplicateModal";
 
-export default function EducationalInstitutionRegistrationPage() {
+import InstitutionInformationSection from "./components/InstitutionInformationSection";
+import InstitutionAddressSection from "./components/InstitutionAddressSection";
+import MaterialCollectionSection from "./components/MaterialCollectionSection";
+import CommunicationPreferenceSection from "./components/CommunicationSection";
+import ReferralInformationSection from "./components/ReferralSection";
+import DeclarationSection from "./components/DeclarationSection";
+
+import type {
+  EducationalInstitutionForm,
+  InstitutionInformation,
+  ContactInformation,
+  InstitutionAddress,
+  MaterialCollection,
+  CommunicationInformation,
+  ReferralInformation,
+  DeclarationInformation,
+} from "./components/types";
+
+import { validateForm } from "./components/validation";
+const INITIAL_FORM_DATA: EducationalInstitutionForm = {
+  institutionInformation: {
+    institutionCategory: "",
+    institutionName: "",
+    website: "",
+    yearEstablished: "",
+  },
+
+  contactInformation: {
+    contactPersonName: "",
+    designation: "",
+    mobileNumber: "",
+    email: "",
+  },
+
+  institutionAddress: {
+    buildingNumber: "",
+    buildingName: "",
+    streetArea: "",
+    landmark: "",
+    city: "",
+    stateName: "",
+    pinCode: "",
+  },
+
+  materialCollection: {
+    materialCategories: [],
+    monthlyRecyclables: "",
+    pickupFrequency: "",
+    pickupDay: "",
+    pickupTime: "",
+  },
+
+  communicationInformation: {
+    communicationPreferences: [],
+  },
+
+  referralInformation: {
+    referralSource: "",
+    referralCode: "",
+    additionalComments: "",
+  },
+
+  declarationInformation: {
+    declarationConfirmed: false,
+    termsAccepted: false,
+    communicationConsent: false,
+  },
+};
+
+export default function Page() {
   const router = useRouter();
-const [loading, setLoading] = useState(false);
-const [
-  institutionCategory,
-  setInstitutionCategory,
-] = useState("");
 
-const [errors, setErrors] = useState<Record<string, string>>({});
-
-const [showDuplicateModal,
-  setShowDuplicateModal] =
-  useState(false);
-
-const [duplicateField,
-  setDuplicateField] =
-  useState("");
-
-const [duplicateValue,
-  setDuplicateValue] =
-  useState("");
-
-
-// Company Information
-const [institutionName, setInstitutionName] =
-  useState("");
-
-const [website, setWebsite] =
-  useState("");
-
-const [
-  yearEstablished,
-  setYearEstablished,
-] = useState("");
-
-// Contact Information
-const [
-  contactPersonName,
-  setContactPersonName,
-] = useState("");
-
-const [designation, setDesignation] =
-  useState("");
-
-const [mobileNumber, setMobileNumber] =
-  useState("");
-
-const [email, setEmail] =
-  useState("");
-
-  // Address
-const [
-  address,
-  setAddress,
-] = useState("");
-
-const [landmark, setLandmark] =
-  useState("");
-
-const [city, setCity] =
-  useState("");
-
-const [stateName, setStateName] =
-  useState("");
-
-const [pinCode, setPinCode] =
-  useState("");
-
-  // Arrays
-const [
-  materialCategories,
-  setMaterialCategories,
-] = useState<string[]>([]);
-
-const [
-  communicationPreferences,
-  setCommunicationPreferences,
-] = useState<string[]>([]);
-
-// Pickup
-const [
-  pickupFrequency,
-  setPickupFrequency,
-] = useState("");
-
-
-const [pickupDay, setPickupDay] =
-  useState("");
-
-const [pickupTime, setPickupTime] =
-  useState("");
-
-  // Referral
-const [
-  referralSource,
-  setReferralSource,
-] = useState("");
-
-const [
-  referralCode,
-  setReferralCode,
-] = useState("");
-
-const [
-  additionalComments,
-  setAdditionalComments,
-] = useState("");
-
-// Consent
-const [
-  declarationConfirmed,
-  setDeclarationConfirmed,
-] = useState(false);
-
-const [
-  termsAccepted,
-  setTermsAccepted,
-] = useState(false);
-
-const [
-  communicationConsent,
-  setCommunicationConsent,
-] = useState(false);
-
-function toggleArrayValue(
-  value: string,
-  current: string[],
-  setter: React.Dispatch<
-    React.SetStateAction<string[]>
-  >
-) {
-  if (current.includes(value)) {
-    setter(
-      current.filter(
-        (item) => item !== value
-      )
+  const [formData, setFormData] =
+    useState<EducationalInstitutionForm>(
+      INITIAL_FORM_DATA
     );
-  } else {
-    setter([...current, value]);
-  }
-}
 
-function validateForm() {
-  const newErrors: Record<string, string> = {};
+    const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-if (!institutionCategory)
-  newErrors.institutionCategory =
-    "Please select Institution Category";
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  if (!institutionName.trim())
-    newErrors.institutionName =
-      "Institution Name is required";
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  if (!contactPersonName.trim())
-    newErrors.contactPersonName =
-      "Contact Person Name is required";
+  const [showDuplicateModal, setShowDuplicateModal] =
+    useState(false);
 
-  if (!designation.trim())
-    newErrors.designation =
-      "Designation is required";
+  const [duplicateField, setDuplicateField] =
+    useState("");
 
-  if (!/^\d{10}$/.test(mobileNumber))
-    newErrors.mobileNumber =
-      "Mobile number should be 10 digits";
+  const [duplicateValue, setDuplicateValue] =
+    useState("");
 
-  if (
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
-      email
-    )
-  ) {
-    newErrors.email =
-        "Please enter a valid email address";
-  }
 
-  if (!address.trim())
-    newErrors.address =
-      "Institution Address is required";
+  const handleInstitutionChange = (
+  field: keyof InstitutionInformation,
+  value: string
+) => {
+  setFormData((prev) => ({
+    ...prev,
+    institutionInformation: {
+      ...prev.institutionInformation,
+      [field]: value,
+    },
+  }));
+};
 
-  if (!landmark.trim())
-    newErrors.landmark =
-      "Landmark is required";
+const handleContactChange = (
+  field: keyof ContactInformation,
+  value: string
+) => {
+  setFormData((prev) => ({
+    ...prev,
+    contactInformation: {
+      ...prev.contactInformation,
+      [field]: value,
+    },
+  }));
+};
 
-  if (!city.trim())
-    newErrors.city =
-      "City is required";
+const handleAddressChange = (
+  field: keyof InstitutionAddress,
+  value: string
+) => {
+  setFormData((prev) => ({
+    ...prev,
+    institutionAddress: {
+      ...prev.institutionAddress,
+      [field]: value,
+    },
+  }));
+};
 
-  if (!stateName.trim())
-    newErrors.stateName =
-      "State is required";
+const handleMaterialCollectionChange = (
+  field: keyof MaterialCollection,
+  value: string | string[]
+) => {
+  setFormData((prev) => ({
+    ...prev,
+    materialCollection: {
+      ...prev.materialCollection,
+      [field]: value,
+    },
+  }));
+};
 
-  if (!pinCode.trim())
-    newErrors.pinCode =
-      "PIN Code is required";
+const handleCommunicationChange = (
+  field: keyof CommunicationInformation,
+  value: string[]
+) => {
+  setFormData((prev) => ({
+    ...prev,
+    communicationInformation: {
+      ...prev.communicationInformation,
+      [field]: value,
+    },
+  }));
+};
 
-  if (materialCategories.length === 0)
-    newErrors.materialCategories =
-      "Select at least one category";
+const handleReferralChange = (
+  field: keyof ReferralInformation,
+  value: string
+) => {
+  setFormData((prev) => ({
+    ...prev,
+    referralInformation: {
+      ...prev.referralInformation,
+      [field]: value,
+    },
+  }));
+};
 
-    if (!pickupFrequency)
-    newErrors.pickupFrequency =
-      "Select pickup frequency";
+const handleDeclarationChange = (
+  field: keyof DeclarationInformation,
+  value: boolean
+) => {
+  setFormData((prev) => ({
+    ...prev,
+    declarationInformation: {
+      ...prev.declarationInformation,
+      [field]: value,
+    },
+  }));
+};
 
-    if (!pickupDay)
-    newErrors.pickupDay =
-      "Select pickup day";
-
-  if (!pickupTime)
-    newErrors.pickupTime =
-      "Select pickup time";
-
-  if (
-    communicationPreferences.length === 0
-  )
-    newErrors.communicationPreferences =
-      "Select at least one preference";
-
-  if (!referralSource)
-    newErrors.referralSource =
-      "Select referral source";
-
-  if (!declarationConfirmed)
-    newErrors.declarationConfirmed =
-      "Required";
-
-  if (!termsAccepted)
-    newErrors.termsAccepted =
-      "Required";
-
-  if (!communicationConsent)
-    newErrors.communicationConsent =
-      "Required";
-
-  return newErrors;
-}
-
-async function handleSubmit(
-  e: React.FormEvent
-) {
+const handleSubmit = async (
+  e: React.FormEvent<HTMLFormElement>
+) => {
   e.preventDefault();
 
-  const validationErrors =
-    validateForm();
+  setSubmitSuccess(false);
 
-  if (
-    Object.keys(validationErrors).length > 0
-  ) {
-    setErrors(validationErrors);
+  const validationErrors = validateForm(formData);
+
+  setErrors(validationErrors);
+
+  if (Object.keys(validationErrors).length > 0) {
     return;
   }
 
-  setErrors({});
+  setIsSubmitting(true);
 
-  setLoading(true);
+  try {
+    /*
+     * Check duplicate Mobile Number
+     */
 
-  // Check duplicate Mobile Number.
+    const { data: existingMobile } = await supabase
+      .from("educational_registrations")
+      .select("id")
+      .eq(
+        "mobile_number",
+        formData.contactInformation.mobileNumber
+      )
+      .maybeSingle();
 
-const { data: existingMobile } =
-await supabase
-  .from("educational_registrations")
-  .select("id")
-  .eq("mobile_number", mobileNumber);
+    if (existingMobile) {
+      setDuplicateField("Mobile Number");
 
-if (
-  existingMobile &&
-  existingMobile.length > 0
-) {
+      setDuplicateValue(
+        formData.contactInformation.mobileNumber
+      );
 
-  setDuplicateField(
-    "Mobile Number"
-  );
+      setShowDuplicateModal(true);
 
-  setDuplicateValue(
-    mobileNumber
-  );
+      setIsSubmitting(false);
 
-  setShowDuplicateModal(
-    true
-  );
+      return;
+    }
 
-  setLoading(false);
+    /*
+     * Check duplicate Email Address
+     */
 
-  return;
+    if (formData.contactInformation.email) {
+      const { data: existingEmail } = await supabase
+        .from("educational_registrations")
+        .select("id")
+        .eq(
+          "email",
+          formData.contactInformation.email
+        )
+        .maybeSingle();
 
-}
+      if (existingEmail) {
+        setDuplicateField("Email Address");
 
-// Check duplicate Email Address.
+        setDuplicateValue(
+          formData.contactInformation.email
+        );
 
-const { data: existingEmail } =
-await supabase
-  .from("educational_registrations")
-  .select("id")
-  .eq("email", email)
-  .maybeSingle();
+        setShowDuplicateModal(true);
 
-if (existingEmail) {
+        setIsSubmitting(false);
 
-  setDuplicateField(
-    "Email Address"
-  );
+        return;
+      }
+    }
 
-  setDuplicateValue(
-    email
-  );
+    /*
+     * Insert Registration
+     */
 
-  setShowDuplicateModal(
-    true
-  );
+    const { data, error } = await supabase
+      .from("educational_registrations")
+      .insert([
+        {
+          institution_category:
+            formData.institutionInformation
+              .institutionCategory,
 
-  setLoading(false);
+          institution_name:
+            formData.institutionInformation
+              .institutionName,
 
-  return;
+          website:
+            formData.institutionInformation
+              .website,
 
-}
+          year_established:
+            formData.institutionInformation
+              .yearEstablished,
 
-  const { data, error } =
-    await supabase
-    .from(
-      "educational_registrations"
-    )
-    .insert([
-      {
-        institution_category:
-  institutionCategory,
+          contact_person_name:
+            formData.contactInformation
+              .contactPersonName,
 
-        institution_name:
-          institutionName,
+          designation:
+            formData.contactInformation
+              .designation,
 
-        website,
+          mobile_number:
+            formData.contactInformation
+              .mobileNumber,
 
-year_established:
-  yearEstablished,
+          email:
+            formData.contactInformation
+              .email,
 
-        contact_person_name:
-          contactPersonName,
+          building_number:
+            formData.institutionAddress
+              .buildingNumber,
 
-        designation,
+          building_name:
+            formData.institutionAddress
+              .buildingName,
 
-        mobile_number:
-          mobileNumber,
+          street_area:
+            formData.institutionAddress
+              .streetArea,
 
-        email,
+          landmark:
+            formData.institutionAddress
+              .landmark,
 
-        address:
-  address,
+          city:
+            formData.institutionAddress
+              .city,
 
-        landmark,
+          state_name:
+            formData.institutionAddress
+              .stateName,
 
-        city,
+          pin_code:
+            formData.institutionAddress
+              .pinCode,
 
-        state_name:
-          stateName,
+          material_categories:
+            formData.materialCollection
+              .materialCategories,
 
-        pin_code:
-          pinCode,
+          monthly_recyclables:
+            formData.materialCollection
+              .monthlyRecyclables,
 
-        material_categories:
-          materialCategories,
+          pickup_frequency:
+            formData.materialCollection
+              .pickupFrequency,
 
-        pickup_frequency:
-          pickupFrequency,
+          pickup_day:
+            formData.materialCollection
+              .pickupDay,
 
+          pickup_time:
+            formData.materialCollection
+              .pickupTime,
 
-        pickup_day:
-          pickupDay,
+          communication_preferences:
+            formData.communicationInformation
+              .communicationPreferences,
 
-        pickup_time:
-          pickupTime,
+          referral_source:
+            formData.referralInformation
+              .referralSource,
 
-        communication_preferences:
-          communicationPreferences,
+          referral_code:
+            formData.referralInformation
+              .referralCode,
 
-        referral_source:
-          referralSource,
+          additional_comments:
+            formData.referralInformation
+              .additionalComments,
 
-        referral_code:
-          referralCode,
+          declaration_confirmed:
+            formData.declarationInformation
+              .declarationConfirmed,
 
-        additional_comments:
-          additionalComments,
+          terms_accepted:
+            formData.declarationInformation
+              .termsAccepted,
 
-        declaration_confirmed:
-          declarationConfirmed,
+          communication_consent:
+            formData.declarationInformation
+              .communicationConsent,
+        },
+      ])
+      .select("id")
+      .single();
 
-        terms_accepted:
-          termsAccepted,
+    if (error) {
+      throw error;
+    }
 
-        communication_consent:
-          communicationConsent,
-      },
-    ])
-    .select("id")
-    .single();
+    /*
+     * Generate Registration Number
+     */
 
-    setLoading(false);
+    const { count } = await supabase
+      .from("educational_registrations")
+      .select("*", {
+        count: "exact",
+        head: true,
+      });
 
-if (error) {
-  alert(error.message);
-  return;
-}
+    const registrationNumber =
+      `UL-EDU-${String(
+        count ?? 0
+      ).padStart(6, "0")}`;
 
-const { count } =
-await supabase
-  .from(
-    "educational_registrations"
-  )
-  .select("*", {
-    count: "exact",
-    head: true,
-  });
+    /*
+     * Save Registration Number
+     */
 
-const registrationNumber =
-  `UL-EDU-${String(
-    count
-  ).padStart(6, "0")}`;
+    const { error: registrationNumberError } =
+      await supabase
+        .from("educational_registrations")
+        .update({
+          registration_number:
+            registrationNumber,
+        })
+        .eq("id", data.id);
 
-await supabase
-  .from(
-    "educational_registrations"
-  )
-  .update({
-    registration_number:
-      registrationNumber,
-  })
-  .eq(
-    "id",
-    data.id
-  );
+    if (registrationNumberError) {
+      throw registrationNumberError;
+    }
 
-router.push(
-  `/registration-success?type=Educational Institution Registration&registrationNumber=${registrationNumber}&return=/join-urbanloop/categories&returnText=Back To Categories`
-);
+    /*
+     * Redirect to Registration Success Page
+     */
 
-}
+    router.push(
+      `/registration-success?type=Educational Institution Registration&registrationNumber=${registrationNumber}&return=/join-urbanloop/categories&returnText=Back To Categories`
+    );
+
+  } catch (error) {
+    console.error(
+      "Educational Institution Registration Error:",
+      error
+    );
+
+    alert(
+      error instanceof Error
+        ? error.message
+        : "Unable to submit registration. Please try again."
+    );
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
+  <>
 
+
+    <Header />
     
-    <>
-      <Header />
+        <main className="min-h-screen">
 
-      <main className="bg-white min-h-screen">
+      <section className="py-20">
 
-        <section className="bg-gradient-to-b from-[#EAF7D7] via-white to-white py-20">
+        <div className="mx-auto max-w-5xl px-6">
 
-          <div className="mx-auto max-w-5xl px-6">
+          {/* Hero Section */}
 
-            {/* Hero Section */}
+          <div className="mb-12 text-center">
 
-            <div className="mb-12 text-center">
+            <h1 className="mt-4 text-3xl font-bold text-slate-900 md:text-4xl">
+              Educational Institution Registration
+            </h1>
 
-<h1 className="mt-4 text-3xl font-bold text-slate-900 md:text-4xl">
-                Educational Institution Registration
-              </h1>
+      <p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed text-slate-600">
+        Register your institution with UrbanLoop for sustainable recycling and waste management services.
+      </p>
+    <div className="mt-12 flex justify-center">
 
-<p className="mx-auto mt-4 max-w-3xl text-base leading-relaxed text-slate-600">
-                Register your educational institution with UrbanLoop to enable responsible recycling, recover reusable assets, manage e-waste efficiently and build a greener, more sustainable campus.
-              </p>
-
-              <div className="mt-8 flex justify-center">
-
-                <Link
-                      href="/join-urbanloop/categories"
-                  className="inline-flex items-center gap-2 rounded-xl border border-[#72B543] px-5 py-3 text-sm font-medium text-[#72B543] transition-all duration-300 hover:bg-[#72B543] hover:text-white"
+              <Link
+                  href="/join-urbanloop/categories"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#D7EFC2] px-6 py-3 text-sm font-medium text-black shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#72B543] hover:text-black hover:shadow-lg"
                 >
                   ← Back
                 </Link>
 
-              </div>
-
             </div>
 
-            {/* Form Container */}
+          </div>
 
-            <form
+    <div className="rounded-3xl border border-[#DDE8D0] bg-white/80 backdrop-blur-sm shadow-[0_20px_60px_rgba(114,181,67,0.10)] overflow-hidden px-10 py-10">  
+
+        {submitSuccess && (
+          <div className="mx-8 mt-8 mb-4 rounded-xl border border-green-200 bg-green-50 p-4">
+            Registration submitted successfully.
+          </div>
+        )}
+
+        <form
   onSubmit={handleSubmit}
-  className="rounded-[32px] border-2 border-[#DDE8D0] bg-white p-8 md:p-10 shadow-[0_20px_60px_rgba(15,76,129,0.08)]"
 >
+          <InstitutionInformationSection
+            institutionData={formData.institutionInformation}
+            contactData={formData.contactInformation}
+            errors={errors}
+            onInstitutionChange={handleInstitutionChange}
+            onContactChange={handleContactChange}
+          />
 
-             <h2 className="mb-8 text-2xl font-bold text-slate-900">
-  Institution Information
-</h2>
+          <InstitutionAddressSection
+            data={formData.institutionAddress}
+            errors={errors}
+            onChange={handleAddressChange}
+          />
 
-<div className="grid gap-6 md:grid-cols-2">
+          <MaterialCollectionSection
+            data={formData.materialCollection}
+            errors={errors}
+            onChange={handleMaterialCollectionChange}
+          />
 
-  {/* Institution Category */}
+          <CommunicationPreferenceSection
+            data={formData.communicationInformation}
+            errors={errors}
+            onChange={handleCommunicationChange}
+          />
 
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Institution Category *
-    </label>
+          <ReferralInformationSection
+            data={formData.referralInformation}
+            errors={errors}
+            onChange={handleReferralChange}
+          />
 
-    <select
-      value={institutionCategory}
-      onChange={(e) =>
-        setInstitutionCategory(e.target.value)
-      }
-      className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.institutionCategory
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-    >
-      <option value="">
-        Select Institution
-      </option>
+          <DeclarationSection
+            data={formData.declarationInformation}
+            errors={errors}
+            onChange={handleDeclarationChange}
+          />
 
-      <option>School</option>
-      <option>College</option>
-      <option>University</option>
-      <option>Training Institute</option>
-      <option>Coaching Center</option>
-      <option>Research Institution</option>
+          <div className="mt-10 flex justify-center">
 
-    </select>
+  <div className="mt-10 flex flex-col items-center">
 
-{errors.institutionCategory && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.institutionCategory}
-  </p>
-)}
-
-  </div>
-
-  {/* Institution Name */}
-
-  <div>
-
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Institution Name *
-    </label>
-
-    <input
-      type="text"
-      value={institutionName}
-      onChange={(e) =>
-        setInstitutionName(e.target.value)
-      }
-      className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.institutionName
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-    />
-{errors.institutionName && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.institutionName}
-  </p>
-)}
-
-  </div>
-
-  {/* Website */}
-
-  <div>
-
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Website
-    </label>
-
-    <input
-      type="text"
-      value={website}
-      onChange={(e) =>
-        setWebsite(e.target.value)
-      }
-      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
-    />
-
-  </div>
-
-   {/* Year Established */}
-
-  <div>
-
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Year Established
-    </label>
-
-    <input
-      type="number"
-      value={yearEstablished}
-      onChange={(e) =>
-        setYearEstablished(e.target.value)
-      }
-      className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
-    />
-
-  </div>
-
-  <div>
-  <label className="mb-2 block text-sm font-medium text-slate-700">
-    Contact Person Name *
-  </label>
-
-  <input
-    type="text"
-    value={contactPersonName}
-    onChange={(e) =>
-      setContactPersonName(
-        e.target.value
-      )
-    }
-    className={`w-full rounded-xl border-2 px-4 py-3 ${
-      errors.contactPersonName
-        ? "border-red-500"
-        : "border-slate-300"
+  <button
+    type="submit"
+    disabled={loading}
+    className={`rounded-xl bg-[#D7EFC2] px-8 py-3 text-sm font-medium text-black shadow-sm transition-all duration-300 hover:-translate-y-1 ${
+      loading
+        ? "cursor-not-allowed bg-gray-400 text-white"
+        : "hover:bg-[#72B543] hover:text-black hover:shadow-lg"
     }`}
-  />
+  >
+    {loading
+      ? "Submitting..."
+      : "Submit Registration"}
+  </button>
 
-  {errors.contactPersonName && (
-    <p className="mt-1 text-sm text-red-500">
-      {errors.contactPersonName}
-    </p>
-  )}
-</div>
-
-  <div>
-  <label className="mb-2 block text-sm font-medium text-slate-700">
-    Designation *
-  </label>
-
-  <input
-    type="text"
-    value={designation}
-    onChange={(e) =>
-      setDesignation(e.target.value)
-    }
-    className={`w-full rounded-xl border-2 px-4 py-3 ${
-      errors.designation
-        ? "border-red-500"
-        : "border-slate-300"
-    }`}
-  />
-
-  {errors.designation && (
-    <p className="mt-1 text-sm text-red-500">
-      {errors.designation}
-    </p>
-  )}
-</div>
-
-  <div>
-  <label className="mb-2 block text-sm font-medium text-slate-700">
-    Mobile Number *
-  </label>
-
-  <input
-    type="tel"
-    value={mobileNumber}
-    onChange={(e) =>
-      setMobileNumber(
-        e.target.value
-          .replace(/\D/g, "")
-          .slice(0, 10)
-      )
-    }
-    className={`w-full rounded-xl border-2 px-4 py-3 ${
-      errors.mobileNumber
-        ? "border-red-500"
-        : "border-slate-300"
-    }`}
-  />
-
-   {errors.mobileNumber && (
-    <p className="mt-1 text-sm text-red-500">
-      {errors.mobileNumber}
-    </p>
-  )}
-</div>
-
-<div>
-  <label className="mb-2 block text-sm font-medium text-slate-700">
-    Email Address *
-  </label>
-
-  <input
-    type="email"
-    value={email}
-    onChange={(e) =>
-      setEmail(
-        e.target.value
-      )
-    }
-    className={`w-full rounded-xl border-2 px-4 py-3 ${
-      errors.email
-        ? "border-red-500"
-        : "border-slate-300"
-    }`}
-  />
-
-  {errors.email && (
-    <p className="mt-1 text-sm text-red-500">
-      {errors.email}
-    </p>
-  )}
-</div>
-</div>
-
-<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
-<h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
-  Institution Address
-</h2>
-
-<div className="grid gap-6 md:grid-cols-2">
-
-  <div className="md:col-span-2">
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Institution Address *
-    </label>
-
-    <input
-      type="text"
-      value={address}
-      onChange={(e) =>
-        setAddress(e.target.value)
-      }
-      className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.address
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-    />
-
-{errors.address && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.address}
+  <p className="mt-4 text-center text-sm text-slate-500">
+    Our team will review your registration and contact you shortly.
   </p>
-)}
-
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Landmark *
-    </label>
-
-    <input
-      type="text"
-      value={landmark}
-      onChange={(e) =>
-        setLandmark(e.target.value)
-      }
-      className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.landmark
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-
-    />
-{errors.landmark && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.landmark}
-  </p>
-)}
-
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      PIN Code *
-    </label>
-
-    <input
-      type="text"
-      value={pinCode}
-      onChange={(e) =>
-        setPinCode(
-          e.target.value
-            .replace(/\D/g, "")
-            .slice(0, 6)
-        )
-      }
-      className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.pinCode
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-    />
-  
-  {errors.pinCode && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.pinCode}
-  </p>
-)}
-  
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      City *
-    </label>
-
-    <input
-      type="text"
-      value={city}
-      onChange={(e) =>
-        setCity(e.target.value)
-      }
-      className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.city
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-
-    />
-{errors.city && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.city}
-  </p>
-)}
-
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      State *
-    </label>
-
-    <input
-      type="text"
-      value={stateName}
-      onChange={(e) =>
-        setStateName(e.target.value)
-      }
-      className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.stateName
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
-    />
-{errors.stateName && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.stateName}
-  </p>
-)}
-
-  </div>
 
 </div>
 
-<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
-<h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
-  Material Categories
-</h2>
-
-<p className="mb-6 text-slate-600">
-Select recyclable materials generated within your institution.
-</p>
-
-<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-
-{[
-"Paper & Books",
-"Plastic",
-"Metal",
-"Glass",
-"E-Waste",
-"Laboratory Equipment",
-"Furniture",
-"Electronic Devices",
-"Packaging Materials",
-].map((item) => (
-
-<label
-key={item}
-className="flex cursor-pointer items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4 transition-all duration-300 hover:border-[#72B543] hover:bg-[#F8FBF4]"
->
-
-<input
-type="checkbox"
-checked={materialCategories.includes(item)}
-onChange={() =>
-toggleArrayValue(
-item,
-materialCategories,
-setMaterialCategories
-)
-}
-className="h-4 w-4 accent-[#72B543]"
-/>
-
-<span className="font-medium text-slate-700">
-{item}
-</span>
-
-</label>
-
-))}
 
 </div>
-
-{errors.materialCategories && (
-  <p className="mt-2 text-sm text-red-500">
-    {errors.materialCategories}
-  </p>
-)}
-
-<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
-<h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
-  Pickup Preferences
-</h2>
-
-<div className="space-y-8">
-
-  <div>
-
-    <label className="mb-4 block text-sm font-medium text-slate-700">
-      Preferred Pickup Frequency *
-    </label>
-
-    <div
-  className={`grid gap-4 md:grid-cols-2 rounded-xl p-3 ${
-    errors.pickupFrequency
-      ? "border-2 border-red-500"
-      : ""
-  }`}
->
-
-      {[
-        "One-Time Pickup",
-        "On-Demand Pickup",
-        "Monthly Pickup",
-        "Quarterly Pickup",
-      ].map((option) => (
-        <label
-          key={option}
-          className="flex cursor-pointer items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4 transition-all duration-300 hover:border-[#72B543] hover:bg-[#F8FBF4]"
-        >
-          <input
-  type="radio"
-  name="pickupFrequency"
-  value={option}
-  checked={
-    pickupFrequency ===
-    option
-  }
-  onChange={(e) =>
-    setPickupFrequency(
-      e.target.value
-    )
-  }
-  className="accent-[#72B543]"
-/>
-
-          <span className="font-medium text-slate-700">
-            {option}
-          </span>
-        </label>
-      ))}
-
-    </div>
-
-  </div>
-
-{errors.pickupFrequency && (
-  <p className="mt-2 text-sm text-red-500">
-    {errors.pickupFrequency}
-  </p>
-)}
-
-  <div className="grid gap-6 md:grid-cols-2">
-
-    <div>
-      <label className="mb-2 block text-sm font-medium text-slate-700">
-  Preferred Pickup Day *
-</label>
-
-      <select
-  value={pickupDay}
-  onChange={(e) =>
-    setPickupDay(
-      e.target.value
-    )
-  }
-  className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.pickupDay
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
->
-        <option>Select Day</option>
-        <option>Monday</option>
-        <option>Tuesday</option>
-        <option>Wednesday</option>
-        <option>Thursday</option>
-        <option>Friday</option>
-        <option>Saturday</option>
-        <option>Sunday</option>
-      </select>
-   
-   {errors.pickupDay && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.pickupDay}
-  </p>
-)}
-
-    </div>
-
-    <div>
-      <label className="mb-2 block text-sm font-medium text-slate-700">
-  Preferred Time Slot *
-</label>
-
-      <select
-  value={pickupTime}
-  onChange={(e) =>
-    setPickupTime(
-      e.target.value
-    )
-  }
-  className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.pickupTime
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
->
-        <option>Select Time Slot</option>
-        <option>08:00 AM - 10:00 AM</option>
-        <option>10:00 AM - 12:00 PM</option>
-        <option>12:00 PM - 03:00 PM</option>
-        <option>03:00 PM - 06:00 PM</option>
-        <option>06:00 PM - 08:00 PM</option>
-      </select>
-   
-   {errors.pickupTime && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.pickupTime}
-  </p>
-)}
-   
-    </div>
-
-  </div>
-
-</div>
-
-<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
-<h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
-  Communication Preferences
-</h2>
-
-<p className="mb-6 text-slate-600">
-  Choose how you would like UrbanLoop to communicate with you.
-</p>
-
-<div
-  className={`grid gap-4 md:grid-cols-2 rounded-xl p-3 ${
-    errors.communicationPreferences
-      ? "border-2 border-red-500"
-      : ""
-  }`}
->
-
-  {[
-    "Email Notifications",
-    "SMS Notifications",
-    "WhatsApp Notifications",
-    "ESG & Sustainability Reports",
-  ].map((item) => (
-    <label
-      key={item}
-      className="flex cursor-pointer items-center gap-3 rounded-2xl border border-[#DDE8D0] p-4 transition-all duration-300 hover:border-[#72B543] hover:bg-[#F8FBF4]"
-    >
-      <input
-  type="checkbox"
-  checked={communicationPreferences.includes(
-    item
-  )}
-  onChange={() =>
-    toggleArrayValue(
-      item,
-      communicationPreferences,
-      setCommunicationPreferences
-    )
-  }
-  className="h-4 w-4 accent-[#72B543]"
-/>
-
-      <span className="font-medium text-slate-700">
-        {item}
-      </span>
-    </label>
-  ))}
-
-</div>
-
-{errors.communicationPreferences && (
-  <p className="mt-2 text-sm text-red-500">
-    {errors.communicationPreferences}
-  </p>
-)}
-
-<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
-<h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
-  Referral Information
-</h2>
-
-<div className="grid gap-6 md:grid-cols-2">
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      How Did You Hear About UrbanLoop?
-    </label>
-
-    <select
-  value={referralSource}
-  onChange={(e) =>
-    setReferralSource(
-      e.target.value
-    )
-  }
-  className={`w-full rounded-xl border-2 px-4 py-3 ${
-  errors.referralSource
-    ? "border-red-500"
-    : "border-slate-300"
-}`}
->
-      <option>Select Source</option>
-      <option>Google Search</option>
-      <option>Social Media</option>
-      <option>Friend / Family</option>
-      <option>Corporate Partner</option>
-      <option>Educational Institution</option>
-      <option>Newspaper / Media</option>
-      <option>Event / Campaign</option>
-      <option>Other</option>
-    </select>
-
-    {errors.referralSource && (
-  <p className="mt-1 text-sm text-red-500">
-    {errors.referralSource}
-  </p>
-)}
-
-  </div>
-
-  <div>
-    <label className="mb-2 block text-sm font-medium text-slate-700">
-      Referral Code (Optional)
-    </label>
-
-    <input
-  type="text"
-  value={referralCode}
-  onChange={(e) =>
-    setReferralCode(
-      e.target.value
-    )
-  }
-  placeholder="Enter Referral Code"
-  className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
-/>
-  </div>
-
-</div>
-
-<div className="mt-6">
-
-  <label className="mb-2 block text-sm font-medium text-slate-700">
-    Additional Comments (Optional)
-  </label>
-
-  <textarea
-  rows={4}
-  value={additionalComments}
-  onChange={(e) =>
-    setAdditionalComments(
-      e.target.value
-    )
-  }
-  placeholder="Any specific requirements, pickup notes, or comments..."
-  className="w-full rounded-xl border-2 border-slate-300 px-4 py-3"
-/>
-
-</div>
-
-<div className="grid gap-6 md:grid-cols-2 mb-5"></div>
-<h2 className="mt-16 mb-8 text-2xl font-bold text-slate-900">
-  Declaration & Consent
-</h2>
-
-<div
-  className={`space-y-5 rounded-xl p-4 ${
-    errors.declarationConfirmed ||
-    errors.termsAccepted ||
-    errors.communicationConsent
-      ? "border-2 border-red-500"
-      : ""
-  }`}
->
-
-  <label className="flex items-start gap-3">
-    <input
-  type="checkbox"
-  checked={declarationConfirmed}
-  onChange={(e) =>
-    setDeclarationConfirmed(
-      e.target.checked
-    )
-  }
-  className="mt-1 h-4 w-4 accent-[#72B543]"
-/>
-
-    <span className="text-slate-700">
-      I confirm that all information provided in this registration form is accurate and complete to the best of my knowledge.
-    </span>
-  </label>
-
-  <label className="flex items-start gap-3">
-    <input
-  type="checkbox"
-  checked={termsAccepted}
-  onChange={(e) =>
-    setTermsAccepted(
-      e.target.checked
-    )
-  }
-  className="mt-1 h-4 w-4 accent-[#72B543]"
-/>
-
-    <span className="text-slate-700">
-      I agree to UrbanLoop's Terms & Conditions and Privacy Policy.
-    </span>
-  </label>
-
-  <label className="flex items-start gap-3">
-    <input
-  type="checkbox"
-  checked={communicationConsent}
-  onChange={(e) =>
-    setCommunicationConsent(
-      e.target.checked
-    )
-  }
-  className="mt-1 h-4 w-4 accent-[#72B543]"
-/>
-
-    <span className="text-slate-700">
-      I consent to receiving service updates, pickup reminders, notifications and sustainability reports.
-    </span>
-  </label>
-
-</div>
-
-{(errors.declarationConfirmed ||
-  errors.termsAccepted ||
-  errors.communicationConsent) && (
-  <p className="mt-3 text-sm text-red-500">
-    Please accept all declarations and consents.
-  </p>
-)}
-
-<div className="mt-12 border-t border-[#E6EFE0] pt-10">
-
-  <div className="text-center">
-
-    <button
-  type="submit"
-  className="rounded-xl bg-[#72B543] px-8 py-4 text-lg font-semibold text-white shadow-[0_10px_25px_rgba(114,181,67,0.30)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#5FA032]"
->
-  {loading
-    ? "Submitting..."
-    : "Register Educational Institution"}
-</button>
-    <p className="mt-4 text-sm text-slate-500">
-      Our team will review your registration and contact you shortly.
-    </p>
-    
-</div>
-</div>
-</form>
-</div>
-        </section>
-
-      </main>
+        
+        </form>
+      </div>
+            </div>
+</section>
+    </main>
 
 <RegistrationDuplicateModal
-  type="Educational Institution Registration"
-  field={duplicateField}
-  value={duplicateValue}
-  isOpen={showDuplicateModal}
-  onClose={() =>
-    setShowDuplicateModal(false)
-  }
-/>
+      type="Educational Institution Registration"
+      field={duplicateField}
+      value={duplicateValue}
+      isOpen={showDuplicateModal}
+      onClose={() =>
+        setShowDuplicateModal(false)
+      }
+    />
 
-      <Footer />
-    </>
-  );
+    <Footer />
+  </>
+);
 }

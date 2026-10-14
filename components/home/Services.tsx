@@ -48,10 +48,10 @@ export default function Services() {
 ];
 
   return (
-    <section id="services" className="scroll-mt-28 bg-white py-28">
+    <section id="services" className="scroll-mt-10 relative py-15">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto mb-16 max-w-3xl text-center">
-          <span className="inline-flex rounded-full bg-[#72B543]/10 px-4 py-2 text-sm font-medium text-[#72B543]">
+          <span className="inline-flex rounded-full border border-[#72B543]/20 bg-[#72B543]/15 px-5 py-2 text-sm font-medium tracking-wide text-[#72B543]">
             OUR SERVICES
           </span>
 
