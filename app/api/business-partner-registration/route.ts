@@ -126,6 +126,16 @@ console.log(
   registrationNumber
 );
 
+return NextResponse.json(
+  {
+    success: true,
+    message: "Business Partner Registration successful.",
+    registrationNumber,
+  },
+  {
+    status: 200,
+  }
+);
 
 
   } catch (error) {

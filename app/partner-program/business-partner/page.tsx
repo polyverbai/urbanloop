@@ -63,18 +63,60 @@ export default function BusinessPartnerPage() {
 
 const handleSubmit = async () => {
 
-  const validationErrors =
-    validateForm(formData);
+  console.log("Submit button clicked");
+
+  const validationErrors = validateForm(formData);
+
+  console.log("Validation Errors:", validationErrors);
 
   setErrors(validationErrors);
 
-  if (
-    Object.keys(validationErrors).length > 0
-  ) {
+  if (Object.keys(validationErrors).length > 0) {
+    console.log("Validation Failed");
     return;
   }
 
+  console.log("Validation Passed");
+
   console.log(formData);
+
+  setIsSubmitting(true);
+
+  try {
+
+    const response = await fetch(
+      "/api/business-partner-registration",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+
+    const result = await response.json();
+
+    console.log(result);
+
+    if (!response.ok) {
+      alert(result.message);
+      return;
+    }
+
+    alert("Registration submitted successfully.");
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert("Something went wrong.");
+
+  } finally {
+
+    setIsSubmitting(false);
+
+  }
 
 };
 
