@@ -11,6 +11,9 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.108.0",
     "bcryptjs": "^3.0.3",
+    "csv-parser": "^3.2.1",
+    "csv-writer": "^1.6.0",
+    "dotenv": "^18.0.10",
     "framer-motion": "^12.40.0",
     "lucide-react": "^1.17.0",
     "next": "^16.2.9",

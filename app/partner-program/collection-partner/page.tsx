@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -28,6 +29,10 @@ import {
   validateDeclaration,
 } from "./validation";
 
+import {
+  validateDuplicateBusinessInformation,
+} from "./utils/duplicateValidation";
+
 import type {
   CollectionPartnerForm,
   BusinessVerification,
@@ -35,6 +40,9 @@ import type {
 
 
 export default function CollectionPartnerRegistration() {
+
+  console.log("PAGE COMPONENT LOADED");
+
   const router = useRouter();
 
   const totalSteps = 7;
@@ -51,7 +59,7 @@ export default function CollectionPartnerRegistration() {
   const [errors, setErrors] =
     useState<Record<string, string>>({});
 
-
+    
   /* =====================================================
      FORM DATA
   ===================================================== */
@@ -80,10 +88,8 @@ export default function CollectionPartnerRegistration() {
 },
 
       businessVerification: {
-  gstCertificate: null,
   panCard: null,
   tradeLicense: null,
-  pollutionCertificate: null,
   aadhaarFront: null,
   aadhaarBack: null,
   ownerPhoto: null,
@@ -108,13 +114,9 @@ export default function CollectionPartnerRegistration() {
 
   dailyCollectionCapacity: "",
   monthlyCollectionCapacity: "",
-  collectionCapacityUnit: "",
 
   sortingFacilityAvailable: "",
-  storageSpaceAvailable: "",
 
-  storageCapacity: "",
-  storageCapacityUnit: "",
   sortingCapacity: "",
 },
 
@@ -140,26 +142,33 @@ selfTransportation: {
 },
 
 facilityTransportation: {
-  processingFacilityAvailable: "",
-  facilityAddress: "",
-  storageCapacity: "",
-  vehicleTypes: [],
-  numberOfVehicles: "",
+    processingFacilityAvailable: "",
+    facilityAddress: "",
+
+    vehicleTypes: [],
+    numberOfVehicles: "",
+    vehicleNumbers: "",
 },
 coveragePayment: {
-  operatingAreas: [],
-  preferredPickupDays: [],
-  preferredPickupTime: "",
+    operatingAreas: [],
+    preferredPickupDays: [],
+    preferredPickupTime: "",
 
-  bankName: "",
-  accountHolderName: "",
-  accountNumber: "",
-  confirmAccountNumber: "",
-  ifscCode: "",
-  upiId: "",
+    bankName: "",
+    bankState: "",
+    bankDistrict: "",
+    bankBranch: "",
+    bankAddress: "",
 
-  emergencyContactName: "",
-  emergencyContactNumber: "",
+    accountHolderName: "",
+    accountNumber: "",
+    confirmAccountNumber: "",
+    ifscCode: "",
+
+    upiId: "",
+
+    emergencyContactName: "",
+    emergencyContactNumber: "",
 },
 
       declaration: {
@@ -195,6 +204,7 @@ console.log("Restoring Form Data");
   }
 }, []);
 
+
   /* =====================================================
      UPDATE FIELD
   ===================================================== */
@@ -222,38 +232,39 @@ console.log("Restoring Form Data");
      UPDATE FILE
   ===================================================== */
 
-  const updateFile = (
-    field: keyof BusinessVerification,
-    file: File | null
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
+const updateFile = (
+  field: keyof BusinessVerification,
+  file: File | null
+) => {
 
-      businessVerification: {
-        ...prev.businessVerification,
-        [field]: file,
-      },
-    }));
+  console.log("=================================");
+  console.log("Field :", field);
+  console.log("File :", file);
+  console.log("Name :", file?.name);
+  console.log("=================================");
 
+  // Save the selected file
+  setFormData((prev) => ({
+    ...prev,
+    businessVerification: {
+      ...prev.businessVerification,
+      [field]: file,
+    },
+  }));
 
-    /* =================================================
-       CLEAR DOCUMENT ERROR WHEN FILE CHANGES
-    ================================================= */
+  // Clear any validation error
+  setErrors((prev) => {
+    if (!prev[field]) {
+      return prev;
+    }
 
-    setErrors((prev) => {
-      if (!prev[field]) {
-        return prev;
-      }
+    const updatedErrors = { ...prev };
+    delete updatedErrors[field];
 
-      const updatedErrors = {
-        ...prev,
-      };
+    return updatedErrors;
+  });
 
-      delete updatedErrors[field];
-
-      return updatedErrors;
-    });
-  };
+};
 
 
   /* =====================================================
@@ -274,7 +285,7 @@ console.log("Restoring Form Data");
      NEXT STEP
   ===================================================== */
 
-  const nextStep = () => {
+  const nextStep = async () => {
     let validationErrors:
       Record<string, string> = {};
 
@@ -326,6 +337,29 @@ if (
   return;
 }
 
+/* =====================================================
+   STEP 1 DUPLICATE VALIDATION
+===================================================== */
+
+if (currentStep === 1) {
+
+    const duplicate =
+        await validateDuplicateBusinessInformation(
+            formData.businessInformation
+        );
+
+        console.log("Duplicate Result:", duplicate);
+
+
+    if (duplicate) {
+
+        setErrors({
+            [duplicate.field]: duplicate.message,
+        });
+
+        return;
+    }
+}
 
 /* =====================================================
    REVALIDATE VEHICLE DOCUMENTS AFTER STEP 4
@@ -530,13 +564,9 @@ console.log("STEP 2 - FormData created");
       const verification =
         formData.businessVerification;
 
-
-      if (verification.gstCertificate) {
-  submissionData.append(
-    "gstCertificate",
-    verification.gstCertificate
-  );
-}
+console.log("Verification Object");
+console.log(JSON.stringify(verification, null, 2));
+console.log("TradeLicense =", verification.tradeLicense);
 
 if (verification.panCard) {
   submissionData.append(
@@ -545,6 +575,9 @@ if (verification.panCard) {
   );
 }
 
+console.log("Trade License File");
+console.log(verification.tradeLicense);
+
 if (verification.tradeLicense) {
   submissionData.append(
     "tradeLicense",
@@ -552,12 +585,10 @@ if (verification.tradeLicense) {
   );
 }
 
-if (verification.pollutionCertificate) {
-  submissionData.append(
-    "pollutionCertificate",
-    verification.pollutionCertificate
-  );
-}
+console.log(
+    "Trade License Before Submit:",
+    verification.tradeLicense
+);
 
 if (verification.aadhaarFront) {
   submissionData.append(
@@ -750,8 +781,7 @@ console.log(
     }
   };
 
-
-  /* =====================================================
+    /* =====================================================
      STEP COMPONENTS
   ===================================================== */
 
@@ -801,11 +831,13 @@ console.log(
 ),
 
     6: (
-  <Step6CoveragePayment
+
+<Step6CoveragePayment
     data={formData.coveragePayment}
     errors={errors}
     updateField={updateField}
-  />
+/>
+
 ),
 
     7: (

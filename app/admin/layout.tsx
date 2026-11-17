@@ -8,7 +8,7 @@ export default function AdminLayout({
   children,
 }: AdminLayoutProps) {
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen">
       {children}
     </main>
   );

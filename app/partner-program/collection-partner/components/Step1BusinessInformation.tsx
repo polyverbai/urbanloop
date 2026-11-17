@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect } from "react";
+
 import SectionCard from "@/components/forms/SectionCard";
 import InputField from "@/components/forms/InputField";
 import SelectField from "@/components/forms/SelectField";
@@ -12,7 +14,6 @@ import type {
 
 import {
   COLLECTION_PARTNER_CATEGORIES,
-  EMPLOYEE_OPTIONS,
 } from "../constants";
 
 interface Step1BusinessInformationProps {
@@ -34,6 +35,122 @@ export default function Step1BusinessInformation({
   errors,
   updateField,
 }: Step1BusinessInformationProps) {
+
+  const [mobileDuplicate, setMobileDuplicate] =
+  useState(false);
+
+const [checkingMobile, setCheckingMobile] =
+  useState(false);
+
+const [panDuplicate, setPanDuplicate] =
+  useState(false);
+
+useEffect(() => {
+    console.log(
+        "PAN Duplicate changed:",
+        panDuplicate
+    );
+}, [panDuplicate]);
+
+const [checkingPan, setCheckingPan] =
+  useState(false);
+
+useEffect(() => {
+  console.log(
+    "Step1 Render",
+    "PAN:",
+    data.panNumber,
+    "Duplicate:",
+    panDuplicate
+  );
+}, [panDuplicate, data.panNumber]);
+
+ async function validateMobileNumber(
+  mobileNumber: string
+) {
+  if (mobileNumber.length !== 10) {
+    setMobileDuplicate(false);
+    return;
+  }
+
+  try {
+    setCheckingMobile(true);
+
+    const response = await fetch(
+  "/api/collection-partner-registration/validate-mobile",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      mobileNumber,
+    }),
+  }
+);
+
+const result = await response.json();
+
+
+console.log("Result:", result);
+console.log("Validating:", mobileNumber);
+
+setMobileDuplicate(result.exists);
+
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setCheckingMobile(false);
+  }
+}
+
+async function validatePanNumber(
+  panNumber: string
+) {
+
+  if (panNumber.length !== 10) {
+    setPanDuplicate(false);
+    return;
+  }
+
+  try {
+
+    setCheckingPan(true);
+
+    const response = await fetch(
+      "/api/collection-partner-registration/validate-pan",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          panNumber,
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+console.log("==========================");
+console.log("Full PAN API Response:", result);
+console.log("Exists Value:", result.exists);
+console.log("Response Type:", typeof result.exists);
+console.log("==========================");
+
+setPanDuplicate(result.exists);
+
+  } catch (error) {
+
+    console.error(error);
+
+  } finally {
+
+    setCheckingPan(false);
+
+  }
+}
+  
   return (
     <div className="space-y-8">
 
@@ -98,29 +215,12 @@ export default function Step1BusinessInformation({
           />
 
           <InputField
-            label="Mobile Number"
-            name="mobileNumber"
-            value={data.mobileNumber}
-            placeholder="Enter Mobile Number"
-            required
-            error={errors.mobileNumber}
-            onChange={(value) =>
-              updateField(
-                "businessInformation",
-                "mobileNumber",
-                value
-              )
-            }
-          />
-
-          <InputField
-            label="Email Address"
-            name="email"
-            type="email"
-            value={data.email}
-            placeholder="Enter Email Address"
-            required
-            error={errors.email}
+  label="Email Address"
+  name="email"
+  type="email"
+  value={data.email}
+  placeholder="Enter Email Address"
+  error={errors.email}
             onChange={(value) =>
               updateField(
                 "businessInformation",
@@ -145,21 +245,6 @@ export default function Step1BusinessInformation({
             }
           />
 
-          <SelectField
-            label="Number of Employees"
-            name="numberOfEmployees"
-            value={data.numberOfEmployees}
-            options={EMPLOYEE_OPTIONS}
-            error={errors.numberOfEmployees}
-            onChange={(value) =>
-              updateField(
-                "businessInformation",
-                "numberOfEmployees",
-                value
-              )
-            }
-          />
-
         </div>
       </SectionCard>
 
@@ -173,22 +258,41 @@ export default function Step1BusinessInformation({
       >
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 
-          <InputField
-            label="Mobile Number"
-            name="mobileNumber"
-            value={data.mobileNumber}
-            placeholder="Enter mobile number"
-            required
-            maxLength={10}
-            error={errors.mobileNumber}
-            onChange={(value) =>
-              updateField(
-                "businessInformation",
-                "mobileNumber",
-                value.replace(/\D/g, "").slice(0, 10)
-              )
-            }
-          />
+          <div>
+
+  <InputField
+    label="Mobile Number"
+    name="mobileNumber"
+    value={data.mobileNumber}
+    placeholder="Enter mobile number"
+    required
+    maxLength={10}
+    error={
+    mobileDuplicate
+        ? "This mobile number is already registered."
+        : errors.mobileNumber
+}
+    onChange={(value) => {
+      const mobile = value
+        .replace(/\D/g, "")
+        .slice(0, 10);
+
+      updateField(
+        "businessInformation",
+        "mobileNumber",
+        mobile
+      );
+
+      if (mobileDuplicate) {
+        setMobileDuplicate(false);
+      }
+    }}
+    onBlur={() =>
+      validateMobileNumber(data.mobileNumber)
+    }
+  />
+
+  </div>
 
                  </div>
       </SectionCard>
@@ -205,36 +309,38 @@ export default function Step1BusinessInformation({
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 
           <InputField
-            label="PAN Number"
-            name="panNumber"
-            value={data.panNumber}
-            placeholder="Enter PAN Number"
-            required
-            error={errors.panNumber}
-            onChange={(value) =>
-              updateField(
-                "businessInformation",
-                "panNumber",
-                value.toUpperCase()
-              )
-            }
+    label="PAN Number"
+    name="panNumber"
+    value={data.panNumber}
+    placeholder="Enter PAN Number"
+    required
+    error={
+        panDuplicate
+            ? "This PAN number is already registered."
+            : errors.panNumber
+    }
+            onChange={(value) => {
+
+    const pan = value.toUpperCase();
+
+    updateField(
+        "businessInformation",
+        "panNumber",
+        pan
+    );
+
+    if (panDuplicate) {
+        setPanDuplicate(false);
+    }
+
+}}
+
+onBlur={() =>
+    validatePanNumber(data.panNumber)
+}
           />
 
-          <InputField
-            label="GST Number"
-            name="gstNumber"
-            value={data.gstNumber}
-            placeholder="Enter GST Number, if applicable"
-            error={errors.gstNumber}
-            onChange={(value) =>
-              updateField(
-                "businessInformation",
-                "gstNumber",
-                value.toUpperCase()
-              )
-            }
-          />
-
+            
         </div>
       </SectionCard>
 

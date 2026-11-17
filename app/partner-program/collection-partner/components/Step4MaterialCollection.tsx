@@ -210,26 +210,6 @@ updateField(
 />
 
 <SelectField
-  label="Collection Capacity Unit"
-  name="collectionCapacityUnit"
-  value={data.collectionCapacityUnit}
-  required
-  error={errors.collectionCapacityUnit}
-  options={[
-    { label: "Kg", value: "Kg" },
-    { label: "Ton", value: "Ton" },
-    { label: "Quintal", value: "Quintal" },
-  ]}
-  onChange={(value) =>
-    updateField(
-      "materialCollection",
-      "collectionCapacityUnit",
-      value
-    )
-  }
-/>
-
-<SelectField
   label="Sorting Facility Available"
   name="sortingFacilityAvailable"
   value={data.sortingFacilityAvailable}
@@ -247,58 +227,6 @@ updateField(
     )
   }
 />
-
-<SelectField
-  label="Storage Space Available"
-  name="storageSpaceAvailable"
-  value={data.storageSpaceAvailable}
-  required
-  error={errors.storageSpaceAvailable}
-  options={[
-    { label: "Yes", value: "Yes" },
-    { label: "No", value: "No" },
-  ]}
-  onChange={(value) =>
-    updateField(
-      "materialCollection",
-      "storageSpaceAvailable",
-      value
-    )
-  }
-/>
-
-<InputField
-  label="Storage Capacity"
-  name="storageCapacity"
-  value={data.storageCapacity}
-  placeholder="Example: 5000"
-  required
-  error={errors.storageCapacity}
-  onChange={(value) =>
-    updateField(
-      "materialCollection",
-      "storageCapacity",
-      value.replace(/\D/g, "")
-    )
-  }
-/>
-
-<InputField
-  label="Storage Capacity Unit"
-  name="storageCapacityUnit"
-  value={data.storageCapacityUnit}
-  placeholder="Example: Kg"
-  required
-  error={errors.storageCapacityUnit}
-  onChange={(value) =>
-    updateField(
-      "materialCollection",
-      "storageCapacityUnit",
-      value
-    )
-  }
-/>
-
 
 
         </div>

@@ -13,6 +13,7 @@ interface InputFieldProps {
   error?: string;
   disabled?: boolean;
   maxLength?: number;
+  onBlur?: () => void;
 }
 
 export default function InputField({
@@ -26,6 +27,7 @@ export default function InputField({
   error,
   disabled = false,
   maxLength,
+  onBlur,
 }: InputFieldProps) {
   return (
     <div className="space-y-2">
@@ -40,14 +42,18 @@ export default function InputField({
       </label>
 
       <input
-        id={name}
-        name={name}
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        disabled={disabled}
-        maxLength={maxLength}
-        onChange={(e) => onChange(e.target.value)}
+  id={name}
+  name={name}
+  type={type}
+  value={value}
+  placeholder={placeholder}
+  disabled={disabled}
+  maxLength={maxLength}
+  onChange={(e) => onChange(e.target.value)}
+  onBlur={() => {
+  console.log("InputField Blur");
+  onBlur?.();
+}}
         className={`w-full rounded-lg border px-4 py-3 transition-all duration-200 focus:outline-none focus:ring-2 ${
           error
             ? "border-red-500 focus:ring-red-300"

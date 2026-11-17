@@ -124,7 +124,7 @@ from a single console.
 
 {/* Registration Management Console */}
 
-<section className="mt-10">
+<section className="mt-52">
 
   <div
     className="
@@ -172,17 +172,17 @@ from a single console.
 />
 
   <OperationalCard
-    title="Recycling Partners"
-    description="Manage recycling partners."
+    title="Recycler Partners"
+    description="Manage recycler partners."
     icon={<Recycle size={24} />}
-    href="/admin/partners/recycling-partners"
+    href="/admin/partners/recycler-partners"
 />
 
   <OperationalCard
-    title="Logistics Partners"
-    description="Manage logistics partners."
+    title="Transport Partners"
+    description="Manage transport partners."
     icon={<Truck size={24} />}
-    href="/admin/partners/logistics-partners"
+    href="/admin/partners/transport-partners"
 />
 
   <OperationalCard
@@ -242,31 +242,31 @@ from a single console.
 >
 
   <OperationalCard
-    title="View All Partners"
-    description="View all partner records."
+    title="Pending Basic Verification"
+description="Verify newly registered partners."
     icon={<Users size={24} />}
-    href="/admin/partners/view-all"
+    href="/admin/partners/pending-basic-verification"
 />
 
   <OperationalCard
-  title="Active Partners"
-  description="View active partners."
+  title="Pending Onboarding"
+  description="Partners awaiting onboarding."
   icon={<UserCheck size={24} />}
-  href="/admin/partners/active"
+  href="/admin/partners/pending-onboarding"
 />
 
   <OperationalCard
-    title="Inactive Partners"
-    description="View inactive partners."
+    title="Approved Partners"
+description="View approved partners."
     icon={<UserX size={24} />}
-    href="/admin/partners/inactive"
+    href="/admin/partners/approved"
 />
 
   <OperationalCard
-    title="Export Partner Data"
-    description="Export partner records."
+    title="Rejected Partners"
+description="View rejected partner applications."
     icon={<Download size={24} />}
-    href="/admin/partners/export"
+    href="/admin/partners/rejected"
 />
 
   <OperationalCard
@@ -288,7 +288,7 @@ from a single console.
     </div>
 
   </div>
-
+  
 </section>
 
 {/* Quick Actions */}

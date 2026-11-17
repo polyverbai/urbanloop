@@ -1,13 +1,19 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
+import { supabase } from "@/lib/supabase";
+
 import SectionCard from "@/components/forms/SectionCard";
 import CheckboxGroup from "@/components/forms/CheckboxGroup";
 import SelectField from "@/components/forms/SelectField";
 import InputField from "@/components/forms/InputField";
 
+
+
 import {
   PICKUP_DAYS,
   PICKUP_TIME,
+  BANKS,
 } from "../constants";
 
 import type {
@@ -18,6 +24,7 @@ import type {
 interface Step6CoveragePaymentProps {
   data: CoveragePayment;
   errors: Record<string, string>;
+
   updateField: <
     T extends keyof CollectionPartnerForm,
     K extends keyof CollectionPartnerForm[T]
@@ -29,14 +36,240 @@ interface Step6CoveragePaymentProps {
 }
 
 export default function Step6CoveragePayment({
-  data,
-  errors,
-  updateField,
+
+    data,
+
+    errors,
+
+    updateField,
+
 }: Step6CoveragePaymentProps) {
 
-    const handlePickupDaysChange = (
-  values: string[],
-  clickedValue?: string
+  const [operatingAreasText, setOperatingAreasText] =
+    useState("");
+
+const [bankSearch, setBankSearch] = useState("");
+
+const [showBankList, setShowBankList] = useState(false);
+const [bankResults, setBankResults] = useState<
+{
+    bank: string;
+}[]
+>([]);
+
+const [states, setStates] = useState<string[]>([]);
+const [districts, setDistricts] = useState<string[]>([]);
+const [branches, setBranches] = useState<string[]>([]);
+const [addresses, setAddresses] = useState<string[]>([]);
+
+const bankRef = useRef<HTMLDivElement>(null);
+
+/* ==========================================
+   LOAD STATES WHEN BANK CHANGES
+========================================== */
+
+useEffect(() => {
+
+    if (data.bankName) {
+
+        console.log("Reloading states for:", data.bankName);
+
+        loadStates(data.bankName);
+
+    }
+
+}, [data.bankName]);
+
+const searchBanks = async (search: string) => {
+
+    if (search.trim().length < 2) {
+
+        setBankResults([]);
+
+        return;
+    }
+
+    const { data, error } = await supabase
+    .from("bank_branches")
+    .select("bank")
+    .ilike("bank", `${search}%`)
+    .limit(15);
+
+    if (error) {
+
+        console.log(error);
+
+        return;
+    }
+
+    const unique = [
+    ...new Map(
+        data.map((item) => [
+            item.bank.trim(),
+            item
+        ])
+    ).values(),
+];
+
+setBankResults(unique);
+};
+
+const loadStates = async (bankName: string) => {
+
+    console.log("================================");
+    console.log("Loading States For :", bankName);
+
+    const PAGE_SIZE = 1000;
+
+    let from = 0;
+
+    let allRows: { state: string }[] = [];
+
+    while (true) {
+
+        const { data, error, count } = await supabase
+            .from("bank_branches")
+            .select("state", { count: "exact" })
+            .eq("bank", bankName)
+            .order("state")
+            .range(from, from + PAGE_SIZE - 1);
+
+        console.log("COUNT :", count);
+        console.log("Fetching :", from, "to", from + PAGE_SIZE - 1);
+        console.log("Rows Returned :", data?.length);
+
+        if (error) {
+            console.log(error);
+            return;
+        }
+
+        if (!data || data.length === 0) {
+            break;
+        }
+
+        allRows.push(...data);
+
+        if (data.length < PAGE_SIZE) {
+            break;
+        }
+
+        from += PAGE_SIZE;
+    }
+
+    console.log("TOTAL ROWS :", allRows.length);
+
+    const uniqueStates = [
+        ...new Set(
+            allRows
+                .map((x) => x.state)
+                .filter(Boolean)
+        ),
+    ].sort();
+
+    console.log("TOTAL STATES :", uniqueStates.length);
+    console.log(uniqueStates);
+
+    setStates(uniqueStates);
+};
+
+const loadDistricts = async (
+    bankName: string,
+    state: string
+) => {
+
+    const { data, error } = await supabase
+        .from("bank_branches")
+        .select("district")
+        .eq("bank", bankName)
+        .eq("state", state)
+        .order("district");
+
+    if (error) {
+        console.log(error);
+        return;
+    }
+
+    const uniqueDistricts = [
+        ...new Set(
+            data
+                .map((x) => x.district)
+                .filter(Boolean)
+        ),
+    ].sort();
+
+    setDistricts(uniqueDistricts);
+};
+
+const loadBranches = async (
+    bankName: string,
+    state: string,
+    district: string
+) => {
+
+    const { data, error } = await supabase
+        .from("bank_branches")
+        .select("branch")
+        .eq("bank", bankName)
+        .eq("state", state)
+        .eq("district", district)
+        .order("branch");
+
+    if (error) {
+        console.log(error);
+        return;
+    }
+
+    const uniqueBranches = [
+        ...new Set(
+            data
+                .map((x) => x.branch)
+                .filter(Boolean)
+        ),
+    ].sort();
+
+    setBranches(uniqueBranches);
+};
+
+const loadAddresses = async (
+    bankName: string,
+    state: string,
+    district: string,
+    branch: string
+) => {
+    const { data, error } = await supabase
+        .from("bank_branches")
+        .select("address")
+        .eq("bank", bankName)
+        .eq("state", state)
+        .eq("district", district)
+        .eq("branch", branch)
+        .order("address");
+
+    if (error) {
+        console.log(error);
+        return;
+    }
+
+    const uniqueAddresses = [
+        ...new Set(
+            data
+                .map((x) => x.address)
+                .filter(Boolean)
+        ),
+    ].sort();
+
+    setAddresses(uniqueAddresses);
+};
+
+  useEffect(() => {
+    setOperatingAreasText(
+      data.operatingAreas.join(", ")
+    );
+  }, [data.operatingAreas]);
+
+  const handlePickupDaysChange = (
+      values: string[],
+      clickedValue?: string
 ) => {
 
   const allDays = PICKUP_DAYS.filter(
@@ -90,20 +323,24 @@ export default function Step6CoveragePayment({
         <InputField
           label="Operating Areas"
           name="operatingAreas"
-          value={data.operatingAreas.join(", ")}
+          value={operatingAreasText}
           placeholder="Example: Bengaluru North, Whitefield, Indiranagar"
           required
           error={errors.operatingAreas}
-          onChange={(value) =>
-            updateField(
-              "coveragePayment",
-              "operatingAreas",
-              value
-                .split(",")
-                .map((item) => item.trim())
-                .filter(Boolean)
-            )
-          }
+          onChange={(value) => {
+    setOperatingAreasText(value);
+}}
+
+onBlur={() =>
+    updateField(
+        "coveragePayment",
+        "operatingAreas",
+        operatingAreasText
+            .split(",")
+            .map((item) => item.trim())
+            .filter(Boolean)
+    )
+}
         />
 
         <div className="mt-8">
@@ -157,20 +394,288 @@ export default function Step6CoveragePayment({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-          <InputField
-            label="Bank Name"
-            name="bankName"
-            value={data.bankName}
-            required
-            error={errors.bankName}
-            onChange={(value) =>
-              updateField(
-                "coveragePayment",
-                "bankName",
-                value
-              )
-            }
-          />
+
+<div className="relative" ref={bankRef}>
+
+    <label className="block text-sm font-semibold text-gray-700 mb-2">
+        Bank Name
+        <span className="text-red-500 ml-1">*</span>
+    </label>
+
+    <input
+        type="text"
+        value={bankSearch || data.bankName}
+        placeholder="Search Bank..."
+        className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-200"
+        onFocus={() => setShowBankList(true)}
+        onChange={(e) => {
+
+    const value = e.target.value;
+
+    setBankSearch(value);
+
+    setShowBankList(true);
+
+    searchBanks(value);
+
+}}
+    />
+{showBankList && bankResults.length > 0 && (
+
+<div className="absolute z-50 mt-1 w-full bg-white border rounded-lg shadow-lg max-h-64 overflow-y-auto">
+
+{bankResults.map((bank) => (
+
+<div
+    key={bank.bank}
+    className="px-4 py-2 cursor-pointer hover:bg-green-100"
+    onClick={() => {
+
+        setBankSearch(bank.bank);
+
+        setShowBankList(false);
+
+        updateField(
+            "coveragePayment",
+            "bankName",
+bank.bank
+        );
+
+        updateField(
+            "coveragePayment",
+            "bankState",
+            ""
+        );
+
+        updateField(
+            "coveragePayment",
+            "bankDistrict",
+            ""
+        );
+
+        updateField(
+            "coveragePayment",
+            "bankBranch",
+            ""
+        );
+
+        updateField(
+            "coveragePayment",
+            "bankAddress",
+            ""
+        );
+
+        updateField(
+            "coveragePayment",
+            "ifscCode",
+            ""
+        );
+
+    }}
+>
+
+{bank.bank}
+
+</div>
+
+))}
+
+</div>
+
+)}
+
+</div>
+
+<SelectField
+    label="State"
+    name="bankState"
+    value={data.bankState}
+    placeholder="Select State"
+    required
+    options={states.map((state) => ({
+        label: state,
+        value: state,
+    }))}
+    onChange={(value) => {
+
+        updateField(
+    "coveragePayment",
+    "bankState",
+    value
+);
+
+loadDistricts(
+    data.bankName,
+    value
+);
+
+updateField(
+    "coveragePayment",
+    "bankDistrict",
+    ""
+);
+
+        updateField(
+            "coveragePayment",
+            "bankBranch",
+            ""
+        );
+
+        updateField(
+            "coveragePayment",
+            "ifscCode",
+            ""
+        );
+
+    }}
+/>
+
+<SelectField
+    label="District"
+    name="bankDistrict"
+    value={data.bankDistrict}
+    placeholder="Select District"
+    required
+    error={errors.bankDistrict}
+    options={districts.map((district) => ({
+        label: district,
+        value: district,
+    }))}
+    onChange={(value) => {
+
+    updateField(
+        "coveragePayment",
+        "bankDistrict",
+        value
+    );
+
+    loadBranches(
+        data.bankName,
+        data.bankState,
+        value
+    );
+
+    updateField(
+        "coveragePayment",
+        "bankBranch",
+        ""
+    );
+
+    updateField(
+        "coveragePayment",
+        "bankAddress",
+        ""
+    );
+
+    updateField(
+        "coveragePayment",
+        "ifscCode",
+        ""
+    );
+
+}}
+/>
+
+<SelectField
+    label="Area / Branch"
+    name="bankBranch"
+    value={data.bankBranch}
+    placeholder="Select Branch"
+    required
+    error={errors.bankBranch}
+    options={branches.map((branch) => ({
+        label: branch,
+        value: branch,
+    }))}
+    onChange={async (value) => {
+
+    updateField(
+        "coveragePayment",
+        "bankBranch",
+        value
+    );
+
+    updateField(
+        "coveragePayment",
+        "bankAddress",
+        ""
+    );
+
+loadAddresses(
+    data.bankName,
+    data.bankState,
+    data.bankDistrict,
+    value
+);
+
+    const { data: branchData } = await supabase
+    .from("bank_branches")
+    .select("address, ifsc")
+    .eq("bank", data.bankName)
+    .eq("state", data.bankState)
+    .eq("district", data.bankDistrict)
+    .eq("branch", value)
+    .limit(1);
+
+if (branchData?.length) {
+    updateField(
+        "coveragePayment",
+        "bankAddress",
+        branchData[0].address
+    );
+
+    updateField(
+        "coveragePayment",
+        "ifscCode",
+        branchData[0].ifsc
+    );
+}
+
+    }}
+/>
+
+<SelectField
+    label="Branch Address"
+    name="bankAddress"
+    value={data.bankAddress}
+    placeholder="Select Address"
+    required
+    error={errors.bankAddress}
+    options={addresses.map((address) => ({
+        label: address,
+        value: address,
+    }))}
+    onChange={async (value) => {
+
+    updateField(
+        "coveragePayment",
+        "bankAddress",
+        value
+    );
+
+    const { data: bankData, error } = await supabase
+        .from("bank_branches")
+        .select("ifsc")
+        .eq("bank", data.bankName)
+        .eq("state", data.bankState)
+        .eq("district", data.bankDistrict)
+        .eq("branch", data.bankBranch)
+        .eq("address", value)
+        .limit(1);
+
+    if (error) {
+        console.log(error);
+        return;
+    }
+
+    updateField(
+        "coveragePayment",
+        "ifscCode",
+        bankData?.[0]?.ifsc ?? ""
+    );
+
+}}
+/>
 
           <InputField
             label="Account Holder Name"
@@ -218,19 +723,14 @@ export default function Step6CoveragePayment({
 />
 
           <InputField
-            label="IFSC Code"
-            name="ifscCode"
-            value={data.ifscCode}
-            required
-            error={errors.ifscCode}
-            onChange={(value) =>
-              updateField(
-                "coveragePayment",
-                "ifscCode",
-                value.toUpperCase()
-              )
-            }
-          />
+    label="IFSC Code"
+    name="ifscCode"
+    value={data.ifscCode}
+    required
+    error={errors.ifscCode}
+    disabled
+    onChange={() => {}}
+/>
 
           <InputField
             label="UPI ID"

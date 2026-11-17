@@ -138,13 +138,6 @@ export function validateMaterialCollection(
       "Monthly Collection Capacity is required";
   }
 
-  if (
-    !formData.materialCollection.collectionCapacityUnit.trim()
-  ) {
-    errors.collectionCapacityUnit =
-      "Collection Capacity Unit is required";
-  }
-
   return errors;
 }
 
@@ -197,6 +190,23 @@ export function validateSelfTransportation(
 
   const errors: ValidationErrors = {};
 
+// Processing Facility Validation
+
+if (
+    !formData.facilityTransportation.processingFacilityAvailable
+) {
+    errors.processingFacilityAvailable =
+        "Please select Yes or No";
+}
+
+if (
+    formData.facilityTransportation.processingFacilityAvailable === "Yes" &&
+    !formData.facilityTransportation.facilityAddress.trim()
+) {
+    errors.facilityAddress =
+        "Facility Address is required";
+}
+
   if (!formData.selfTransportation.vehicleAvailable) {
     errors.vehicleAvailable = "Please select Yes or No";
     return errors;
@@ -224,6 +234,14 @@ export function validateSelfTransportation(
         "Driving Licence is required";
     }
 
+if (
+    formData.facilityTransportation.vehicleTypes.length > 0 &&
+    !formData.facilityTransportation.vehicleNumbers.trim()
+) {
+    errors.vehicleNumbers =
+        "Vehicle Registration Number is required";
+}
+
   }
 
   return errors;
@@ -236,13 +254,6 @@ export function validateBusinessVerification(
   const errors: ValidationErrors = {};
 
   if (
-  formData.businessInformation.gstAvailable === "Yes" &&
-  !formData.businessVerification.gstCertificate
-) {
-  errors.gstCertificate = "GST Certificate is required";
-}
-
- if (
   formData.businessInformation.panAvailable === "Yes" &&
   !formData.businessVerification.panCard
 ) {
@@ -305,6 +316,18 @@ export function validateCoveragePayment(
 
 if (!formData.coveragePayment.bankName.trim()) {
   errors.bankName = "Bank Name is required";
+}
+
+if (!formData.coveragePayment.bankState.trim()) {
+  errors.bankState = "State is required";
+}
+
+if (!formData.coveragePayment.bankDistrict.trim()) {
+  errors.bankDistrict = "District is required";
+}
+
+if (!formData.coveragePayment.bankBranch.trim()) {
+  errors.bankBranch = "Branch is required";
 }
 
 if (!formData.coveragePayment.accountHolderName.trim()) {

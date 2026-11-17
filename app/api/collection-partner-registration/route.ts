@@ -28,6 +28,11 @@ body.businessVerification.panCard =
 body.businessVerification.tradeLicense =
   requestData.get("tradeLicense") as File | null;
 
+console.log(
+    "Trade License File:",
+    body.businessVerification.tradeLicense
+);
+
 body.businessVerification.aadhaarFront =
   requestData.get("aadhaarFront") as File | null;
 
@@ -93,7 +98,16 @@ const documents = await uploadDocuments(body);
 console.log("Uploaded Documents:");
 console.log(documents);
 
+console.log("Trade License URL:");
+console.log(documents.tradeLicense);
+
 // Save into Supabase
+console.log("Value going into trade_license column:");
+console.log(documents.tradeLicense);
+
+console.log("Trade License URL being inserted:");
+console.log(documents.tradeLicense);
+
 const { error: insertError } = await supabase
   .from("collection_partner_registrations")
   .insert({
@@ -246,6 +260,21 @@ if (insertError) {
   throw insertError;
 }
 
+const { error: timelineError } = await supabase
+  .from("collection_partner_timeline")
+  .insert({
+    partner_registration_number: registrationNumber,
+    action: "Submitted",
+    remarks: "Application Submitted",
+    action_by: "Collection Partner",
+     });
+
+if (timelineError) {
+  throw timelineError;
+}
+
+
+
 console.log(
   "Collection Partner saved successfully."
 );
@@ -307,32 +336,23 @@ async function uploadFile(
 
 async function uploadDocuments(body: any) {
   return {
-    gstCertificate:
-      body.businessInformation.gstAvailable === "Yes"
-        ? await uploadFile(
-            "collection-partner",
-            "gst-certificate",
-            body.businessVerification?.gstCertificate ?? null
-          )
-        : null,
+    gstCertificate: await uploadFile(
+      "collection-partner",
+      "gst-certificate",
+      body.businessVerification?.gstCertificate ?? null
+    ),
 
-    panCard:
-      body.businessInformation.panAvailable === "Yes"
-        ? await uploadFile(
-            "collection-partner",
-            "pan-card",
-            body.businessVerification?.panCard ?? null
-          )
-        : null,
+    panCard: await uploadFile(
+      "collection-partner",
+      "pan-card",
+      body.businessVerification?.panCard ?? null
+    ),
 
-    tradeLicense:
-      body.businessInformation.tradeLicenseAvailable === "Yes"
-        ? await uploadFile(
-            "collection-partner",
-            "trade-license",
-            body.businessVerification?.tradeLicense ?? null
-          )
-        : null,
+    tradeLicense: await uploadFile(
+      "collection-partner",
+      "trade-license",
+      body.businessVerification?.tradeLicense ?? null
+    ),
 
     aadhaarFront: await uploadFile(
       "collection-partner",
@@ -352,13 +372,10 @@ async function uploadDocuments(body: any) {
       body.businessVerification?.ownerPhoto ?? null
     ),
 
-    drivingLicence:
-      body.facilityTransportation.vehicleAvailable === "Yes"
-        ? await uploadFile(
-            "collection-partner",
-            "driving-licence",
-            body.facilityTransportation?.drivingLicence ?? null
-          )
-        : null,
+    drivingLicence: await uploadFile(
+      "collection-partner",
+      "driving-licence",
+      body.facilityTransportation?.drivingLicence ?? null
+    ),
   };
 }

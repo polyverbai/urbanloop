@@ -18,10 +18,8 @@ tradeLicenseAvailable: "" | "Yes" | "No";
 }
 
 export interface BusinessVerification {
-  gstCertificate: File | null;
   panCard: File | null;
   tradeLicense: File | null;
-  pollutionCertificate: File | null;
   aadhaarFront: File | null;
   aadhaarBack: File | null;
   ownerPhoto: File | null;
@@ -45,23 +43,19 @@ export interface MaterialCollection {
 
   dailyCollectionCapacity: string;
   monthlyCollectionCapacity: string;
-  collectionCapacityUnit: string;
 
   sortingFacilityAvailable: string;
   sortingCapacity: string;
 
-  storageSpaceAvailable: string;
-
-  storageCapacity: string;
-  storageCapacityUnit: string;
 }
 
 export interface FacilityTransportation {
   processingFacilityAvailable: string;
   facilityAddress: string;
-  storageCapacity: string;
+
   vehicleTypes: string[];
   numberOfVehicles: string;
+  vehicleNumbers: string;
 }
 
 export interface CoveragePayment {
@@ -73,13 +67,21 @@ export interface CoveragePayment {
 
   bankName: string;
 
-  accountHolderName: string;
+bankState: string;
 
-  accountNumber: string;
+bankDistrict: string;
 
-  confirmAccountNumber: string;
+bankBranch: string;
 
-  ifscCode: string;
+bankAddress: string;
+
+accountHolderName: string;
+
+accountNumber: string;
+
+confirmAccountNumber: string;
+
+ifscCode: string;
 
   upiId: string;
 

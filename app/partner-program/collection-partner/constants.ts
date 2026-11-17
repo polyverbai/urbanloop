@@ -25,11 +25,7 @@ export const EMPLOYEE_OPTIONS = [
 // ======================================================
 
 export const VERIFICATION_DOCUMENTS = [
-  {
-    field: "gstCertificate",
-    label: "GST Registration Certificate",
-    required: true,
-  },
+  
   {
     field: "panCard",
     label: "PAN Card",
@@ -40,21 +36,19 @@ export const VERIFICATION_DOCUMENTS = [
     label: "Trade / Shop License",
     required: true,
   },
-  {
-    field: "pollutionCertificate",
-    label: "Pollution Certificate (If Applicable)",
-    required: false,
-  },
-  {
+  
+{
     field: "aadhaarFront",
     label: "Aadhaar Card (Front)",
     required: true,
-  },
-  {
+},
+
+{
     field: "aadhaarBack",
     label: "Aadhaar Card (Back)",
     required: true,
-  },
+},
+
   {
     field: "ownerPhoto",
     label: "Owner Photograph",
@@ -131,6 +125,26 @@ export const PICKUP_TIME = [
   { label: "12 PM - 3 PM", value: "12-3" },
   { label: "3 PM - 6 PM", value: "3-6" },
   { label: "6 PM - 9 PM", value: "6-9pm" },
+];
+
+export const BANKS = [
+  { label: "Select Bank", value: "" },
+
+  { label: "State Bank of India", value: "State Bank of India" },
+  { label: "HDFC Bank", value: "HDFC Bank" },
+  { label: "ICICI Bank", value: "ICICI Bank" },
+  { label: "Axis Bank", value: "Axis Bank" },
+  { label: "Canara Bank", value: "Canara Bank" },
+  { label: "Bank of Baroda", value: "Bank of Baroda" },
+  { label: "Punjab National Bank", value: "Punjab National Bank" },
+  { label: "Union Bank of India", value: "Union Bank of India" },
+  { label: "Indian Bank", value: "Indian Bank" },
+  { label: "Indian Overseas Bank", value: "Indian Overseas Bank" },
+  { label: "Federal Bank", value: "Federal Bank" },
+  { label: "South Indian Bank", value: "South Indian Bank" },
+  { label: "Kotak Mahindra Bank", value: "Kotak Mahindra Bank" },
+  { label: "IDBI Bank", value: "IDBI Bank" },
+  { label: "Yes Bank", value: "Yes Bank" },
 ];
 
 // ======================================================

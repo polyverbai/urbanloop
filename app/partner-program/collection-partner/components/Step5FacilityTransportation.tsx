@@ -7,7 +7,6 @@ import SelectField from "@/components/forms/SelectField";
 import CheckboxGroup from "@/components/forms/CheckboxGroup";
 
 import {
-  STORAGE_CAPACITY,
   VEHICLE_TYPES,
 } from "../constants";
 
@@ -108,36 +107,22 @@ const handleVehicleTypesChange = (
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
 
-          <InputField
-            label="Facility Address"
-            name="facilityAddress"
-            value={data.facilityAddress}
-            placeholder="Enter facility address"
-            error={errors.facilityAddress}
-            onChange={(value) =>
-              updateField(
+          {data.processingFacilityAvailable === "Yes" && (
+    <InputField
+        label="Facility Address"
+        name="facilityAddress"
+        value={data.facilityAddress}
+        placeholder="Enter Facility Address"
+        error={errors.facilityAddress}
+        onChange={(value) =>
+            updateField(
                 "facilityTransportation",
                 "facilityAddress",
                 value
-              )
-            }
-          />
-
-          <SelectField
-            label="Storage Capacity"
-            name="storageCapacity"
-            value={data.storageCapacity}
-            placeholder="Select Capacity"
-            options={STORAGE_CAPACITY}
-            error={errors.storageCapacity}
-            onChange={(value) =>
-              updateField(
-                "facilityTransportation",
-                "storageCapacity",
-                value
-              )
-            }
-          />
+            )
+        }
+    />
+)}
 
         </div>
 
@@ -182,6 +167,25 @@ const handleVehicleTypesChange = (
               )
             }
           />
+
+{data.vehicleTypes.length > 0 && (
+
+<InputField
+    label="Vehicle Registration Number(s)"
+    name="vehicleNumbers"
+    value={data.vehicleNumbers}
+    placeholder="KA01AB1234, KA02CD5678"
+    error={errors.vehicleNumbers}
+    onChange={(value) =>
+        updateField(
+            "facilityTransportation",
+            "vehicleNumbers",
+            value
+        )
+    }
+/>
+
+)}
 
         </div>
 

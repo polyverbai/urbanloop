@@ -1,11 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 import BusinessPartnerFormComponent from "./components/BusinessPartnerForm";
+import RegistrationDuplicateModal
+  from "@/components/common/RegistrationDuplicateModal";
+
 
 import { defaultValues } from "./defaultValues";
 
@@ -19,6 +23,8 @@ import type {
 
 export default function BusinessPartnerPage() {
 
+      const router = useRouter();
+
   const [formData, setFormData] =
   useState<BusinessPartnerFormData>(
     defaultValues
@@ -30,13 +36,25 @@ export default function BusinessPartnerPage() {
   const [isSubmitting, setIsSubmitting] =
     useState(false);
 
-  const [registrationNumber, setRegistrationNumber] =
-    useState("");
+const [registrationNumber, setRegistrationNumber] =
+  useState("");
 
-  const [submitted, setSubmitted] =
-    useState(false);
+const [showDuplicate, setShowDuplicate] =
+  useState(false);
 
-    const updateField = <
+const [duplicateField, setDuplicateField] =
+  useState("");
+
+const [duplicateValue, setDuplicateValue] =
+  useState("");
+
+const [duplicateType, setDuplicateType] =
+  useState("");
+
+const [applicationStatus, setApplicationStatus] =
+  useState("");
+
+      const updateField = <
   T extends keyof BusinessPartnerFormData,
   K extends keyof BusinessPartnerFormData[T]
 >(
@@ -62,6 +80,10 @@ export default function BusinessPartnerPage() {
 };
 
 const handleSubmit = async () => {
+
+  if (isSubmitting) return;
+
+  setErrors({});
 
   console.log("Submit button clicked");
 
@@ -100,11 +122,58 @@ const handleSubmit = async () => {
     console.log(result);
 
     if (!response.ok) {
-      alert(result.message);
-      return;
-    }
 
-    alert("Registration submitted successfully.");
+  if (result.duplicateType) {
+
+  if (result.duplicateType === "mobile") {
+
+    setDuplicateField("Mobile Number");
+
+    setDuplicateValue(
+      formData.businessInformation.mobileNumber
+    );
+
+  } else if (result.duplicateType === "pan") {
+
+    setDuplicateField("PAN Number");
+
+    setDuplicateValue(
+      formData.businessRegistration.panNumber
+    );
+
+  } else if (result.duplicateType === "gst") {
+
+    setDuplicateField("GST Number");
+
+    setDuplicateValue(
+      formData.businessRegistration.gstNumber
+    );
+
+  }
+
+  setRegistrationNumber(
+    result.registrationNumber ?? ""
+  );
+
+  setApplicationStatus(
+    result.applicationStatus ?? ""
+  );
+
+  setShowDuplicate(true);
+
+  return;
+
+}
+
+  alert(result.message);
+
+  return;
+
+}
+
+    router.push(
+  `/registration-success?type=Business Partner Registration&registrationNumber=${result.registrationNumber}&return=/partner-program&returnText=Back To Partnership Program`
+);
 
   } catch (error) {
 
@@ -119,6 +188,7 @@ const handleSubmit = async () => {
   }
 
 };
+
 
 return (
 
@@ -137,6 +207,14 @@ return (
 />
 
 </div>
+
+<RegistrationDuplicateModal
+  type="Business Partner Registration"
+  field={duplicateField}
+  value={duplicateValue}
+  isOpen={showDuplicate}
+  onClose={() => setShowDuplicate(false)}
+/>
 
 <Footer />
 
