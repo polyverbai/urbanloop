@@ -177,25 +177,51 @@ const loadDistricts = async (
     state: string
 ) => {
 
-    const { data, error } = await supabase
-        .from("bank_branches")
-        .select("district")
-        .eq("bank", bankName)
-        .eq("state", state)
-        .order("district");
+    let from = 0;
+    const pageSize = 1000;
+    let allRows: { district: string }[] = [];
 
-    if (error) {
-        console.log(error);
-        return;
+    while (true) {
+
+        console.log("Loading Districts:", from);
+
+        const { data, error } = await supabase
+            .from("bank_branches")
+            .select("district")
+            .eq("bank", bankName)
+            .eq("state", state)
+            .order("district")
+            .range(from, from + pageSize - 1);
+
+        if (error) {
+            console.log(error);
+            return;
+        }
+
+        if (!data || data.length === 0) {
+            break;
+        }
+
+        allRows.push(...data);
+
+        if (data.length < pageSize) {
+            break;
+        }
+
+        from += pageSize;
     }
+
+    console.log("District Records :", allRows.length);
 
     const uniqueDistricts = [
         ...new Set(
-            data
-                .map((x) => x.district)
+            allRows
+                .map(x => x.district)
                 .filter(Boolean)
         ),
     ].sort();
+
+    console.log("District Count :", uniqueDistricts.length);
 
     setDistricts(uniqueDistricts);
 };
@@ -206,26 +232,52 @@ const loadBranches = async (
     district: string
 ) => {
 
-    const { data, error } = await supabase
-        .from("bank_branches")
-        .select("branch")
-        .eq("bank", bankName)
-        .eq("state", state)
-        .eq("district", district)
-        .order("branch");
+    let from = 0;
+    const pageSize = 1000;
+    let allRows: { branch: string }[] = [];
 
-    if (error) {
-        console.log(error);
-        return;
+    while (true) {
+
+        console.log("Loading Branches:", from);
+
+        const { data, error } = await supabase
+            .from("bank_branches")
+            .select("branch")
+            .eq("bank", bankName)
+            .eq("state", state)
+            .eq("district", district)
+            .order("branch")
+            .range(from, from + pageSize - 1);
+
+        if (error) {
+            console.log(error);
+            return;
+        }
+
+        if (!data || data.length === 0) {
+            break;
+        }
+
+        allRows.push(...data);
+
+        if (data.length < pageSize) {
+            break;
+        }
+
+        from += pageSize;
     }
+
+    console.log("Branch Records :", allRows.length);
 
     const uniqueBranches = [
         ...new Set(
-            data
-                .map((x) => x.branch)
+            allRows
+                .map(x => x.branch)
                 .filter(Boolean)
         ),
     ].sort();
+
+    console.log("Branch Count :", uniqueBranches.length);
 
     setBranches(uniqueBranches);
 };
@@ -236,27 +288,54 @@ const loadAddresses = async (
     district: string,
     branch: string
 ) => {
-    const { data, error } = await supabase
-        .from("bank_branches")
-        .select("address")
-        .eq("bank", bankName)
-        .eq("state", state)
-        .eq("district", district)
-        .eq("branch", branch)
-        .order("address");
 
-    if (error) {
-        console.log(error);
-        return;
+    let from = 0;
+    const pageSize = 1000;
+    let allRows: { address: string }[] = [];
+
+    while (true) {
+
+        console.log("Loading Addresses:", from);
+
+        const { data, error } = await supabase
+            .from("bank_branches")
+            .select("address")
+            .eq("bank", bankName)
+            .eq("state", state)
+            .eq("district", district)
+            .eq("branch", branch)
+            .order("address")
+            .range(from, from + pageSize - 1);
+
+        if (error) {
+            console.log(error);
+            return;
+        }
+
+        if (!data || data.length === 0) {
+            break;
+        }
+
+        allRows.push(...data);
+
+        if (data.length < pageSize) {
+            break;
+        }
+
+        from += pageSize;
     }
+
+    console.log("Address Records :", allRows.length);
 
     const uniqueAddresses = [
         ...new Set(
-            data
-                .map((x) => x.address)
+            allRows
+                .map(x => x.address)
                 .filter(Boolean)
         ),
     ].sort();
+
+    console.log("Address Count :", uniqueAddresses.length);
 
     setAddresses(uniqueAddresses);
 };
